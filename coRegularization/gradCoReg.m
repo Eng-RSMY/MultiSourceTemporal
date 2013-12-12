@@ -1,4 +1,4 @@
-function [obj, G] = gradCoReg(series, Sol, lambda, index, cor)
+function [obj, G] = gradCoReg(series, Sol, lambda, index)
 funcList = {@gradGaussian, @gradGumbel, @gradLogistic};
 nType = length(series);
 nVar = size(series{1}, 1);
@@ -19,15 +19,13 @@ for i = 1:nType
 end
 
 % The coRegularization part
-if strcmp(cor, 'yes')
-    for i = 1:nType
-        for j = 1:nType
-            if i ~= j
-                obj = obj + lambda * norm(Sol(nVar*(i-1)+1:nVar*i, :) -...
-                    Sol(nVar*(j-1)+1:nVar*(j), :), 'fro')^2;
-                G(nVar*(i-1)+1:nVar*i, :) = G(nVar*(i-1)+1:nVar*i, :) + 2*lambda * ...
-                    (Sol(nVar*(i-1)+1:nVar*i, :) - Sol(nVar*(j-1)+1:nVar*(j), :)) ;
-            end
+for i = 1:nType
+    for j = 1:nType
+        if i ~= j
+            obj = obj + lambda * norm(Sol(nVar*(i-1)+1:nVar*i, :) -...
+                Sol(nVar*(j-1)+1:nVar*(j), :), 'fro')^2;
+            G(nVar*(i-1)+1:nVar*i, :) = G(nVar*(i-1)+1:nVar*i, :) + 2*lambda * ...
+                (Sol(nVar*(i-1)+1:nVar*i, :) - Sol(nVar*(j-1)+1:nVar*(j), :)) ;
         end
     end
 end

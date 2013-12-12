@@ -14,7 +14,7 @@ MaxIter = ceil(4*Cf/ep);
 obj = zeros(MaxIter, 1);
 if verbose; fprintf('Iter #: %5d', 0); end
 for i = 1:MaxIter
-    [obj(i), G] = gradCoReg(series, TLam*Sol(1:p, p+1:p+q), lambda(1), index{1}, 'yes');
+    [obj(i), G] = gradCoReg(series, TLam*Sol(1:p, p+1:p+q), lambda(1), index{1});
     
     G2 = TLam*[zeros(p, q), G; G', zeros(q, p)];
     v = approxEV(-G2, Cf/(i^2));
@@ -33,19 +33,23 @@ figure; plot(obj); end
 L = Sol;
 obj = zeros(MaxIter, 1);
 S = 0*L;
+b = zeros(nVar*nType, 1);
+Yb = b;
 YS = S;
 t = 1;
-delta = 1e-7;
-MaxIter = 500;
+delta = 2e-8;
+MaxIter = 1000;
 if verbose; fprintf('Iter #: %5d', 0); end
 for i = 1:MaxIter
-    [obj(i), G] = gradCoReg(series, YS+L, lambda(1), index{1}, 'no');
+    [obj(i), G, Gb] = gradCoRegS(series, YS+L, Yb, index{1});
+    b_new = Yb - delta*Gb;
     S_new = YS - delta*G;
     S_new = (abs(S_new) > lambda(2)).*(abs(S_new)-lambda(2)).*sign(S_new);
     
     t_new = (1+sqrt(1+4*t^2))/2;
     YS = S_new + ((t-1)/t_new)*(S_new - S);
-    S = S_new;
+    Yb = b_new + ((t-1)/t_new)*(b_new - b);
+    b = b_new;
     t = t_new;
     
     if verbose;
