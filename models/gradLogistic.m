@@ -1,22 +1,22 @@
-function [obj, G, Gb] = gradLogistic(series, S, b)
-[~, T] = size(series);
+function [obj, G, Gb] = gradLogistic(series, S, b, index)
+T = length(index);
 P = length(S);
 epsilon = 1e-7;
-mu = b*ones(1, T-P);
+mu = b*ones(1, T);
 for ll = 1:P
-    mu = mu + S{ll}*series(:, P-ll+1:T-ll);
+    mu = mu + S{ll}*series(:, index-ll);
 end
 [ob, dr] = logist(mu);
 ob(ob < epsilon) = epsilon;     % Numerical issues
 ob(ob > 1-epsilon) = 1-epsilon;
 
-obj = - sum(sum(  series(:, P+1:T).*log(ob) + (1-series(:, P+1:T)).*log(1-ob)  ))/(T-P);
-Gb = - sum( (series(:, P+1:T).*(dr./ob))  - ((1-series(:, P+1:T)).*dr./(1-ob)), 2 )/(T-P);
+obj = - sum(sum(  series(:, index).*log(ob) + (1-series(:, index)).*log(1-ob)  ))/T;
+Gb = - sum( (series(:, index).*(dr./ob))  - ((1-series(:, index)).*dr./(1-ob)), 2 )/T;
 
 G = cell(P, 1);
 for ll = 1:P
-    G{ll} = - ( (series(:, P+1:T).*(dr./ob))*series(:, P+1-ll:T-ll)'  ...
-        - ((1-series(:, P+1:T)).*dr./(1-ob))*series(:, P+1-ll:T-ll)' )/(T-P);
+    G{ll} = - ( (series(:, index).*(dr./ob))*series(:, index-ll)'  ...
+        - ((1-series(:, index)).*dr./(1-ob))*series(:, index-ll)' )/T;
 end
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

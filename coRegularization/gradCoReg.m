@@ -1,4 +1,4 @@
-function [obj, G] = gradCoReg(series, Sol, lambda)
+function [obj, G] = gradCoReg(series, Sol, lambda, index)
 funcList = {@gradGaussian, @gradGumbel, @gradLogistic};
 nType = length(series);
 nVar = size(series{1}, 1);
@@ -11,7 +11,7 @@ for i = 1:nType
     for ll = 1:nLag
         S{ll} = Sol(nVar*(i-1)+1:nVar*i, nVar*(ll-1)+1:nVar*ll);
     end
-    [objTemp, Gtemp] = feval(funcList{i}, series{i}, S, b);
+    [objTemp, Gtemp] = feval(funcList{i}, series{i}, S, b, index);
     obj = obj + objTemp;
     for ll = 1:nLag
         G(nVar*(i-1)+1:nVar*i, nVar*(ll-1)+1:nVar*ll) = Gtemp{ll};

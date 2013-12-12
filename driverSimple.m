@@ -20,5 +20,8 @@ verbose = 1;
 TLam = 100;
 lambda = 0.01;
 nLag = 3;
-Sol = coreg(series, TLam, lambda, nLag);
-
+T = size(series{1}, 2);
+Ttest = 10;
+index{1} = nLag+1:T-Ttest;
+index{2} = T-Ttest+1:T;
+Sol = coreg(series, TLam, lambda, nLag, index);

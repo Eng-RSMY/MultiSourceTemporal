@@ -1,4 +1,4 @@
-function [Solout] = coreg(series, TLam, lambda, nLag)
+function [Solout] = coreg(series, TLam, lambda, nLag, index)
 global verbose
 nType = length(series);
 nVar = size(series{1}, 1);
@@ -13,7 +13,7 @@ MaxIter = ceil(4*Cf/ep);
 obj = zeros(MaxIter, 1);
 if verbose; fprintf('Iter #: %5d', 0); end
 for i = 1:MaxIter
-    [obj(i), G] = gradCoReg(series, TLam*Sol(1:p, p+1:p+q), lambda);
+    [obj(i), G] = gradCoReg(series, TLam*Sol(1:p, p+1:p+q), lambda, index{1});
     
     G2 = TLam*[zeros(p, q), G; G', zeros(q, p)];
     v = approxEV(-G2, Cf/(i^2));
