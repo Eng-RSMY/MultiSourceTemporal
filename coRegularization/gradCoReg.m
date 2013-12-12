@@ -23,9 +23,9 @@ for i = 1:nType
     for j = 1:nType
         if i ~= j
             obj = obj + lambda * norm(Sol(nVar*(i-1)+1:nVar*i, :) -...
-                Sol(nVar*(j-1)+1:nVar*(j), :), 'fro')^2;
+                Sol(nVar*(j-1)+1:nVar*(j), :), 'fro')^2/(nVar^2);
             G(nVar*(i-1)+1:nVar*i, :) = G(nVar*(i-1)+1:nVar*i, :) + 2*lambda * ...
-                (Sol(nVar*(i-1)+1:nVar*i, :) - Sol(nVar*(j-1)+1:nVar*(j), :)) ;
+                (Sol(nVar*(i-1)+1:nVar*i, :) - Sol(nVar*(j-1)+1:nVar*(j), :))/(nVar^2) ;
         end
     end
 end

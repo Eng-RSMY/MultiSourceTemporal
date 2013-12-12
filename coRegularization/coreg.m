@@ -1,4 +1,4 @@
-function [Solout] = coreg(series, TLam, lambda, nLag, index)
+function [Solout, err, normerr] = coreg(series, TLam, lambda, nLag, index)
 global verbose
 nType = length(series);
 nVar = size(series{1}, 1);
@@ -8,7 +8,7 @@ q = nVar*nLag;
 Sol = zeros(p + q); 
 Cf = 0.5;
 ep = 0.01;
-MaxIter = ceil(4*Cf/ep);
+MaxIter = ceil(2*Cf/ep);
 % TLam = 3; % 0.3
 %% Low-rank part
 obj = zeros(MaxIter, 1);
@@ -37,8 +37,8 @@ b = zeros(nVar*nType, 1);
 Yb = b;
 YS = S;
 t = 1;
-delta = 2e-8;
-MaxIter = 1000;
+delta = 2e-6;
+MaxIter = 2000;
 if verbose; fprintf('Iter #: %5d', 0); end
 for i = 1:MaxIter
     [obj(i), G, Gb] = gradCoRegS(series, YS+L, Yb, index{1});
@@ -60,7 +60,7 @@ end
 if verbose; fprintf('\n');
 figure; plot(obj); end
 %% Prediction
-
+[err, normerr] = prediction(series, S+L, b, index{2});
 % Output Formatting
 Solout = cell(nType, 1);
 for i = 1:nType
