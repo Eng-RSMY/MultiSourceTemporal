@@ -18,7 +18,7 @@ global verbose
 verbose = 1;
 
 TLam = 100;
-lambda = 0.01;
+lambda = [0.01, 1e-4];
 nLag = 3;
 T = size(series{1}, 2);
 Ttest = 10;
