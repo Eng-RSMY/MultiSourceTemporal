@@ -1,0 +1,1 @@
+The goal of this project is to improve the prediction accuracy of multi-variate heterogeneous time series with multi-source learning.
