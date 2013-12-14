@@ -1,7 +1,7 @@
 function [S, err, normerr] = sparseGLARP(series, lambda, nLag, index, grad)
 global verbose
 n = size(series, 1);
-delta = 1e-3;
+delta = 1e-1;
 MaxIter = 2000;
 
 % Initialize the parameters
@@ -28,6 +28,7 @@ for i = 1:MaxIter
         S_new{ll} = YS{ll} - delta*G{ll};
         S_new{ll} = (abs(S_new{ll}) > lambda).*(abs(S_new{ll})-lambda).*sign(S_new{ll});
         YS{ll} = S_new{ll} + ((t-1)/t_new)*(S_new{ll} - S{ll});
+        S{ll} = S_new{ll};
     end
     
     t = t_new;

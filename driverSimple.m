@@ -31,4 +31,5 @@ index{2} = T-Ttest+1:T;
 % [Sol, err, normerr] = coreg(series, TLam, lambda, nLag, index);
 
 grad = {@gradGaussian, 'Gaussian'};
+% grad = {@gradGumbel, 'Gumbel'};
 [S, err, normerr] = sparseGLARP(series{1}, lambda(2), nLag, index, grad);

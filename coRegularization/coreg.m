@@ -49,6 +49,7 @@ for i = 1:MaxIter
     t_new = (1+sqrt(1+4*t^2))/2;
     YS = S_new + ((t-1)/t_new)*(S_new - S);
     Yb = b_new + ((t-1)/t_new)*(b_new - b);
+    S = S_new;
     b = b_new;
     t = t_new;
     

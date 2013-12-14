@@ -1,6 +1,6 @@
 function [err, normerr] = predictSp(series, S, b, index, fname)
 nVar = size(series, 1);
-nLag = size(S, 2)/nVar;
+nLag = length(S);
 T = length(index);
 mu = b*ones(1, T);
 for ll = 1:nLag
