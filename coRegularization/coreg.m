@@ -1,7 +1,7 @@
 function [Solout, err, normerr] = coreg(series, TLam, lambda, nLag, index)
 global verbose
 nType = length(series);
-nVar = size(series{1}, 1);
+nVar = size(series{1}, 1); % location
 % The solution will be (nV x nT) x (nV x nL)
 p = nVar*nType;
 q = nVar*nLag;

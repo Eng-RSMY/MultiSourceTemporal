@@ -1,4 +1,4 @@
-clear all
+% clear all
 clc
 close all
 
@@ -11,7 +11,7 @@ load wind.mat
 series{2} = obs';
 load rain.mat
 series{3} = (obs > 0.01)'*1.0;
-clear obs pars  % Housekeeping
+% clear obs pars  % Housekeeping
 
 
 global verbose
@@ -24,4 +24,9 @@ T = size(series{1}, 2);
 Ttest = 10;
 index{1} = nLag+1:T-Ttest;
 index{2} = T-Ttest+1:T;
-[Sol, err, normerr] = coreg(series, TLam, lambda, nLag, index);
+% [Sol, err, normerr] = coreg(series, TLam, lambda, nLag, index);
+
+%%
+load location.mat
+[Sol2, err2, normerr2] = kriging(series, loc, lambda, nLag, index);
+
