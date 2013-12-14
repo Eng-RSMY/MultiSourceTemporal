@@ -38,7 +38,7 @@ Yb = b;
 YS = S;
 t = 1;
 delta = 2e-6;
-MaxIter = 2000;
+MaxIter = 5000;
 if verbose; fprintf('Iter #: %5d', 0); end
 for i = 1:MaxIter
     [obj(i), G, Gb] = gradCoRegS(series, YS+L, Yb, index{1});

@@ -6,8 +6,12 @@ addpath(genpath('./'))
 
 series = cell(3, 1);
 load temp.mat
+obs = obs - ones(size(obs, 1), 1)*mean(obs, 1);
+obs = obs./(ones(size(obs, 1), 1)*std(obs, 0, 1));
 series{1} = obs';
 load wind.mat
+obs = obs - ones(size(obs, 1), 1)*mean(obs, 1);
+obs = obs./(ones(size(obs, 1), 1)*std(obs, 0, 1));
 series{2} = obs';
 load rain.mat
 series{3} = (obs > 0.01)'*1.0;
@@ -18,10 +22,13 @@ global verbose
 verbose = 1;
 
 TLam = 100;
-lambda = [0.01, 1e-4];
+lambda = [10, 1e-4];
 nLag = 3;
 T = size(series{1}, 2);
 Ttest = 10;
 index{1} = nLag+1:T-Ttest;
 index{2} = T-Ttest+1:T;
-[Sol, err, normerr] = coreg(series, TLam, lambda, nLag, index);
+% [Sol, err, normerr] = coreg(series, TLam, lambda, nLag, index);
+
+grad = {@gradGaussian, 'Gaussian'};
+[S, err, normerr] = sparseGLARP(series{1}, lambda(2), nLag, index, grad);
