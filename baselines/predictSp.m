@@ -8,4 +8,4 @@ for ll = 1:nLag
 end
 pred = linkglm(mu, fname);
 err = norm(pred - series(:, index), 'fro')/T/nVar;
-normerr = norm(pred - series(:, index), 'fro')/norm(series, 'fro')/T/nVar;
+normerr = norm(pred - series(:, index), 'fro')/norm(series(:, index), 'fro');

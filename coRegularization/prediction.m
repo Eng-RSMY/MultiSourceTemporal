@@ -17,5 +17,5 @@ for i = 1:nType
     end
     pred = linkglm(mu, funcList{i});
     err(i) = norm(pred - series{i}(:, index), 'fro')/T/nVar;
-    normerr(i) = norm(pred - series{i}(:, index), 'fro')/norm(series{i}, 'fro')/T/nVar;
+    normerr(i) = norm(pred - series{i}(:, index), 'fro')/norm(series{i}, 'fro');
 end
