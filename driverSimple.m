@@ -23,7 +23,7 @@ verbose = 1;
 
 TLam = 100;
 lambda = [10, 1e-4];
-nLag = 3;
+nLag = 5;
 T = size(series{1}, 2);
 Ttest = 10;
 index{1} = nLag+1:T-Ttest;
@@ -33,3 +33,5 @@ index{2} = T-Ttest+1:T;
 grad = {@gradGaussian, 'Gaussian'};
 % grad = {@gradGumbel, 'Gumbel'};
 [S, err, normerr] = sparseGLARP(series{1}, lambda(2), nLag, index, grad);
+disp(err)
+disp(normerr)
