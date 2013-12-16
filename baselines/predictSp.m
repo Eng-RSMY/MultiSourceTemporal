@@ -8,4 +8,9 @@ for ll = 1:nLag
 end
 pred = linkglm(mu, fname);
 err = norm(pred - series(:, index), 'fro')/T/nVar;
-normerr = norm(pred - series(:, index), 'fro')/norm(series(:, index), 'fro');
+normerr = norm(pred-series(:, index), 'fro')/T/nVar/mean(mean(abs(series(:, index))));
+
+% hold all
+% for i = 1:4
+%     plot(1:T, pred(i, :), '--', 1:T, series(i, index), '-')
+% end

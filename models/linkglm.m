@@ -4,7 +4,7 @@ switch model
     case 'Gaussian'
         out = mu;
     case 'Gumbel'
-        out = mu - psi(1);
+        out = mu;% - psi(1); % I have no idea why this doesn't work.
     case 'Logistic'
         out  = (1./(1 + exp(-mu)) > 0.5)*1.0;
     otherwise
