@@ -1,4 +1,4 @@
-function [ x history ] = pred_groupLasso( series, nLag, lambda, index)
+function [sols, error] = pred_groupLasso( series, nLag, lambda, index)
 %PREDICT_GL Summary of this function goes here
 %   Detailed explanation goes here
 global verbose
@@ -18,7 +18,7 @@ A = zeros(length(index{1}),nLag*nVar*nType);
 T = length(index{1});
 % training 
 
-% Estimate for each location
+% training dataset
 for t = index{1}
      x = [];
     for  type = 1:nType      
@@ -29,13 +29,7 @@ for t = index{1}
     A(t-nLag,:) = x;
 end
 
-    
-
-b = zeros(T,1);
-b = series{1}(1,index{1})';
-
-[sol history] = group_lasso(A, b,lambda, partition, rho, alpha);
-
+% testing dataset
 A_t = [];
 for t = index{2}
     x = [];
@@ -46,9 +40,22 @@ for t = index{2}
     end
     A_t = [A_t; x];
 end
-pred = A_t*sol;
-true = series{1}(1, index{2})';
-error = norm(true-pred);
+    
+
+sols = [];
+error = zeros(nVar, nType);
+for type = 1:nType
+    for n = 1:nVar
+        b = series{type}(n,index{1})';
+        [sol history] = group_lasso(A, b,lambda, partition, rho, alpha);
+        sols = [sols,sol];
+        pred = A_t*sol;
+        true = series{type}(n, index{2})';
+        error(n,type) = norm(true-pred);
+    end
+end
+
+
     
 
 end
