@@ -29,7 +29,7 @@ function [z, history] = group_lasso(A, b, lambda, p, rho, alpha)
 t_start = tic;
 % global constants and defaults
 
-QUIET    = 0;
+QUIET    = 1;
 MAX_ITER = 1000;
 ABSTOL   = 1e-4;
 RELTOL   = 1e-2;

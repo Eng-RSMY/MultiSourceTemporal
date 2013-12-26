@@ -37,14 +37,28 @@ index{2} = T-Ttest+1:T;
 load location.mat
 % [Sol2, err2, normerr2] = kriging(series, loc, lambda, nLag, index);
 
-lambda = 0.1;
-[sols, error] = pred_groupLasso(series, nLag, lambda,index);
+lambdas = [1, 0.1, 0.01];
+sols = cell(1,3);
+errors = cell(1,3);
+for lambda = lambdas
+    [sol, error] = pred_groupLasso(series, nLag, lambda,index);
+    if verbose
+        fprintf('lambda: %d', lambda);
+        disp(error);
+    end
+    sols = [sols,{sol}]; errors = [sols,{error}];
+    errors = [errors,{error}];
+    
+end
 
 %%
-lambda = [1,0.1]
+lambdas = [1,0.1,0.01];
 grad = {@gradGaussian, 'Gaussian'};
 grad = {@gradGumbel, 'Gumbel'};
-[S, err, normerr] = sparseGLARP(series{1}, lambda(2), nLag, index, grad);
 
+for lamba =  lambdas
 
+    [S, err, normerr] = sparseGLARP(series{3}, lambda(2), nLag, index, grad);
+
+end
 
