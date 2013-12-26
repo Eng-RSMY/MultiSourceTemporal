@@ -31,20 +31,22 @@ index{1} = nLag+1:T-Ttest;
 index{2} = T-Ttest+1:T;
 %%
 
-[Sol, err, normerr] = coreg(series, TLam, lambda, nLag, index);
+% [Sol, err, normerr] = coreg(series, TLam, lambda, nLag, index);
+% 
+% %%
+% load location.mat
+% % [Sol2, err2, normerr2] = kriging(series, loc, lambda, nLag, index);
+% 
+% lambda = 0.1;
+% [sols, error] = pred_groupLasso(series, nLag, lambda,index);
 
 %%
-load location.mat
-% [Sol2, err2, normerr2] = kriging(series, loc, lambda, nLag, index);
-
-lambda = 0.1;
-[sols, error] = pred_groupLasso(series, nLag, lambda,index);
-
-%%
-lambda = [1,0.1]
+lambda = [1,0.1];
 grad = {@gradGaussian, 'Gaussian'};
-grad = {@gradGumbel, 'Gumbel'};
-[S, err, normerr] = sparseGLARP(series{1}, lambda(2), nLag, index, grad);
+% grad = {@gradGumbel, 'Gumbel'};
+% [S, err, normerr] = sparseGLARP(series{1}, lambda(2), nLag, index, grad);
+TLam = 100;
+[Sol, err, normerr] = lowrankGLARP(series{1}, TLam, nLag, index, grad);
 
 
 
