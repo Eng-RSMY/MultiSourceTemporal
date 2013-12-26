@@ -41,12 +41,40 @@ index{2} = T-Ttest+1:T;
 % [sols, error] = pred_groupLasso(series, nLag, lambda,index);
 
 %%
+<<<<<<< .merge_file_CW66YG
+load location.mat
+% [Sol2, err2, normerr2] = kriging(series, loc, lambda, nLag, index);
+
+lambdas = [1, 0.1, 0.01];
+sols = cell(1,3);
+errors = cell(1,3);
+for lambda = lambdas
+    [sol, error] = pred_groupLasso(series, nLag, lambda,index);
+    if verbose
+        fprintf('lambda: %d', lambda);
+        disp(error);
+    end
+    sols = [sols,{sol}]; errors = [sols,{error}];
+    errors = [errors,{error}];
+    
+end
+
+%%
+lambdas = [1,0.1,0.01];
+grad = {@gradGaussian, 'Gaussian'};
+grad = {@gradGumbel, 'Gumbel'};
+=======
 lambda = [1,0.1];
 grad = {@gradGaussian, 'Gaussian'};
 % grad = {@gradGumbel, 'Gumbel'};
 % [S, err, normerr] = sparseGLARP(series{1}, lambda(2), nLag, index, grad);
 TLam = 100;
 [Sol, err, normerr] = lowrankGLARP(series{1}, TLam, nLag, index, grad);
+>>>>>>> .merge_file_VTWzRr
 
+for lamba =  lambdas
 
+    [S, err, normerr] = sparseGLARP(series{3}, lambda(2), nLag, index, grad);
+
+end
 
