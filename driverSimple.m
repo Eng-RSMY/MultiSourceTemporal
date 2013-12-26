@@ -31,9 +31,17 @@ index{1} = nLag+1:T-Ttest;
 index{2} = T-Ttest+1:T;
 %%
 
-[Sol, err, normerr] = coreg(series, TLam, lambda, nLag, index);
+% [Sol, err, normerr] = coreg(series, TLam, lambda, nLag, index);
+% 
+% %%
+% load location.mat
+% % [Sol2, err2, normerr2] = kriging(series, loc, lambda, nLag, index);
+% 
+% lambda = 0.1;
+% [sols, error] = pred_groupLasso(series, nLag, lambda,index);
 
 %%
+<<<<<<< .merge_file_CW66YG
 load location.mat
 % [Sol2, err2, normerr2] = kriging(series, loc, lambda, nLag, index);
 
@@ -55,6 +63,14 @@ end
 lambdas = [1,0.1,0.01];
 grad = {@gradGaussian, 'Gaussian'};
 grad = {@gradGumbel, 'Gumbel'};
+=======
+lambda = [1,0.1];
+grad = {@gradGaussian, 'Gaussian'};
+% grad = {@gradGumbel, 'Gumbel'};
+% [S, err, normerr] = sparseGLARP(series{1}, lambda(2), nLag, index, grad);
+TLam = 100;
+[Sol, err, normerr] = lowrankGLARP(series{1}, TLam, nLag, index, grad);
+>>>>>>> .merge_file_VTWzRr
 
 for lamba =  lambdas
 

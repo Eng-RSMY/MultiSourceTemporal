@@ -2,7 +2,7 @@ function [S, err, normerr] = sparseGLARP(series, lambda, nLag, index, grad)
 global verbose
 n = size(series, 1);
 delta = 1e-1;
-MaxIter = 2000;
+MaxIter = 300;
 
 % Initialize the parameters
 S = cell(nLag, 1);
