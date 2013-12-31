@@ -9,7 +9,9 @@
 % 
 % nLoc = size(data, 1);
 
-function [pp1, pp2] = locationSimilarity(Sol, Loc)
+
+function [pp1, pp2] =  locationSimilarity(Sol, Loc)
+
 nLoc = size(Loc,1);
 names = Loc;
 
@@ -42,3 +44,4 @@ pp2 = corrcoef([distance(:), L2dist(:)]);
 pp1 = corrcoef([distance(:), L1dist(:)]);
 
 fprintf('L1dist = %f\nL2dist = %f\n', pp1(1, 2), pp2(1, 2))
+end

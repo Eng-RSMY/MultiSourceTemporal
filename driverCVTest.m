@@ -6,6 +6,11 @@ addpath(genpath('./'))
 
 load temp.mat
 obs = obs';
+
+% load('./data/Foursquare/active_checkin.mat');
+% obs = active_checkin_counts;
+
+
 obs = obs - mean(obs, 2)*ones(1, size(obs, 2));
 obs = obs./(std(obs, 0, 2)*ones(1, size(obs, 2)));
 series = obs;

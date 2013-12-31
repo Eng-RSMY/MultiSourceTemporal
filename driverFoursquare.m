@@ -1,6 +1,10 @@
 clear;
 clc;
+<<<<<<< HEAD
 addpath(genpath('./'))
+=======
+addpath('./data/Foursquare/')
+>>>>>>> tmp
 global verbose
 verbose = 1;
 
