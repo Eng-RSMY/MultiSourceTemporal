@@ -1,6 +1,6 @@
 clear;
 clc;
-addpath('./data/Foursquare/')
+addpath(genpath('./'))
 global verbose
 verbose = 1;
 
