@@ -1,5 +1,6 @@
 % clear all
 clc
+clear
 close all
 
 addpath(genpath('./'))
@@ -30,12 +31,21 @@ Ttest = 10;
 index{1} = nLag+1:T-Ttest;
 index{2} = T-Ttest+1:T;
 %%
-
+% [ Y_pred, A, C, norm_err  ] = pred_STRE (series, index);
+% 
+% %%
+% 
 % [Sol, err, normerr] = coreg(series, TLam, lambda, nLag, index);
 % 
 % %%
 % load location.mat
-% % [Sol2, err2, normerr2] = kriging(series, loc, lambda, nLag, index);
+% [Sol2, err2, normerr2] = kriging(series, loc, lambda, nLag, index);
 % 
 % lambda = 0.1;
 % [sols, error] = pred_groupLasso(series, nLag, lambda,index);
+
+%%
+
+grad = {@gradPoisson, 'Poisson'};
+[Sol, err, normerr] = sparseGLARP(series, Lambda_1, nLag, index, grad);
+

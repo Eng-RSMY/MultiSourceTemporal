@@ -8,6 +8,7 @@ load synth.mat
 
 global verbose
 verbose = 0;
+
 addpath('../../Hidden/Experiments/comP/func')
 method = 'poissonHidden'; 
 L = 5;
