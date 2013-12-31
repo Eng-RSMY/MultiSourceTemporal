@@ -9,7 +9,7 @@
 % 
 % nLoc = size(data, 1);
 
-[pp1, pp2] =  function locationSimilarity(Sol, Loc)
+function [pp1, pp2] =  locationSimilarity(Sol, Loc)
 nLoc = size(Loc,1);
 names = Loc;
 
