@@ -1,13 +1,17 @@
 % The goal is to find the similarity between the L1 and L2 distance and the
 % geometrical distance
-close all
-clear all
-clc
+% close all
+% clear all
+% clc
+% 
+% load('../tminP3.mat')		% This containts the location information for the stations
+% load new_s_resultTmax.mat	% This contains the Sol matrices
+% 
+% nLoc = size(data, 1);
 
-load('../tminP3.mat')		% This containts the location information for the stations
-load new_s_resultTmax.mat	% This contains the Sol matrices
-
-nLoc = size(data, 1);
+function [pp1, pp2] =  locationSimilarity(Sol, Loc)
+nLoc = size(Loc,1);
+names = Loc;
 
 % Here we create a nLoc x nLoc matrix of distance among the stations
 % L2-distance has been used.
@@ -38,3 +42,4 @@ pp2 = corrcoef([distance(:), L2dist(:)]);
 pp1 = corrcoef([distance(:), L1dist(:)]);
 
 fprintf('L1dist = %f\nL2dist = %f\n', pp1(1, 2), pp2(1, 2))
+end

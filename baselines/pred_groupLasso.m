@@ -56,7 +56,7 @@ for type = 1:nType
 end
 
 
-[err, norm_err  ] =  eval_groupLasso(series, sols, nLag, index)
+[err, norm_err  ] =  eval_groupLasso(series, sols, nLag, index);
 
     
 
