@@ -42,5 +42,8 @@ for i = 1:MaxIter
 end
 if verbose; fprintf('\n');
 figure; plot(obj); end
-
-[err, normerr] = predictSp(series, S, b, index{2}, grad{2});
+if isempty(index{2})
+    err = 0;
+else
+    [err, normerr] = predictSp(series, S, b, index{2}, grad{2});
+end
