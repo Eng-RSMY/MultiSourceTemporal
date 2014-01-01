@@ -15,7 +15,7 @@ nLag = 1;   % To avoid high dimensionality
 grad = {@gradGaussian, 'Gaussian'};
 
 % For crossvalidation
-Lambda_S = logspace(-7, -2, 24);
+Lambda_S = logspace(-7, -2, 20);
 nCV = 6;
 index = cell(nCV, 1);
 ind = nLag + randperm(T-nLag);
@@ -37,7 +37,6 @@ for k = 1:nType
             for ll = 1:nCV;  if ll ~= i;  ind{1} = [ind{1}, index{ll}];  end;  end
             [~, ~, normerr(i)] = sparseGLARP(series{k}, lambda, nLag, ind, grad);
         end
-        fprintf('Iteration: %d\n', j)
         errL(j) = sum(normerr);
     end
     [~, ix] = min(errL);
@@ -48,6 +47,6 @@ for k = 1:nType
     index{2} = T;
     tempSol = sparseGLARP(series{k}, Lambda_1, nLag, index, grad);
     Sol{k} = tempSol{1};
+    fprintf('Iteration: %d\n', k)
+    save('climate17Results.mat', 'Sol')
 end
-
-save('climate17Results.mat', 'Sol')
