@@ -1,11 +1,9 @@
 function [S, err, normerr] = sparseGLARP(series, lambda, nLag, index, grad)
 global verbose
 n = size(series, 1);
-<<<<<<< HEAD
-delta = 1e-5;
-=======
-delta = 1e-2;
->>>>>>> tmp
+
+delta = 5*1e-5;
+
 MaxIter = 300;
 
 % Initialize the parameters
