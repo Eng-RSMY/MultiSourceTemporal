@@ -1,5 +1,6 @@
 function [S, err, normerr] = sparseGLARP(series, lambda, nLag, index, grad)
 global verbose
+global draw
 n = size(series, 1);
 
 delta = 1e-1;
@@ -40,7 +41,8 @@ for i = 1:MaxIter
         fprintf('%5d ', i);
     end
 end
-if verbose; fprintf('\n');
-figure; plot(obj); end
+if verbose; fprintf('\n'); end
+
+if draw figure; plot(obj); end
 
 [err, normerr] = predictSp(series, S, b, index{2}, grad{2});
