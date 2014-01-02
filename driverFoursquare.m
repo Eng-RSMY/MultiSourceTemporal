@@ -61,7 +61,7 @@ for k = 1:length(series)
     Lambda_1 = Lambda_S(ix(end));
     
     % Final Evaluation
-    Sol = sparseGLARP(series{k}, Lambda_1, nLag, findex, grad);
+    Sol{k} = sparseGLARP(series{k}, Lambda_1, nLag, findex, grad);
     fprintf('Iteration: %d\n', k)
     save('tensor_4SQ_Results.mat', 'Sol')
 end
