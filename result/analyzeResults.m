@@ -4,8 +4,8 @@
 clc
 clear
 
-load climate17Results.mat
-
+% load climate17Results.mat
+load tensor_4SQ_Results
 Sol(4) = [];
 nType = length(Sol);
 
