@@ -30,3 +30,47 @@ scatter(checkin_loc(:,1),checkin_loc(:,2))
 
 spectrogram(day_sum-mean(day_sum), 128);
 
+%%
+% choose 200 active users
+thres = 200;
+checkin_sum = sum(active_checkin_counts,2);
+[~,order ] = sort(checkin_sum,'descend');
+
+top_users = active_user_IDs (order(1:thres));
+
+dlmwrite('/Users/roseyu/Downloads/DataSet/Foursquare/top_users.txt',top_users);
+%%
+N = length(Top_Common_User);
+bigN = length(active_checkin_counts);
+idx = zeros(N,1)
+for  n = 1:N
+    idx(n,1) = find(active_user_IDs==Top_Common_User(n));
+end
+
+select_idx = zeros(bigN,1); 
+
+for n = 1:N
+    select_idx(idx(n)) = 1;
+end
+    
+select_idx  = logical (select_idx);  
+top_checkin = active_checkin_counts(select_idx,:);
+top_sum = sum(sum(top_checkin,2));
+
+%%
+nC = 15;
+nU = 121;
+tensor_checkin_counts = cell(nC,1);
+for c = 1:nC
+    start_idx = (c-1)*nU+1;
+    end_idx = c*nU;
+    
+    tensor_checkin_counts{c} = checkin_counts(start_idx:end_idx,:);
+end
+
+%%
+% for c = 1:nC
+%     sum_check(c) = sum(sum(tensor_checkin_counts{c}));
+% end
+
+tmp = sum(tensor_checkin_counts{1});
