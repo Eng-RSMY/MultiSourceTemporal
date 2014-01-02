@@ -17,6 +17,8 @@ Lambda_S = logspace(-7, -2, 20);
 % For crossvalidation
 
 
+findex{1} = nLag+1:T;
+findex{2} = [];
 errL = zeros(size(Lambda_S));
 for k = 1:nType
     T = size(series{k}, 2);
@@ -45,9 +47,7 @@ for k = 1:nType
     Lambda_1 = Lambda_S(ix(end));
     
     % Final Evaluation
-    index{1} = nLag+1:T;
-    index{2} = [];
-    tempSol = sparseGLARP(series{k}, Lambda_1, nLag, index, grad);
+    tempSol = sparseGLARP(series{k}, Lambda_1, nLag, findex, grad);
     Sol{k} = tempSol{1};
     fprintf('Iteration: %d\n', k)
     save('genomeResults.mat', 'Sol')

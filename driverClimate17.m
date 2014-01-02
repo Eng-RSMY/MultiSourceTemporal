@@ -25,6 +25,8 @@ for i = 1:nCV-1
 end
 index{nCV} = ind((nCV-1)*step+1:end);
 
+findex{1} = nLag+1:T-1;
+findex{2} = T;
 errL = zeros(size(Lambda_S));
 for k = 1:nType
     % Do the cross validation
@@ -43,9 +45,7 @@ for k = 1:nType
     Lambda_1 = Lambda_S(ix(end));
     
     % Final Evaluation
-    index{1} = nLag+1:T-1;
-    index{2} = T;
-    tempSol = sparseGLARP(series{k}, Lambda_1, nLag, index, grad);
+    tempSol = sparseGLARP(series{k}, Lambda_1, nLag, findex, grad);
     Sol{k} = tempSol{1};
     fprintf('Iteration: %d\n', k)
     save('climate17Results.mat', 'Sol')
