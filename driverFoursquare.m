@@ -11,7 +11,7 @@ global verbose
 verbose = 1;
 
 global draw
-draw = 0;
+draw = 1;
 
 nType = length(series);
 Sol = cell(nType, 1);
@@ -35,22 +35,22 @@ errL = zeros(size(Lambda_S));
 
 tic 
 for k = 1:1
-    % Do the cross validation
-    parfor j = 1:length(Lambda_S)
-        normerr = zeros(nCV, 1);
-        lambda = Lambda_S(j);
-        
-        for i = 1:nCV
-            ind = cell(2, 1); ind{1} = []; ind{2} = index{i};
-            for ll = 1:nCV;  if ll ~= i;  ind{1} = [ind{1}, index{ll}];  end;  end
-            [~, ~, normerr(i)] = sparseGLARP(series{k}, lambda, nLag, ind, grad);
-        end
-        errL(j) = sum(normerr);
-    end
-    [~, ix] = min(errL);
-    Lambda_1 = Lambda_S(ix(end));
+%     % Do the cross validation
+%     parfor j = 1:length(Lambda_S)
+%         normerr = zeros(nCV, 1);
+%         lambda = Lambda_S(j);
+%         
+%         for i = 1:nCV
+%             ind = cell(2, 1); ind{1} = []; ind{2} = index{i};
+%             for ll = 1:nCV;  if ll ~= i;  ind{1} = [ind{1}, index{ll}];  end;  end
+%             [~, ~, normerr(i)] = sparseGLARP(series{k}, lambda, nLag, ind, grad);
+%         end
+%         errL(j) = sum(normerr);
+%     end
+%     [~, ix] = min(errL);
+%     Lambda_1 = Lambda_S(ix(end));
     
- 
+    Lambda_1 = 1e-5;
     % Final Evaluation
     index{1} = nLag+1:T-1;
     index{2} = T;

@@ -4,8 +4,13 @@
 clc
 clear
 
+<<<<<<< HEAD
 % load climate17Results.mat
 load tensor_4SQ_Results
+=======
+load genomeResults.mat
+
+>>>>>>> 179f34dde68fc8c75afb9eed8971f870b3ecfb18
 Sol(4) = [];
 nType = length(Sol);
 

@@ -3,9 +3,9 @@ global verbose
 global draw
 n = size(series, 1);
 
-delta = 1e-5;
+delta = 5*1e-3;
 
-MaxIter = 300;
+MaxIter = 500;
 
 % Initialize the parameters
 S = cell(nLag, 1);
