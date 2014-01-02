@@ -3,7 +3,7 @@ global verbose
 global draw
 n = size(series, 1);
 
-delta = 1e-1;
+delta = 1e-5;
 
 MaxIter = 300;
 

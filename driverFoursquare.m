@@ -20,8 +20,8 @@ nLag = 5;   % To avoid high dimensionality
 grad = {@gradPoisson, 'Poisson'};
 
 % For crossvalidation
-% Lambda_S = logspace(-7, -2, 20);
-Lambda_S = [0.01,0.1,1];
+Lambda_S = logspace(-6, -3, 5);
+
 nCV = 5;
 index = cell(nCV, 1);
 ind = nLag + randperm(T-nLag);
@@ -32,7 +32,9 @@ end
 index{nCV} = ind((nCV-1)*step+1:end);
 
 errL = zeros(size(Lambda_S));
-for k = 1:nType
+
+tic 
+for k = 1:1
     % Do the cross validation
     parfor j = 1:length(Lambda_S)
         normerr = zeros(nCV, 1);
@@ -48,6 +50,7 @@ for k = 1:nType
     [~, ix] = min(errL);
     Lambda_1 = Lambda_S(ix(end));
     
+ 
     % Final Evaluation
     index{1} = nLag+1:T-1;
     index{2} = T;
@@ -56,3 +59,5 @@ for k = 1:nType
     fprintf('Iteration: %d\n', k)
     save('tensor_4SQ_Results.mat', 'Sol')
 end
+
+toc
