@@ -17,11 +17,12 @@ Lambda_S = logspace(-7, -2, 20);
 % For crossvalidation
 
 
-findex{1} = nLag+1:T;
-findex{2} = [];
+
 errL = zeros(size(Lambda_S));
 for k = 1:nType
     T = size(series{k}, 2);
+    findex{1} = nLag+1:T;
+    findex{2} = [];
     nCV = 2;
     index = cell(nCV, 1);
     ind = nLag + randperm(T-nLag);

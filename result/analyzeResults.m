@@ -4,8 +4,13 @@
 clc
 clear
 
-load '4Sq_Results.mat'
-
+load 'genomeResults.mat'
+% tSol = Sol;
+% for i = 1:length(tSol)
+%     tSol{i} = cell(1);
+%     tSol{i}{1} = Sol{i};
+% end
+% Sol = tSol;
 
 nType = length(Sol);
 nLag = length(Sol{1});

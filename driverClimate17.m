@@ -11,7 +11,7 @@ verbose = 0;
 nType = length(series);
 Sol = cell(nType, 1);
 T = size(series{1}, 2);
-nLag = 1;   % To avoid high dimensionality
+nLag = 2;   % To avoid high dimensionality
 grad = {@gradGaussian, 'Gaussian'};
 
 % For crossvalidation
@@ -45,8 +45,7 @@ for k = 1:nType
     Lambda_1 = Lambda_S(ix(end));
     
     % Final Evaluation
-    tempSol = sparseGLARP(series{k}, Lambda_1, nLag, findex, grad);
-    Sol{k} = tempSol{1};
+    Sol{k} = sparseGLARP(series{k}, Lambda_1, nLag, findex, grad);
     fprintf('Iteration: %d\n', k)
     save('climate17Results.mat', 'Sol')
 end
