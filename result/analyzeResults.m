@@ -4,7 +4,7 @@
 clc
 clear
 
-load climate17Results.mat
+load genomeResults.mat
 
 Sol(4) = [];
 nType = length(Sol);
