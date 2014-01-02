@@ -8,7 +8,7 @@ series =  tensor_checkin_counts;
 
 
 global verbose
-verbose = 1;
+verbose = 0;
 
 global draw
 draw = 0;
