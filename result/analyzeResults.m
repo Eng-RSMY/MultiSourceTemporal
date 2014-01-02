@@ -4,37 +4,53 @@
 clc
 clear
 
-<<<<<<< HEAD
-% load climate17Results.mat
-load tensor_4SQ_Results
-=======
-load genomeResults.mat
+load '4Sq_Results.mat'
 
->>>>>>> 179f34dde68fc8c75afb9eed8971f870b3ecfb18
-Sol(4) = [];
+
 nType = length(Sol);
+nLag = length(Sol{1});
+nVar  = size(Sol{1}{1},2);
 
-solution = zeros(size(Sol{1}, 1), size(Sol{1}, 2), nType);
+%%
+solution = zeros(nVar, nVar, nType);
+
+S1_lag = cell(nLag,1);
+
+
 for i = 1:nType
-    solution(:, :, i) = Sol{i};
+    Sol_Type = Sol{i};
+    Sol_Lag = zeros(nVar,nVar,nLag);
+    for j = 1:nLag
+        Sol_Lag(:,:,j) = Sol_Type{j};
+    end
+    Sol_Lag = squeeze(mean(Sol_Lag,3));
+    solution(:,:,i) = Sol_Lag;
 end
+        
 
 %% Method 1: Structure of the mean
+
 face1 = squeeze(mean(solution, 1));
 face2 = squeeze(mean(solution, 2));
 face3 = squeeze(mean(solution, 3));
-subplot(1, 3, 1)
 S1 = svd(face1);
+S2  = svd(face2);
+S3 = svd(face3);
+subplot(1, 3, 1)
 % stem(S1)
 stairs([0; cumsum(sort(S1/sum(S1), 'descend'))])
+
 subplot(1, 3, 2)
-S2 = svd(face2);
-% stem(S2)
+ % stem(S2)
 stairs([0; cumsum(sort(S2/sum(S2), 'descend'))])
+
 subplot(1, 3, 3)
-S3 = svd(face3);
 % stem(S3)
 stairs([0; cumsum(sort(S3/sum(S3), 'descend'))])
+
+
+
+
 %% Method 2: Mean of the individual structures
 figure
 subplot(1, 3, 1)
