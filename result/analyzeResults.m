@@ -4,7 +4,8 @@
 clc
 clear
 
-load 'genomeResults.mat'
+% load 'genomeResults.mat'
+load 4Sq_Results.mat
 % tSol = Sol;
 % for i = 1:length(tSol)
 %     tSol{i} = cell(1);
@@ -35,9 +36,13 @@ end
 
 %% Method 1: Structure of the mean
 
-face1 = squeeze(mean(solution, 1));
-face2 = squeeze(mean(solution, 2));
-face3 = squeeze(mean(solution, 3));
+% face1 = squeeze(mean(solution, 1));
+% face2 = squeeze(mean(solution, 2));
+% face3 = squeeze(mean(solution, 3));
+
+face1 = flatten(solution,1);
+face2 = flatten(solution,2);
+face3 = flatten(solution,3);
 S1 = svd(face1);
 S2  = svd(face2);
 S3 = svd(face3);
