@@ -47,7 +47,7 @@ end
         
 
 %% Method 1: Structure of the mean
-
+            
 % face1 = squeeze(mean(solution, 1));
 % face2 = squeeze(mean(solution, 2));
 % face3 = squeeze(mean(solution, 3));
