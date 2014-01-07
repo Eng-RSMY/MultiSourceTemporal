@@ -6,10 +6,13 @@
 % beta: hyper_para, lambda: weight of regularizaer
 % outerNiTPre: iteration number 100 is enough
 clear all;
-load 'climateP17'
+% load 'climateP17'
 % Climate dataset has  125 locations in 17 agents, 156 days of training
 % data. Task: predict the values for certain location and certain agents
 
+
+load 'tensor_checkin_counts'
+% Genomic dataset has 798 location(??) for 10 speciest, in 6 time stamp
 
 nType = length(series);
 [nLoc, nTime] = size(series{1});
@@ -44,8 +47,8 @@ end
 fprintf('Data Constructed');
 
 %%
-nTrainSample = 100;
-nTestSample = 51;
+nTrainSample = ceil(nSample/3*2);
+nTestSample = nSample-nTrainSample;
 TrainIdx = randsample(nSample, nTrainSample);
 TestIdx = setdiff(1:nSample,TrainIdx);
 
