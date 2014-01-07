@@ -13,6 +13,12 @@
 % Copyright(c) 2010 Ryota Tomioka
 % This software is distributed under the MIT license. See license.txt
 
+% input:
+
+% X: zeros
+% I: tensor subscripts
+% yy: ground truth random tensor 
+% lambda, eta, tol: parameters
 
 function [X,Z,fval,gval]=tensormix_adm(X, I, yy, lambda, eta, tol, verbose)
 
@@ -111,8 +117,13 @@ while 1
     kk=kk+1;
 end
 
+<<<<<<< HEAD
 fprintf('[%d] fval=%g gval=%g viol=%s\n', kk, fval(kk), ...
     gval(kk), printvec(viol));
+=======
+fprintf('Mixture [%d] fval=%g gval=%g viol=%s\n', kk, fval(kk), ...
+        gval(kk), printvec(viol));
+>>>>>>> 88f51870f2d75a52cc85e344b4694a44ff269de2
 
 %fprintf('[%d] fval=%g dval=%g fact=%g\n', kk, fval(kk), ...
 %        dval(kk), fact);

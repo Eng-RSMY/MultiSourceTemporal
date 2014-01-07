@@ -4,7 +4,16 @@
 clc
 clear
 
-load 'genomeResults.mat'
+% load 'genomeResults.mat'
+load 'climate17Results.mat'
+% nType = length(Sol);
+% nVar = size(Sol{1},1);
+% solution = zeros(nVar, nVar,nType);
+% for i = 1:nType
+%     solution(:,:,i) = Sol{i};
+% end
+
+%%
 % tSol = Sol;
 % for i = 1:length(tSol)
 %     tSol{i} = cell(1);
@@ -12,9 +21,13 @@ load 'genomeResults.mat'
 % end
 % Sol = tSol;
 
+% load 4Sq_Results.mat
+% 
 nType = length(Sol);
 nLag = length(Sol{1});
 nVar  = size(Sol{1}{1},2);
+
+
 
 %%
 solution = zeros(nVar, nVar, nType);
@@ -34,10 +47,14 @@ end
         
 
 %% Method 1: Structure of the mean
+            
+% face1 = squeeze(mean(solution, 1));
+% face2 = squeeze(mean(solution, 2));
+% face3 = squeeze(mean(solution, 3));
 
-face1 = squeeze(mean(solution, 1));
-face2 = squeeze(mean(solution, 2));
-face3 = squeeze(mean(solution, 3));
+face1 = flatten(solution,1);
+face2 = flatten(solution,2);
+face3 = flatten(solution,3);
 S1 = svd(face1);
 S2  = svd(face2);
 S3 = svd(face3);

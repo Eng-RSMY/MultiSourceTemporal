@@ -122,6 +122,6 @@ while 1
   kk=kk+1;
 end
 
-fprintf('k=%d fval=%g gnorm=%g viol=%s\n',...
+fprintf('Constraint [%d] fval=%g gnorm=%g viol=%s\n',...
         kk, fval(kk), gval(kk), printvec(viol));
   
