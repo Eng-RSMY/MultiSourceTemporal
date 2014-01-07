@@ -12,15 +12,17 @@
 % Copyright(c) 2010 Ryota Tomioka
 % This software is distributed under the MIT license. See license.txt
 
-
-nrep=10;
+clear all;
+clc;
+nrep=1;
 nsample = 1;
 sz=[50 50 20];
-trfrac=0.05:0.05:0.95;
+trfrac=0.1:0.2:0.95;
 
 tol=1e-3;
 
-methods = {'matrix','constraint','mixture','tucker','tuckertrue'};
+% methods = {'matrix','constraint','mixture','tucker','tuckertrue'};
+methods = {'constraint','mixture'};
 base_err = cumsum([0, 3, 1, 1, 1]);
 
 for ll=1:nsample
@@ -38,7 +40,8 @@ for ll=1:nsample
       ind_test=setdiff(1:prod(sz), ind);
       [I,J,K]=ind2sub(sz,ind);
       yy=X0(ind);
-
+      
+      fprintf('Fraction %d\n',trfrac(ii));
       for mm=1:length(methods)
         switch(methods{mm})
          case 'matrix'
@@ -57,7 +60,7 @@ for ll=1:nsample
           [X,Z,Y,fval,gvals]=tensorconst_adm(zeros(sz),{I,J,K},yy,0,1, tol);
           time(kk,ii,mm)=toc;
           gval(kk,ii,mm)=gvals(end);
-          err(kk,ii,base_err(mm)+1)=norm(X(ind_test)-X0(ind_test));
+          err(kk,ii,mm)=norm(X(ind_test)-X0(ind_test));
          case 'mixture'
           %% Mixture
           tic;
@@ -65,7 +68,7 @@ for ll=1:nsample
                                             0, 1, tol);
           time(kk,ii,mm)=toc;
           gval(kk,ii,mm)=gval2(end);
-          err(kk,ii,base_err(mm)+1)=norm(X2(ind_test)-X0(ind_test));
+          err(kk,ii,mm)=norm(X2(ind_test)-X0(ind_test));
          case {'tucker','tuckertrue'}
           %% Tucker
           Xobs=zeros(sz);
@@ -86,19 +89,26 @@ for ll=1:nsample
          error('Method [%s] unknown!', methods{mm});
         end
       end
-     fprintf('frac=%g\nerr1=%s  err2=%g  err3=%g  err4=%g err5=%g\n',...
-              trfrac(ii), printvec(err(kk,ii,1:3)),...
-              err(kk,ii,4), err(kk,ii,5), err(kk,ii,6), err(kk,ii,7));
-      fprintf('time1=%g      time2=%g time3=%g time4=%g time5=%g\n', time(kk,ii,1),time(kk,ii,2),time(kk,ii,3),time(kk,ii,4),time(kk,ii,5));
+% %      fprintf('frac=%g\nerr1=%s  err2=%g  err3=%g  err4=%g err5=%g\n',...
+%               trfrac(ii), printvec(err(kk,ii,1:3)),...
+%               err(kk,ii,4), err(kk,ii,5), err(kk,ii,6), err(kk,ii,7));
+%       fprintf('time1=%g      time2=%g time3=%g time4=%g time5=%g\n', time(kk,ii,1),time(kk,ii,2),time(kk,ii,3),time(kk,ii,4),time(kk,ii,5));
       end
   end
 
-  file_save=sprintf('result_compare5_new_%d_%d_%d_%d_%d_%d.mat',sz(1),sz(2),sz(3),dtrue(1),dtrue(2),dtrue(3));
+%   file_save=sprintf('result_compare5_new_%d_%d_%d_%d_%d_%d.mat',sz(1),sz(2),sz(3),dtrue(1),dtrue(2),dtrue(3));
 
 
-  save(file_save,'nrep', 'sz', 'dtrue', 'methods','err', 'trfrac','gval','time');
+%   save(file_save,'nrep', 'sz', 'dtrue', 'methods','err', 'trfrac','gval','time');
    
     
 end
 
-plot_tensorworkshop10
+% plot_tensorworkshop10
+%%
+subplot(1,2,1);
+plot (trfrac,squeeze(err)); title('recover error');
+legend(methods);
+subplot(1,2,2);
+plot (trfrac,squeeze(time));title('running time');
+legend(methods);
