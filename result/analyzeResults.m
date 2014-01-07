@@ -4,8 +4,16 @@
 clc
 clear
 
-load 'genomeResults.mat'
+% load 'genomeResults.mat'
+load 'climate17Results.mat'
+% nType = length(Sol);
+% nVar = size(Sol{1},1);
+% solution = zeros(nVar, nVar,nType);
+% for i = 1:nType
+%     solution(:,:,i) = Sol{i};
+% end
 
+%%
 % tSol = Sol;
 % for i = 1:length(tSol)
 %     tSol{i} = cell(1);
@@ -14,9 +22,12 @@ load 'genomeResults.mat'
 % Sol = tSol;
 
 % load 4Sq_Results.mat
+% 
 nType = length(Sol);
 nLag = length(Sol{1});
 nVar  = size(Sol{1}{1},2);
+
+
 
 %%
 solution = zeros(nVar, nVar, nType);
