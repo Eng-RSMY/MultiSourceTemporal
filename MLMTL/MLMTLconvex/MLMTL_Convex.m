@@ -41,12 +41,17 @@ sumA=tenzeros(indicators);
 sumB=tenzeros(indicators); 
 oldW=Inf(nAttrs, nTotalTasks);
 oit=0;
+
+%Main Loop 
 while true    
     oit=oit+1;
-    % Optimizing over X
+    % Optimizing over X- W in the paper 
     matSumAux=tenmat(sumA, 1) + beta*tenmat(sumB, 1);
     matSumAux=matSumAux.data;
+    
     matW=zeros(nAttrs, nTotalTasks);
+    
+    % finding the w_t for each task
     for t=1:nTotalTasks
         matW(:,t)=(XX_plus_betaNI{t})\(1/lambda*XY{t} + matSumAux(:,t));
     end
@@ -54,6 +59,7 @@ while true
    
     sumA=tenzeros(indicators); 
     sumB=tenzeros(indicators); 
+    
     for n=1:nModes
 %         [oit n]
         % Optimizing over B
@@ -66,7 +72,7 @@ while true
         B{n}=permute(BTensor, [2:n, 1, n+1:nModes]);
         sumB=sumB+B{n};
         
-        % Optimizing over A
+        % Optimizing over A - C in the paper
         A{n}=A{n}-beta*(W-B{n});
         sumA=sumA+A{n};
     end
@@ -82,13 +88,13 @@ while true
     oldW=Wmat;
 end
 
-disp('L_Inf');
+% disp('L_Inf');
 for i=1:nModes
     mat=tenmat(W, i);
     [u l v]=mySVD(mat.data);
-    max(diag(l))
+    max(diag(l));
 end
-norm(mat.data, 'fro')
+% norm(mat.data, 'fro');
 
 tensorW=W;
 W=tenmat(full(W), 1);

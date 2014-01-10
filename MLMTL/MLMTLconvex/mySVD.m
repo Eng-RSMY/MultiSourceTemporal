@@ -8,7 +8,7 @@ if nRows>=nCols
     return
 end
 AA=A*A';
-[u l2 v2]=svd(AA);
+[u l2 v2]=svds(AA);
 l=diag(sqrt(diag(l2)));
 invl2=diag(1./sqrt(diag(l2)));
 v=(invl2*u'*A)';

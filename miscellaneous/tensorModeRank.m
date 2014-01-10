@@ -3,11 +3,17 @@ function [ p1,p2,p3 ] = tensorModeRank( X )
 %   X is a three-way tensor. this function analyze the structures of the
 %   tensor
 
-face1 = flatten(X,1);
-face2 = flatten(X,2);
-face3 = flatten(X,3);
+% face1 = flatten(X,1);
+% face2 = flatten(X,2);
+% face3 = flatten(X,3);
+
+
+face1 = squeeze(mean(X,1));
+face2 = squeeze(mean(X,2));
+face3 = squeeze(mean(X,3));
+
 S1 = svd(face1);
-S2  = svd(face2);
+S2 = svd(face2);
 S3 = svd(face3);
 
 subplot(1, 3, 1)
