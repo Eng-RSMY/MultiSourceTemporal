@@ -97,3 +97,24 @@ for i = 1:size(solution, 3)
 end
 % stem(S3/size(solution, 3))
 stairs([0; cumsum(sort(S3/sum(S3), 'descend'))])
+
+%%
+% Data matrix
+clear all;
+% load 'climateP17.mat'
+% load 'tensor_checkin_counts.mat'
+load 'genomeP.mat'
+
+
+nTask = length(series);
+[nVar, nTime] = size(series{1});
+nTime = 8;
+X = zeros([nVar, nTime, nTask]);
+for i = 1:nTask
+    tmp = series{i};
+    [row,col] = size(tmp);
+    X(:,:,i) = [tmp,zeros(row,nTime-col)];
+end
+
+[p1,p2,p3] =tensorModeRank(X);
+    
