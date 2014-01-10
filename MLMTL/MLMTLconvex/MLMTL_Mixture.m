@@ -42,6 +42,8 @@ end
 sumB=tenzeros(indicators); 
 oldW=Inf(nAttrs, nTotalTasks);
 oit=0;
+
+MaxIterCD = nModes;
 while true    
     oit=oit+1;
     % Optimizing over W
@@ -56,6 +58,10 @@ while true
 %     sumA=tenzeros(indicators); 
     sumBlast = sumB;
     sumB=tenzeros(indicators); 
+    
+    % ADD iteration over NModes
+    for iter = 1: 
+    
     for n=1:nModes
 %         [oit n]
         % Optimizing over B
