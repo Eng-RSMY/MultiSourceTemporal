@@ -110,7 +110,7 @@ while 1
    break;
   end
   
-  if kk>1000
+  if kk>100
     break;
   end
 
