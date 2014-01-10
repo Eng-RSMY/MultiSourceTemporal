@@ -91,20 +91,22 @@ fprintf('Train/Test Splitted\n');
 
 %% train (TBD: cross validation)
 
-beta = 0.1;
+beta = 1e-2;
 lambda = 1e-3;
-outerNiTPre = 100;
-% [ W tensorW ] = MLMTL_Convex( X_train, Y_train, indicators, beta, lambda );
+outerNiTPre = 50;
+[ W tensorW ] = MLMTL_Convex( X_train, Y_train, indicators, beta, lambda );
 
+ MSE_Convex = MLMTL_Test(X_test,Y_test, W);
+ 
 [ W tensorW ] = MLMTL_Mixture( X_train, Y_train, indicators, beta, lambda );
 
+ MSE_Mixture = MLMTL_Mixture(X_test,Y_test, W);
+ 
+fprintf('Prediction MSE Convex: %d Mixture:  %d\n ',MSE_Convex,MSE_Mixture);
 
 
-%% test
-
-MSE = MLMTL_Test(X_test,Y_test, W);
 
 %%
-
-W_tensor = reshape(W, indicators);
-[p1,p2,p3] = tensorModeRank(W_tensor);
+% 
+% W_tensor = reshape(W, indicators);
+% [p1,p2,p3] = tensorModeRank(W_tensor);

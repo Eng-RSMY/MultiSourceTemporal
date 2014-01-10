@@ -1,12 +1,12 @@
-function [ W tensorW ] = MLMTL_Mixture( X, Y, indicators, beta, lambda, outerNiTPre, thresholdPre, groundW )
+function [ W tensorW ] = MLMTL_Mixture( X, Y, indicators, beta, lambda, innerNiTPre,outerNiTPre, thresholdPre, groundW )
 %MLMTL Summary of this function goes here
 %   Detailed explanation goes here
 
 outerNiT=1000;
-if nargin>5 && ~isempty(outerNiTPre)
+if nargin>6 && ~isempty(outerNiTPre)
     outerNiT=outerNiTPre;
 end
-if nargin>6 && ~isempty(thresholdPre)
+if nargin>7 && ~isempty(thresholdPre)
     threshold=thresholdPre;
 end
 
@@ -40,10 +40,11 @@ for n=1:nModes
 end
 % sumA=tenzeros(indicators); 
 sumB=tenzeros(indicators); 
+
 oldW=Inf(nAttrs, nTotalTasks);
 oit=0;
 
-MaxIterCD = nModes;
+MaxIterCD = 2*nModes;
 while true    
     oit=oit+1;
     % Optimizing over W
@@ -56,29 +57,32 @@ while true
     W=tensor(reshape(matW, indicators));
    
 %     sumA=tenzeros(indicators); 
-    sumBlast = sumB;
-    sumB=tenzeros(indicators); 
     
     % ADD iteration over NModes
-    for iter = 1: 
-    
-    for n=1:nModes
-%         [oit n]
-        % Optimizing over B
-        matW=tenmat(W, n);
-        matW=matW.data;
-        matA=tenmat(A,n);
-        matA=matA.data;
-%         matB=shrink(matW-1/beta*matA, 1/beta);
-        matsumNB = tenmat(sumBlast-B{n},n);
-        matsumNB = matsumNB.data;
-        shrink_target = nModes*matW - 1/beta*nModes*matA - matsumNB;
-        matB = shrink(shrink_target,nModes^2/beta);
+    for iter = 1: MaxIterCD
         
-        BTensor=tensor(reshape(matB, [indicators(n), indicators(1:n-1), indicators(n+1:end)]));
-        B{n}=permute(BTensor, [2:n, 1, n+1:nModes]);
-        sumB=sumB+B{n};
-       
+         
+        for n=1:nModes
+    %         [oit n]
+            % Optimizing over B
+            matW=tenmat(W, n);
+            matW=matW.data;
+            matA=tenmat(A,n);
+            matA=matA.data;
+    %         matB=shrink(matW-1/beta*matA, 1/beta);
+            sumNB = sumB-B{n};
+            matsumNB = tenmat(sumNB,n);
+            matsumNB = matsumNB.data;
+            shrink_target = nModes*matW - 1/beta*nModes*matA - matsumNB;
+            matB = shrink(shrink_target,nModes^2/beta);
+
+            BTensor=tensor(reshape(matB, [indicators(n), indicators(1:n-1), indicators(n+1:end)]));
+            B{n}=permute(BTensor, [2:n, 1, n+1:nModes]);
+            sumB = sumNB+B{n};
+
+        end
+        
+        
     end
     % Optimizing over A (C in the supp)
     A=A-beta*(W-1/nModes*sumB);
@@ -102,13 +106,13 @@ while true
     
 end
 
-disp('L_Inf');
+% disp('L_Inf');
 for i=1:nModes
     mat=tenmat(W, i);
     [u l v]=mySVD(mat.data);
-    max(diag(l))
+    max(diag(l));
 end
-norm(mat.data, 'fro')
+% norm(mat.data, 'fro');
 
 tensorW=W;
 W=tenmat(full(W), 1);

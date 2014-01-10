@@ -88,13 +88,13 @@ while true
     oldW=Wmat;
 end
 
-disp('L_Inf');
+% disp('L_Inf');
 for i=1:nModes
     mat=tenmat(W, i);
     [u l v]=mySVD(mat.data);
-    max(diag(l))
+    max(diag(l));
 end
-norm(mat.data, 'fro')
+% norm(mat.data, 'fro');
 
 tensorW=W;
 W=tenmat(full(W), 1);
