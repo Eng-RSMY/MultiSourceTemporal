@@ -1,4 +1,3 @@
-
 % X,Y: cell of 1 x numTasks
 % X{i} =  featureDim  x numSample
 % Y{i} =  1 x numSamples
@@ -76,7 +75,6 @@ TestIdx = setdiff(1:nSample,TrainIdx);
 
 X_train = cell(1,numTask);
 Y_train = cell(1,numTask);
-
 X_test = cell(1,numTask);
 Y_test = cell(1,numTask);
 
@@ -109,4 +107,4 @@ fprintf('Prediction MSE Convex: %d Mixture:  %d\n ',MSE_Convex,MSE_Mixture);
 %%
 % 
 % W_tensor = reshape(W, indicators);
-% [p1,p2,p3] = tensorModeRank(W_tensor);
+% [p1,p2,p3] = tensorModeRank(W_tensor);ss
