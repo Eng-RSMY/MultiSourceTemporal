@@ -15,7 +15,7 @@ nTotalTasks=length(Y);
 nAttrs=getNAttrs(X);
 nModes=length(indicators);
 
-innerNiT = nModes;
+innerNiT = 2*nModes;
 
 if nargin>5 && ~isempty(innerNiTPre)
     innerNiT = innerNiTPre;
