@@ -9,8 +9,8 @@ r_convex =[];
 r_mixture =[];
 nSample = 20; 
 % loop_var = logspace(-3,3,30);
-loop_var = 3:1:15;
-for innerNiTPre = loop_var
+loop_var = 3:1:50;
+
 
 W = zeros(nDim, nTasks);
 
@@ -20,13 +20,16 @@ for i = 1:nTasks
     Y{i}=X{i}'*W(:,i);
 end
     
- modesDim = [nDim,folds];
+modesDim = [nDim,folds];
 beta = 1e-2;
 lambda = 1e-3;
 outerNiTPre = 50;
 
 
+
 [ W_r_convex tensorW_r_convex ] = MLMTL_Convex( X, Y, modesDim, beta, lambda, outerNiTPre);
+
+for innerNiTPre = loop_var
 [ W_r_mixture tensorW_r_mixture ] = MLMTL_Mixture( X, Y, modesDim, beta, lambda,innerNiTPre,outerNiTPre);
 
 e_convex = norm(W_r_convex- W,'fro')/(nDim*nTasks);

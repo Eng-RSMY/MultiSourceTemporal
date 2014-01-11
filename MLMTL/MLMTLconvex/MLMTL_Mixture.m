@@ -3,6 +3,7 @@ function [ W tensorW ] = MLMTL_Mixture( X, Y, indicators, beta, lambda, innerNiT
 %   Detailed explanation goes here
 
 outerNiT=1000;
+
 if nargin>6 && ~isempty(outerNiTPre)
     outerNiT=outerNiTPre;
 end
@@ -13,6 +14,12 @@ end
 nTotalTasks=length(Y);
 nAttrs=getNAttrs(X);
 nModes=length(indicators);
+
+innerNiT = nModes;
+
+if nargin>5 && ~isempty(innerNiTPre)
+    innerNiT = innerNiTPre;
+end
 
 if nTotalTasks~=prod(indicators(2:end))
     [nTotalTasks prod(indicators(2:end))]
@@ -44,7 +51,7 @@ sumB=tenzeros(indicators);
 oldW=Inf(nAttrs, nTotalTasks);
 oit=0;
 
-MaxIterCD = 2*nModes;
+
 while true    
     oit=oit+1;
     % Optimizing over W
@@ -59,7 +66,7 @@ while true
 %     sumA=tenzeros(indicators); 
     
     % ADD iteration over NModes
-    for iter = 1: MaxIterCD
+    for iter = 1: innerNiT
         
          
         for n=1:nModes
