@@ -92,17 +92,28 @@ fprintf('Train/Test Splitted\n');
 beta = 1e-2;
 lambda = 1e-3;
 outerNiTPre = 50;
+r_Convex =[];
+r_Mixture=[];
+
+for lambda = logspace(-3,3,10)
 [ W tensorW ] = MLMTL_Convex( X_train, Y_train, indicators, beta, lambda );
 
  MSE_Convex = MLMTL_Test(X_test,Y_test, W);
+ r_Convex = [r_Convex, MSE_Convex];
  
 [ W tensorW ] = MLMTL_Mixture( X_train, Y_train, indicators, beta, lambda );
 
- MSE_Mixture = MLMTL_Mixture(X_test,Y_test, W);
- 
+ MSE_Mixture = MLMTL_Test(X_test,Y_test, W);
+  r_Mixture = [r_Mixture, MSE_Mixture];
 fprintf('Prediction MSE Convex: %d Mixture:  %d\n ',MSE_Convex,MSE_Mixture);
+save (strcat('MSE_',int2str(lambda),'.mat'),'r_Convex','r_Mixture');
+end
 
-
+%save('result.mat','r_Convex','r_Mixture');
+%%
+plot(lambda(1:4),r_Convex,'b');hold on;
+plot(lambda(1:4),r_Mixture,'r'); hold off;
+legend('Romera-ParedesICML13','Latent approach');
 
 %%
 % 

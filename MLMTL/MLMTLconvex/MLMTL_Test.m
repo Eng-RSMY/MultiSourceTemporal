@@ -10,5 +10,5 @@ for i = 1:numTask
 end
 
 MSE = mean(error);
-fprintf('Mean Square Error: %d', MSE);
+%fprintf('Mean Square Error: %d', MSE);
 
