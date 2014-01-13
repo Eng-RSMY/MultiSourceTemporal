@@ -52,7 +52,8 @@ oldW=Inf(nAttrs, nTotalTasks);
 oit=0;
 
 
-while true    
+while true  
+%     fprintf('Iter # %d\n',oit);
     oit=oit+1;
     % Optimizing over W
     matSumAux=tenmat(A, 1) + beta/nModes*tenmat(sumB, 1);
