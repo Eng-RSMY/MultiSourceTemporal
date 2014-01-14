@@ -37,10 +37,14 @@ for lambda = lambdas
         end
         err  = err + MSE;        
     end
-    errs = [errs,err/K];
-     if(err/K < avg_err)
+    err = err/K;
+    if verbose
+        disp(err);
+    end
+    errs = [errs,err];
+     if(err < avg_err)
         opt_lambda = lambda;
-        avg_err = err/K;
+        avg_err = err;
      end
 end
 
@@ -49,6 +53,6 @@ if verbose
     plot(errs);
 end
 
-[ W ~ ] = MLMTL_Convex( X_eval, Y_eval, dimModes, beta, opt_lambda );
+[ W ~ ] = feval(Func_train, X_train, Y_train, dimModes, beta, lambda);
 
 
