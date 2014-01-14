@@ -63,20 +63,18 @@ nSample = nTime-1;
          Y{task_idx} = labels;
      end
  end
- indicators = [nLoc, nLoc,nType];        
+ dimModes = [nLoc, nLoc,nType];        
 
 fprintf('Data Constructed\n');
 
 %%
-nTrainSample = ceil(nSample/3*2);
-nTestSample = nSample-nTrainSample;
-TrainIdx = randsample(nSample, nTrainSample);
-TestIdx = setdiff(1:nSample,TrainIdx);
-
+[TrainIdx, TestIdx]  = crossvalind('HoldOut',nSample,0.4);
 X_train = cell(1,numTask);
 Y_train = cell(1,numTask);
-X_test = cell(1,numTask);
-Y_test = cell(1,numTask);
+X_test = X_train;
+Y_test = Y_train;
+
+
 
 for i = 1:numTask
     X_train{i} = X{i}(:,TrainIdx);
@@ -84,31 +82,30 @@ for i = 1:numTask
     X_test{i} = X{i}(:,TestIdx);
     Y_test{i} = Y{i}(TestIdx);
 end
+fprintf('Eval/Test Splitted\n');
 
-fprintf('Train/Test Splitted\n');
 
-%% train (TBD: cross validation)
-
+%% train (with cross validation)
 beta = 1e-2;
 lambda = 1e-3;
 outerNiTPre = 50;
-r_Convex =[];
-r_Mixture=[];
+lambdas = logspace(-3,3,10);
+
+paras.beta = beta;
+paras.dimModes = dimModes;
+
+W_Convex = MLMTL_Crosval(X_train,Y_train,MLMTL_Mixture,lambdas, paras);
+W_Mixture = MLMTL_Crosval(X_train,Y_train,MLMTL_Mixture,lambdas, paras);
+
+% select best parameter
+
+%%
+MSE_Convex = MLMTL_Test(X_test,Y_test, W_Mixture);
+MSE_Mixture = MLMTL_Test(X_test,Y_test, W_Convex);
 
 
-for lambda = logspace(-3,3,10)
-[ W tensorW ] = MLMTL_Convex( X_train, Y_train, indicators, beta, lambda );
-
- MSE_Convex = MLMTL_Test(X_test,Y_test, W);
- r_Convex = [r_Convex, MSE_Convex];
- 
-[ W tensorW ] = MLMTL_Mixture( X_train, Y_train, indicators, beta, lambda );
-
- MSE_Mixture = MLMTL_Test(X_test,Y_test, W);
-  r_Mixture = [r_Mixture, MSE_Mixture];
 fprintf('Prediction MSE Convex: %d Mixture:  %d\n ',MSE_Convex,MSE_Mixture);
 save (strcat('MSE_',int2str(lambda),'.mat'),'r_Convex','r_Mixture');
-end
 
 %save('result.mat','r_Convex','r_Mixture');
 %%
