@@ -15,11 +15,15 @@ for i = 1:Max_Iter-1
     [delta(2), tempSol{2}] = solveFold2(Yp, X, Sol);
     [delta(3), tempSol{3}] = solveFold3(Yp, X, Sol);
     [~, ix] = max(delta);
-    if delta(ix) > mu
+    if delta(ix)/obj(1) > mu
         Sol = Sol + tempSol{ix};
         [Yp, Sol, obj(i+1)] = project(Y, X, Sol, i); % Do an orthogonal projection step here
+    else
+        break
     end
 end
+
+plot(1:i, obj(1:i))
 
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

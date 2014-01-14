@@ -3,7 +3,7 @@ clc
 clear 
 
 global verbose
-verbose = 1;
+verbose = 0;
 
 p = 20;
 q = 10;
@@ -19,6 +19,9 @@ for i = 1:r
     Y{i} = A*X{i} + 0.1 * randn(q, n);
 end
 
-mu = 1e-2;
+mu = 2e-4;
 max_iter = 50;
 solveGreedyOrth(Y, X, mu, max_iter);
+
+
+solveGreedy(Y, X, mu, max_iter);

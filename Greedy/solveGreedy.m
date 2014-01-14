@@ -14,13 +14,15 @@ for i = 1:Max_Iter-1
     [delta(2), tempSol{2}] = solveFold2(Y, X, Sol);
     [delta(3), tempSol{3}] = solveFold3(Y, X, Sol);
     [~, ix] = max(delta);
-    if delta(ix) > mu
+    if delta(ix)/obj(1) > mu
         Sol = Sol + tempSol{ix};
         for ll = 1:r; Y{ll} = Y{ll} - squeeze(tempSol{ix}(:, :, ll))'*X{ll}; end
         obj(i+1) = obj(i) - delta(ix);
+    else 
+        break
     end
 end
-
+plot(1:i, obj(1:i))
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Rank-1 Greedy Steps
