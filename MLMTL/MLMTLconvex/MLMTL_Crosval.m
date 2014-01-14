@@ -15,16 +15,14 @@ Y_train = Y_eval;
 X_valid = X_eval;
 Y_valid = Y_eval;
 
-avg_err=0;
+avg_err=inf;
 opt_lambda = -inf;
-
+errs = [];
 for lambda = lambdas  
     err =0;
     indices = crossvalind('Kfold',N,K);
     for k = 1:K
-        if verbose
-            fprintf('lambda: %d, Fold: %d\n',lambda,k);
-        end
+
         validate = (indices ==k); train = ~validate;
         for i = 1:numTask
             X_valid{i} = X_eval{i}(:,validate);
@@ -34,9 +32,12 @@ for lambda = lambdas
         end
         [ W_valid ~ ] = feval(Func_train, X_train, Y_train, dimModes, beta, lambda);
         MSE = feval(Func_test, X_valid,Y_valid, W_valid);
+        if verbose
+            fprintf('lambda: %d, Fold: %d, MSE %d \n',lambda,k,MSE);
+        end
         err  = err + MSE;        
     end
-    
+    errs = [errs,err/K];
      if(err/K < avg_err)
         opt_lambda = lambda;
         avg_err = err/K;
@@ -45,6 +46,7 @@ end
 
 if verbose
     fprintf('selected lambda %d\n',opt_lambda);
+    plot(errs);
 end
 
 [ W ~ ] = MLMTL_Convex( X_eval, Y_eval, dimModes, beta, opt_lambda );

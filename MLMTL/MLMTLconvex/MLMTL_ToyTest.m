@@ -27,7 +27,7 @@ beta = 1e-2;
 %lambda = 1e-3;
 % outerNiTPre = 50;
 
-lambdas = logspace(-3,3,10);
+lambdas = logspace(-3,1,2);
 paras.beta = beta;
 paras.dimModes = dimModes;
 

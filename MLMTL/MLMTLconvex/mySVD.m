@@ -1,6 +1,7 @@
 function [ u l v ] = mySVD( A )
 %MYSVD Summary of this function goes here
 %   Detailed explanation goes here
+% TBD: add try/catch pair
 
 [nRows, nCols]=size(A);
 if nRows>=nCols
