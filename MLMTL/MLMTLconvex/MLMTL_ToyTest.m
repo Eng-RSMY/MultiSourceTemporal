@@ -1,3 +1,5 @@
+global verbose ;
+verbose =1;
 
 folds = [3,3];
 nTasks = prod(folds);
@@ -20,25 +22,32 @@ for i = 1:nTasks
     Y{i}=X{i}'*W(:,i);
 end
     
-modesDim = [nDim,folds];
+dimModes = [nDim,folds];
 beta = 1e-2;
-lambda = 1e-3;
-outerNiTPre = 50;
+%lambda = 1e-3;
+% outerNiTPre = 50;
+
+lambdas = logspace(-5,1,5);% lambda is quite small , 10-3 
+paras.beta = beta;
+paras.dimModes = dimModes;
+
+W_Convex = MLMTL_Crosval(X,Y,@MLMTL_Convex,@MLMTL_Test,lambdas, paras);
+W_Mixture = MLMTL_Crosval(X,Y,@MLMTL_Mixture,@MLMTL_Test,lambdas, paras);
 
 
-
-[ W_r_convex tensorW_r_convex ] = MLMTL_Convex( X, Y, modesDim, beta, lambda, outerNiTPre);
-
-for innerNiTPre = loop_var
-[ W_r_mixture tensorW_r_mixture ] = MLMTL_Mixture( X, Y, modesDim, beta, lambda,innerNiTPre,outerNiTPre);
-
+% [ W_r_convex tensorW_r_convex ] = MLMTL_Convex( X, Y, dimModes, beta, lambda, outerNiTPre);
+% 
+% for innerNiTPre = loop_var
+% [ W_r_mixture tensorW_r_mixture ] = MLMTL_Mixture( X, Y, dimModes, beta, lambda,innerNiTPre,outerNiTPre);
+% 
 e_convex = norm(W_r_convex- W,'fro')/(nDim*nTasks);
 e_mixture = norm(W_r_mixture- W,'fro')/(nDim*nTasks);
-r_convex = [r_convex,e_convex];
-r_mixture = [r_mixture, e_mixture];
 fprintf('frobenius norm error Convex: %d Mixture:  %d\n ',e_convex,e_mixture);
 
-end
+% r_convex = [r_convex,e_convex];
+% r_mixture = [r_mixture, e_mixture];
+% 
+% end
 
 
 %%

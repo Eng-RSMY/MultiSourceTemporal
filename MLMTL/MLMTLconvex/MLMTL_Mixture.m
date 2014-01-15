@@ -1,13 +1,13 @@
-function [ W tensorW ] = MLMTL_Mixture( X, Y, indicators, beta, lambda, innerNiTPre,outerNiTPre, thresholdPre, groundW )
+function [ W tensorW ] = MLMTL_Mixture( X, Y, indicators, beta, lambda,outerNiTPre, thresholdPre,innerNiTPre, groundW )
 %MLMTL Summary of this function goes here
 %   Detailed explanation goes here
 
 outerNiT=1000;
 
-if nargin>6 && ~isempty(outerNiTPre)
+if nargin>5 && ~isempty(outerNiTPre)
     outerNiT=outerNiTPre;
 end
-if nargin>7 && ~isempty(thresholdPre)
+if nargin>6 && ~isempty(thresholdPre)
     threshold=thresholdPre;
 end
 
@@ -17,7 +17,7 @@ nModes=length(indicators);
 
 innerNiT = 2*nModes;
 
-if nargin>5 && ~isempty(innerNiTPre)
+if nargin>7 && ~isempty(innerNiTPre)
     innerNiT = innerNiTPre;
 end
 
