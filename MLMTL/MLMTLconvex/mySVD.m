@@ -4,6 +4,14 @@ function [ u l v ] = mySVD( A )
 % TBD: add try/catch pair
 
 [nRows, nCols]=size(A);
+
+% check input
+if(sum(isinf(A))) >0
+    warning('mySVD: input matrix has inf element, set to zero\n');
+    A(isinf(A)) =0;
+end
+    
+    
 if nRows>=nCols
     [u l v]=svd(A);
     return

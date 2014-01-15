@@ -12,7 +12,8 @@ load 'climateP17'
 
 %load 'genomeP'
 % Genomic dataset has 798 location(??) for 10 speciest, in 6 time stamp
-
+global verbose;
+verbose = 1;
 nType = length(series);
 [nLoc, nTime] = size(series{1});
 
