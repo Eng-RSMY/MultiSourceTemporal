@@ -28,9 +28,9 @@ for i = 1:dy
     M{i} = rand(dx,n);
     Z{i} = M{i}' * W0(:,i) + noise;
 end
-lambdamin = 5.88e-7;
-lambdamax = 348;
-nlambdas  = 200;
+lambdamin = -15;
+lambdamax = 5;
+nlambdas  = 10;
 lambdas  = logspace(lambdamin, lambdamax, nlambdas);
 svds = [];
 
@@ -45,9 +45,9 @@ for ilambda = 1:length(lambdas)
 
 end
 
-
-plot(-log(lambdas),svds','linewidth',2); hold on;
-plot(-log(lambdas),repmat(svd(W0),1,length(lambdas))',':','linewidth',2); hold off
+%%
+plot(-log(lambdas(1:94)),svds','linewidth',2); hold on;
+plot(-log(lambdas(1:94)),repmat(svd(W0),1,length(lambdas))',':','linewidth',2); hold off
 axis( [ min(-log(lambdas) ) max(-log(lambdas) ) 0 max(svds(:))*1.1] );
 xlabel('-log(\lambda)','fontsize',16);
 ylabel('singular values','fontsize',16);

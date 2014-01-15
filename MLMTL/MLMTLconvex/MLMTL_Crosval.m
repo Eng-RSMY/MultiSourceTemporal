@@ -8,7 +8,7 @@ N = size(X_eval{1},2);
 K = 10; % 10-fold cross validation
 dimModes = paras.dimModes;
 beta = paras.beta;
-outIter = 100;
+outIter = paras.outIter;
 
 X_train = X_eval;
 Y_train = Y_eval;
@@ -30,7 +30,7 @@ for lambda = lambdas
             X_train{i} = X_eval{i}(:,train);
             Y_train{i} = Y_eval{i}(train);
         end
-        [ W_valid ~ ] = feval(Func_train, X_train, Y_train, dimModes, beta, lambda);
+        [ W_valid ~ ] = feval(Func_train, X_train, Y_train, dimModes, beta, lambda,outIter);
         MSE = feval(Func_test, X_valid,Y_valid, W_valid);
         if verbose
             fprintf('lambda: %d, Fold: %d, MSE %d \n',lambda,k,MSE);
@@ -53,6 +53,6 @@ if verbose
     plot(errs);
 end
 
-[ W ~ ] = feval(Func_train, X_train, Y_train, dimModes, beta, lambda);
+[ W ~ ] = feval(Func_train, X_train, Y_train, dimModes, beta, lambda, outIter);
 
 

@@ -88,14 +88,15 @@ fprintf('Eval/Test Splitted\n');
 %% train (with cross validation)
 beta = 1e-2;
 lambda = 1e-3;
-outerNiTPre = 50;
-lambdas = logspace(-3,3,10);
+outerNiTPre = 100;
+lambdas = logspace(-8,2,10);
 
 paras.beta = beta;
 paras.dimModes = dimModes;
+paras.outIter = outerNiTPre;
 
-W_Convex = MLMTL_Crosval(X_train,Y_train,MLMTL_Mixture,lambdas, paras);
-W_Mixture = MLMTL_Crosval(X_train,Y_train,MLMTL_Mixture,lambdas, paras);
+W_Convex = MLMTL_Crosval(X_train,Y_train,@MLMTL_Convex,@MLMTL_Test,lambdas, paras);
+W_Mixture = MLMTL_Crosval(X_train,Y_train,@MLMTL_Mixture,@MLMTL_Test,lambdas, paras);
 
 % select best parameter
 
