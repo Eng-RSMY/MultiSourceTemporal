@@ -69,7 +69,13 @@ nSample = nTime-1;
 fprintf('Data Constructed\n');
 
 %%
-[TrainIdx, TestIdx]  = crossvalind('HoldOut',nSample,0.4);
+beta = 1e-2;
+outerNiTPre = 100;
+lambdas = logspace(-2,2,5);
+r_Convex = [];
+r_Mixture = [];
+for pr = fliplr(0.1:0.1:1)
+[TrainIdx, TestIdx]  = crossvalind('HoldOut',nSample,pr);
 X_train = cell(1,numTask);
 Y_train = cell(1,numTask);
 X_test = X_train;
@@ -83,20 +89,16 @@ for i = 1:numTask
     X_test{i} = X{i}(:,TestIdx);
     Y_test{i} = Y{i}(TestIdx);
 end
-fprintf('Eval/Test Splitted\n');
+
+if verbose
+    fprintf('Data Splitted: Training %d , Testing %d\n', 1-pr, pr);
+end
 
 
-%% train (with cross validation)
-beta = 1e-2;
-lambda = 1e-3;
-outerNiTPre = 100;
+%% train-test (with cross validation)
+
 % lambdas = logspace(-8,2,10);
-<<<<<<< HEAD
-
-lambdas = [3.162278e+02:100:600];
-=======
-lambdas = 316:200:800;
->>>>>>> 72f859857605e81f957b66ed2babd0396a9239e3
+% lambda = 3.162278e+02;
 
 paras.beta = beta;
 paras.dimModes = dimModes;
@@ -109,21 +111,24 @@ W_Mixture = MLMTL_Crosval(X_train,Y_train,@MLMTL_Mixture,@MLMTL_Test,lambdas, pa
 
 % select best parameter
 
-%%
 MSE_Convex = MLMTL_Test(X_test,Y_test, W_Convex);
 MSE_Mixture = MLMTL_Test(X_test,Y_test, W_Mixture);
 
+if verbose
+    fprintf('Prediction MSE Convex: %d Mixture:  %d\n ',MSE_Convex,MSE_Mixture);
+end
 
-fprintf('Prediction MSE Convex: %d Mixture:  %d\n ',MSE_Convex,MSE_Mixture);
-save ('MSE_CroVal.mat');
+r_Convex = [r_Convex,MSE_Convex];
+r_Mixture = [r_Mixture, MSE_Mixture];
+end
 
-%save('result.mat','r_Convex','r_Mixture');
 %%
 % plot(lambda(1:4),r_Convex,'b');hold on;
 % plot(lambda(1:4),r_Mixture,'r'); hold off;
 % legend('Romera-ParedesICML13','Latent approach');
+save ('MSE_TrainSize.mat');
+exit;
 
-exit
 
 %%
 % 

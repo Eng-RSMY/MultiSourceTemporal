@@ -32,14 +32,14 @@ for lambda = lambdas
         end
         [ W_valid ~ ] = feval(Func_train, X_train, Y_train, dimModes, beta, lambda,outIter);
         MSE = feval(Func_test, X_valid,Y_valid, W_valid);
-        if verbose
-            fprintf('lambda: %d, Fold: %d, MSE %d \n',lambda,k,MSE);
-        end
+%         if verbose
+%             fprintf('lambda: %d, Fold: %d, MSE %d \n',lambda,k,MSE);
+%         end
         err  = err + MSE;        
     end
     err = err/K;
     if verbose
-        disp(err);
+        fprintf('lambda: %d, avg_err: %d\n',lambda, err);
     end
     errs = [errs,err];
      if(err < avg_err)
