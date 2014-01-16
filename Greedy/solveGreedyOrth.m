@@ -1,4 +1,4 @@
-function Sol = solveGreedyOrth(Y, X, mu, Max_Iter)
+function [Sol, quality] = solveGreedyOrth(Y, X, mu, Max_Iter, A)
 % X and Y are cells of size nTask
 % Y{i} is a matrix of size (nPred) x (nData)
 % X{i} is a matrix of size (nFeature) x (nData)
@@ -12,6 +12,7 @@ tempSol = cell(3, 1);
 delta = zeros(3, 1);
 obj = zeros(Max_Iter, 1);
 Yp = Y;
+quality = [obj,obj];
 for ll = 1:r; obj(1) = obj(1) + norm(Y{ll}, 'fro')^2; end
 for i = 1:Max_Iter-1
     [delta(1), tempSol{1}] = solveFold1(Yp, X, Sol);
@@ -21,6 +22,7 @@ for i = 1:Max_Iter-1
     if delta(ix)/obj(1) > mu
         Sol = Sol + tempSol{ix};
         [Yp, Sol, obj(i+1)] = project(Y, X, Sol, i); % Do an orthogonal projection step here
+        quality(i, :) = testQuality(Sol, A)';
     else
         break
     end
@@ -193,4 +195,17 @@ for i = 1:length(Y)
     mp = 2*tr*(Y{i}*X{i}');
     G = G + mp/m - 2*A*(X{i}*X{i}')*(tr^2)/(m^2);
 end
+end
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+function quality = testQuality(Sol, A)
+
+quality = [0;0];
+for i = 1:size(Sol, 3)
+    quality(1) = quality(1) + norm(A - squeeze(Sol(:, :, i)), 'fro')^2;
+end
+
+quality(2) = quality(2) + rank(unfld(Sol, 1));
+quality(2) = quality(2) + rank(unfld(Sol, 2));
+quality(2) = quality(2) + rank(unfld(Sol, 3));
+
 end

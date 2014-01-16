@@ -4,9 +4,9 @@ clear
 
 addpath(genpath('../MLMTL/'))
 
-load('../data/climateP17.mat')
-% load synth_r10.mat
-nLag = 2;
+% load('../data/climateP17.mat')
+load synthBench.mat
+nLag = 1;
 nTask = length(series);
 [nLoc, tLen] = size(series{1});
 
@@ -23,15 +23,30 @@ for i = 1:nTask
     end
 end
 indicators = [nLoc*nLag, nTask, nLoc];
-lambda = 1e-5;
+Lambda = logspace(-4, 5, 20);
 beta = 2e-2;
 
-tic
-MLMTL_Mixture( X, Y, indicators, beta, lambda, 100);
-timeMLMTL = toc;
+err = 0*Lambda;
+err2 = err;
+ranks = 0*Lambda;
+for i = 1:length(Lambda)
+    [~, SolConv] = MLMTL_Convex( X, Y, indicators, beta, Lambda(i), 100);
+    SolConv = SolConv.data;
+    for ll = 1:size(SolConv, 2)
+        err(i) = err(i) + norm(A-squeeze(SolConv(:, ll, :)), 'fro')^2;
+    end
+    for ll = 1:size(SolConv, 2)
+        err2(i) = err2(i) + norm(A-squeeze(SolConv(:, ll, :))', 'fro')^2;
+    end
+    ranks(i) = ranks(i) + rank(unfld(SolConv, 1));
+    ranks(i) = ranks(i) + rank(unfld(SolConv, 2));
+    ranks(i) = ranks(i) + rank(unfld(SolConv, 3));
+    disp(i)
+end
+qualityNuc = [err; ranks];
 
 %% Run Greedy
-global verbose
+ global verbose
 verbose = 0;
 X = cell(nTask, 1);
 Y = cell(nTask, 1);
@@ -46,9 +61,9 @@ end
 tic
 mu = 1e-4;
 max_iter = 10;
-solveGreedyOrth(Y, X, mu, max_iter);
+[~, qualityGreedy] = solveGreedyOrth(Y, X, mu, max_iter, A);
 timeGreedy = toc;
 %% Print the results
-fprintf('Run time for Regularization = %f.\n', timeMLMTL)
-fprintf('Run time for Greedy = %f.\n', timeGreedy)
-fprintf('Speedup = %f\n', timeMLMTL/timeGreedy)
+% fprintf('Run time for Regularization = %f.\n', timeMLMTL)
+% fprintf('Run time for Greedy = %f.\n', timeGreedy)
+% fprintf('Speedup = %f\n', timeMLMTL/timeGreedy)
