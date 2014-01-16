@@ -1,0 +1,10 @@
+Resutls
+
+p = 20, r = 4
+Speedup = 5.073574
+
+p = 40, r = 4
+Speedup = 2.376134
+
+p = 20, r = 10
+Speedup = 2.028361

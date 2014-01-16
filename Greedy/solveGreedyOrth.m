@@ -1,4 +1,7 @@
 function Sol = solveGreedyOrth(Y, X, mu, Max_Iter)
+% X and Y are cells of size nTask
+% Y{i} is a matrix of size (nPred) x (nData)
+% X{i} is a matrix of size (nFeature) x (nData)
 
 r = length(X);
 [p, n] = size(X{1});
@@ -23,7 +26,7 @@ for i = 1:Max_Iter-1
     end
 end
 
-plot(1:i, obj(1:i))
+% plot(1:i, obj(1:i))
 
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
