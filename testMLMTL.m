@@ -90,7 +90,8 @@ fprintf('Eval/Test Splitted\n');
 beta = 1e-2;
 lambda = 1e-3;
 outerNiTPre = 100;
-lambdas = logspace(-8,2,10);
+% lambdas = logspace(-8,2,10);
+lambdas = 316:200:800;
 
 paras.beta = beta;
 paras.dimModes = dimModes;
@@ -99,21 +100,25 @@ paras.outIter = outerNiTPre;
 W_Convex = MLMTL_Crosval(X_train,Y_train,@MLMTL_Convex,@MLMTL_Test,lambdas, paras);
 W_Mixture = MLMTL_Crosval(X_train,Y_train,@MLMTL_Mixture,@MLMTL_Test,lambdas, paras);
 
+
+
 % select best parameter
 
 %%
-MSE_Convex = MLMTL_Test(X_test,Y_test, W_Mixture);
-MSE_Mixture = MLMTL_Test(X_test,Y_test, W_Convex);
+MSE_Convex = MLMTL_Test(X_test,Y_test, W_Convex);
+MSE_Mixture = MLMTL_Test(X_test,Y_test, W_Mixture);
 
 
 fprintf('Prediction MSE Convex: %d Mixture:  %d\n ',MSE_Convex,MSE_Mixture);
-save (strcat('MSE_',int2str(lambda),'.mat'),'r_Convex','r_Mixture');
+save ('MSE_CroVal.mat');
 
 %save('result.mat','r_Convex','r_Mixture');
 %%
-plot(lambda(1:4),r_Convex,'b');hold on;
-plot(lambda(1:4),r_Mixture,'r'); hold off;
-legend('Romera-ParedesICML13','Latent approach');
+% plot(lambda(1:4),r_Convex,'b');hold on;
+% plot(lambda(1:4),r_Mixture,'r'); hold off;
+% legend('Romera-ParedesICML13','Latent approach');
+
+exit
 
 %%
 % 
