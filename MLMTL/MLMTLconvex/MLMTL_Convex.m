@@ -1,4 +1,4 @@
-function [ W tensorW ] = MLMTL_Convex( X, Y, indicators, beta, lambda, outerNiTPre, thresholdPre, groundW )
+function [ W ,tensorW,Ls] = MLMTL_Convex( X, Y, indicators, beta, lambda, outerNiTPre, thresholdPre, groundW )
 %MLMTL Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -6,6 +6,7 @@ outerNiT=1000;
 if nargin>5 && ~isempty(outerNiTPre)
     outerNiT=outerNiTPre;
 end
+threshold = 10e-5;
 if nargin>6 && ~isempty(thresholdPre)
     threshold=thresholdPre;
 end
@@ -42,16 +43,14 @@ sumB=tenzeros(indicators);
 oldW=Inf(nAttrs, nTotalTasks);
 oit=0;
 
-%Main Loop 
+Ls = [];
+oldL =0;
 while true    
     oit=oit+1;
-    % Optimizing over X- W in the paper 
+    % Optimizing over X
     matSumAux=tenmat(sumA, 1) + beta*tenmat(sumB, 1);
     matSumAux=matSumAux.data;
-    
     matW=zeros(nAttrs, nTotalTasks);
-    
-    % finding the w_t for each task
     for t=1:nTotalTasks
         matW(:,t)=(XX_plus_betaNI{t})\(1/lambda*XY{t} + matSumAux(:,t));
     end
@@ -59,7 +58,6 @@ while true
    
     sumA=tenzeros(indicators); 
     sumB=tenzeros(indicators); 
-    
     for n=1:nModes
 %         [oit n]
         % Optimizing over B
@@ -72,7 +70,7 @@ while true
         B{n}=permute(BTensor, [2:n, 1, n+1:nModes]);
         sumB=sumB+B{n};
         
-        % Optimizing over A - C in the paper
+        % Optimizing over A
         A{n}=A{n}-beta*(W-B{n});
         sumA=sumA+A{n};
     end
@@ -85,16 +83,24 @@ while true
     if oit>outerNiT %norm(Wmat(1:end)-oldW(1:end))<threshold
         break
     end
+    L = MLMTL_Objfunc(X,Y,W,B,A,lambda,beta);
+    Ls = [Ls,L];
+    
+    if( abs(L-oldL)< threshold)
+        fprintf('Converge after %d iteration \n', oit);
+        break;
+    end
     oldW=Wmat;
+    oldL=L;
 end
-
+plot(Ls);
 % disp('L_Inf');
 for i=1:nModes
     mat=tenmat(W, i);
     [u l v]=mySVD(mat.data);
     max(diag(l));
 end
-% norm(mat.data, 'fro');
+% norm(mat.data, 'fro')
 
 tensorW=W;
 W=tenmat(full(W), 1);

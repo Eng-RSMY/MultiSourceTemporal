@@ -1,7 +1,7 @@
 global verbose ;
 verbose =1;
 
-folds = [3,3];
+folds = [5,5];
 nTasks = prod(folds);
 X = cell(1, nTasks);
 Y = cell(1, nTasks);
@@ -25,7 +25,7 @@ end
 dimModes = [nDim,folds];
 beta = 1e-2;
 lambda = 1e-3;
-outerNiTPre = 50;
+outerNiTPre = 1000;
 
 
 lambdas = logspace(-5,1,5);% lambda is quite small , 10-3 
@@ -35,14 +35,13 @@ paras.dimModes = dimModes;
 % W_Convex = MLMTL_Crosval(X,Y,@MLMTL_Convex,@MLMTL_Test,lambdas, paras);
 % W_Mixture = MLMTL_Crosval(X,Y,@MLMTL_Mixture,@MLMTL_Test,lambdas, paras);
 
-
-% [ W_r_convex tensorW_r_convex ] = MLMTL_Convex( X, Y, dimModes, beta, lambda, outerNiTPre);
+[ W_r_convex tensorW_r_convex Ls_Convex ] = MLMTL_Convex( X, Y, dimModes, beta, lambda, outerNiTPre);
 % 
 % for innerNiTPre = loop_var
-[ W_r_mixture tensorW_r_mixture ] = MLMTL_Mixture( X, Y, dimModes, beta, lambda,outerNiTPre);
+[ W_r_mixture tensorW_r_mixture Ls_Mixture] = MLMTL_Mixture( X, Y, dimModes, beta, lambda,outerNiTPre);
 % 
 % e_convex = norm(W_r_convex- W,'fro')/(nDim*nTasks);
-e_mixture = norm(W_r_mixture- W,'fro')/(nDim*nTasks);
+% e_mixture = norm(W_r_mixture- W,'fro')/(nDim*nTasks);
 % fprintf('frobenius norm error Convex: %d Mixture:  %d\n ',e_convex,e_mixture);
 
 % r_convex = [r_convex,e_convex];
@@ -52,10 +51,12 @@ e_mixture = norm(W_r_mixture- W,'fro')/(nDim*nTasks);
 
 
 %%
-plot(loop_var,r_convex.*1/(nDim*nTasks),'b'); hold on;
-plot(loop_var,r_mixture.*1/(nDim*nTasks),'r'); hold off;
-
-
-xlabel('Coordinate Descent Iter');
-ylabel('Frobenius Norm Error');
-legend('Overlap Method [Romera-ParedesICML13]','Latent Method');
+plot(Ls_Convex,'b'); hold on;
+plot(Ls_Mixture,'r'); hold off;
+% plot(loop_var,r_convex.*1/(nDim*nTasks),'b'); hold on;
+% plot(loop_var,r_mixture.*1/(nDim*nTasks),'r'); hold off;
+% 
+% 
+% xlabel('Coordinate Descent Iter');
+% ylabel('Frobenius Norm Error');
+% legend('Overlap Method [Romera-ParedesICML13]','Latent Method');

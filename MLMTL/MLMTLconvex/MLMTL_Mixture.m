@@ -1,4 +1,4 @@
-function [ W tensorW ] = MLMTL_Mixture( X, Y, indicators, beta, lambda,outerNiTPre, thresholdPre,innerNiTPre, groundW )
+function [ W ,tensorW, Ls] = MLMTL_Mixture( X, Y, indicators, beta, lambda,outerNiTPre, thresholdPre,innerNiTPre, groundW )
 %MLMTL Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -17,7 +17,7 @@ nTotalTasks=length(Y);
 nAttrs=getNAttrs(X);
 nModes=length(indicators);
 
-innerNiT = 3*nModes;
+innerNiT = 2*nModes;
 
 if nargin>7 && ~isempty(innerNiTPre)
     innerNiT = innerNiTPre;
@@ -53,7 +53,8 @@ sumB=tenzeros(indicators);
 oldW=Inf(nAttrs, nTotalTasks);
 oit=0;
 
-
+oldL =0;
+Ls = [];
 while true  
 %     fprintf('Iter # %d\n',oit);
     oit=oit+1;
@@ -96,12 +97,6 @@ while true
     end
     % Optimizing over A (C in the supp)
     A=A-beta*(W-1/nModes*sumB);
-      
-
-%     % call mixture solver by Tomioka
-%     [sumB,B]= tomioka_mixture(nModes*W, nModes*(W-A/beta), beta, 1);
-%     % Optimizing over A (C in the supp)
-%     A=A-beta*(W-1/nModes*sumB);
    
     
     Wmat=tenmat(full(W), 1);
@@ -112,23 +107,27 @@ while true
     if oit>outerNiT %norm(Wmat(1:end)-oldW(1:end))<threshold
         break
     end
+       
+    L = MLMTL_Objfunc(X,Y,W,B,A,lambda,beta);
+    Ls = [Ls,L];
     
-    if( norm(oldW-Wmat,'fro')/prod(indicators) < threshold)
+    if( abs(L-oldL)< threshold)
         fprintf('Converge after %d iteration \n', oit);
         break;
     end
     oldW=Wmat;
-    
-    
+    oldL = L;
+          
 end
 
-% disp('L_Inf');
+plot(Ls);
+
+
 for i=1:nModes
     mat=tenmat(W, i);
     [u l v]=mySVD(mat.data);
     max(diag(l));
 end
-% norm(mat.data, 'fro');
 
 tensorW=W;
 W=tenmat(full(W), 1);
