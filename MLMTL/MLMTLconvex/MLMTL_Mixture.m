@@ -8,7 +8,7 @@ if nargin>5 && ~isempty(outerNiTPre)
     outerNiT=outerNiTPre;
 end
 
-threshold = 10e-4;
+threshold = 10e-5;
 if nargin>6 && ~isempty(thresholdPre)
     threshold=thresholdPre;
 end
@@ -113,8 +113,8 @@ while true
         break
     end
     
-    if( norm(oldW-W,'fro')/prod(indicators) < threshold)
-        fprintf('Weight Converge\n');
+    if( norm(oldW-Wmat,'fro')/prod(indicators) < threshold)
+        fprintf('Converge after %d iteration \n', oit);
         break;
     end
     oldW=Wmat;
