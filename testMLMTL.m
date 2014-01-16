@@ -90,7 +90,9 @@ fprintf('Eval/Test Splitted\n');
 beta = 1e-2;
 lambda = 1e-3;
 outerNiTPre = 100;
-lambdas = logspace(-8,2,10);
+% lambdas = logspace(-8,2,10);
+
+lambdas = [3.162278e+02:100:600];
 
 paras.beta = beta;
 paras.dimModes = dimModes;

@@ -7,6 +7,8 @@ outerNiT=1000;
 if nargin>5 && ~isempty(outerNiTPre)
     outerNiT=outerNiTPre;
 end
+
+threshold = 10e-4;
 if nargin>6 && ~isempty(thresholdPre)
     threshold=thresholdPre;
 end
@@ -110,7 +112,13 @@ while true
     if oit>outerNiT %norm(Wmat(1:end)-oldW(1:end))<threshold
         break
     end
+    
+    if( norm(oldW-W,'fro')/prod(indicators) < threshold)
+        fprintf('Weight Converge\n');
+        break;
+    end
     oldW=Wmat;
+    
     
 end
 
@@ -127,13 +135,6 @@ W=tenmat(full(W), 1);
 W=W.data;
 end
 
-function M = shrink(A, s)
-[U L V]=mySVD(A);
-eig=diag(L)-s;
-eig(eig<0)=0;
-eigM=diag(eig);
-L(1:size(eigM,1), 1:size(eigM,2))=eigM;
-M=U*L*V';
-end
+
 
 
