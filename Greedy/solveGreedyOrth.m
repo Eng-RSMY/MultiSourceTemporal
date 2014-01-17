@@ -12,7 +12,7 @@ tempSol = cell(3, 1);
 delta = zeros(3, 1);
 obj = zeros(Max_Iter, 1);
 Yp = Y;
-quality = [obj,obj];
+quality = obj*ones(1, 3);
 for ll = 1:r; obj(1) = obj(1) + norm(Y{ll}, 'fro')^2; end
 for i = 1:Max_Iter-1
     [delta(1), tempSol{1}] = solveFold1(Yp, X, Sol);
@@ -207,5 +207,7 @@ end
 quality(2) = quality(2) + rank(unfld(Sol, 1));
 quality(2) = quality(2) + rank(unfld(Sol, 2));
 quality(2) = quality(2) + rank(unfld(Sol, 3));
+
+quality(3) = TRComplexity(Sol);
 
 end
