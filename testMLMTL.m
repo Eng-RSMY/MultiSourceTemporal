@@ -70,7 +70,7 @@ fprintf('Data Constructed\n');
 
 %%
 beta = 1e-2;
-outerNiTPre = 100;
+outerNiTPre = 200;
 lambdas = logspace(-2,2,5);
 r_Convex = [];
 r_Mixture = [];
@@ -98,16 +98,18 @@ end
 %% train-test (with cross validation)
 
 % lambdas = logspace(-8,2,10);
-% lambda = 3.162278e+02;
+lambda = 3.162278e+02;
 
-paras.beta = beta;
-paras.dimModes = dimModes;
-paras.outIter = outerNiTPre;
+% paras.beta = beta;
+% paras.dimModes = dimModes;
+% paras.outIter = outerNiTPre;
 
-W_Convex = MLMTL_Crosval(X_train,Y_train,@MLMTL_Convex,@MLMTL_Test,lambdas, paras);
-W_Mixture = MLMTL_Crosval(X_train,Y_train,@MLMTL_Mixture,@MLMTL_Test,lambdas, paras);
+% W_Convex = MLMTL_Crosval(X_train,Y_train,@MLMTL_Convex,@MLMTL_Test,lambdas, paras);
+% W_Mixture = MLMTL_Crosval(X_train,Y_train,@MLMTL_Mixture,@MLMTL_Test,lambdas, paras);
 
+[ W_Convex ,~, ~ ] = MLMTL_Convex( X, Y, dimModes, beta, lambda, outerNiTPre);
 
+[ W_Mixture ,~ ,~] = MLMTL_Mixture( X, Y, dimModes, beta, lambda,outerNiTPre);
 
 % select best parameter
 
