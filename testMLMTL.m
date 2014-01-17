@@ -74,7 +74,7 @@ outerNiTPre = 200;
 lambdas = logspace(-2,2,5);
 r_Convex = [];
 r_Mixture = [];
-for pr = fliplr(0.1:0.1:0.9)
+for pr = [0.2,0.4]
 [TrainIdx, TestIdx]  = crossvalind('HoldOut',nSample,pr);
 X_train = cell(1,numTask);
 Y_train = cell(1,numTask);
@@ -97,19 +97,18 @@ end
 
 %% train-test (with cross validation)
 
-% lambdas = logspace(-8,2,10);
-lambda = 3.162278e+02;
+lambdas = logspace(-3,3,10);
+% lambda = 3.162278e+02;
 
-% paras.beta = beta;
-% paras.dimModes = dimModes;
-% paras.outIter = outerNiTPre;
+paras.beta = beta;
+paras.dimModes = dimModes;
+paras.outIter = outerNiTPre;
 
-% W_Convex = MLMTL_Crosval(X_train,Y_train,@MLMTL_Convex,@MLMTL_Test,lambdas, paras);
-% W_Mixture = MLMTL_Crosval(X_train,Y_train,@MLMTL_Mixture,@MLMTL_Test,lambdas, paras);
+W_Convex = MLMTL_Crosval(X_train,Y_train,@MLMTL_Convex,@MLMTL_Test,lambdas, paras);
+W_Mixture = MLMTL_Crosval(X_train,Y_train,@MLMTL_Mixture,@MLMTL_Test,lambdas, paras);
 
-[ W_Convex ,~, ~ ] = MLMTL_Convex( X, Y, dimModes, beta, lambda, outerNiTPre);
-
-[ W_Mixture ,~ ,~] = MLMTL_Mixture( X, Y, dimModes, beta, lambda,outerNiTPre);
+% [ W_Convex ,~, ~ ] = MLMTL_Convex( X, Y, dimModes, beta, lambda, outerNiTPre);
+% [ W_Mixture ,~ ,~] = MLMTL_Mixture( X, Y, dimModes, beta, lambda,outerNiTPre);
 
 % select best parameter
 
@@ -125,11 +124,13 @@ r_Mixture = [r_Mixture, MSE_Mixture];
 end
 
 %%
-% plot(lambda(1:4),r_Convex,'b');hold on;
-% plot(lambda(1:4),r_Mixture,'r'); hold off;
+
+plot( 0.1:0.1:0.9,r_Convex(1:end),'b'); hold on;
+plot( 0.1:0.1:0.9,r_Mixture(1:end),'r'); 
+ylim([0,1]); hold off;
 % legend('Romera-ParedesICML13','Latent approach');
-save ('MSE_TrainSize.mat');
-exit;
+% save ('MSE_TrainSize.mat');
+% exit;
 
 
 %%

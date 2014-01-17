@@ -93,7 +93,7 @@ while true
     oldW=Wmat;
     oldL=L;
 end
-plot(Ls);
+% plot(Ls);
 % disp('L_Inf');
 for i=1:nModes
     mat=tenmat(W, i);

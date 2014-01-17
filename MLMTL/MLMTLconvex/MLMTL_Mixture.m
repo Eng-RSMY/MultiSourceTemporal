@@ -120,7 +120,7 @@ while true
           
 end
 
-plot(Ls);
+% plot(Ls);
 
 
 for i=1:nModes

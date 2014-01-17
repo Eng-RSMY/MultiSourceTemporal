@@ -50,7 +50,7 @@ end
 
 if verbose
     fprintf('selected lambda %d\n',opt_lambda);
-    plot(errs);
+%     plot(errs);
 end
 
 [ W ~ ] = feval(Func_train, X_train, Y_train, dimModes, beta, lambda, outIter);
