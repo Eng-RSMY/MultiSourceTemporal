@@ -1,8 +1,8 @@
-function [Sol, quality] = solveGreedyOrth(Y, X, mu, Max_Iter, A)
+function [Sol, quality, err] = solveGreedyOrth(Y, X, mu, Max_Iter, A, test)
 % X and Y are cells of size nTask
 % Y{i} is a matrix of size (nPred) x (nData)
 % X{i} is a matrix of size (nFeature) x (nData)
-
+global evaluate
 r = length(X);
 [p, n] = size(X{1});
 q = size(Y{1}, 1);
@@ -12,7 +12,8 @@ tempSol = cell(3, 1);
 delta = zeros(3, 1);
 obj = zeros(Max_Iter, 1);
 Yp = Y;
-quality = obj*ones(1, 3);
+quality = zeros(Max_Iter, 3);
+err = zeros(Max_Iter, 2);
 for ll = 1:r; obj(1) = obj(1) + norm(Y{ll}, 'fro')^2; end
 for i = 1:Max_Iter-1
     [delta(1), tempSol{1}] = solveFold1(Yp, X, Sol);
@@ -22,7 +23,10 @@ for i = 1:Max_Iter-1
     if delta(ix)/obj(1) > mu
         Sol = Sol + tempSol{ix};
         [Yp, Sol, obj(i+1)] = project(Y, X, Sol, i); % Do an orthogonal projection step here
-        quality(i, :) = testQuality(Sol, A)';
+        if evaluate
+            quality(i, :) = testQuality(Sol, A)';
+            err(i, :) = normpredict(test.Y, test.X, Sol);
+        end
     else
         break
     end
@@ -196,18 +200,29 @@ for i = 1:length(Y)
     G = G + mp/m - 2*A*(X{i}*X{i}')*(tr^2)/(m^2);
 end
 end
-%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function quality = testQuality(Sol, A)
 
-quality = [0;0];
-for i = 1:size(Sol, 3)
-    quality(1) = quality(1) + norm(A - squeeze(Sol(:, :, i)), 'fro')^2;
-end
+quality = [0;0;0];
+% for i = 1:size(Sol, 3)
+%     quality(1) = quality(1) + norm(A - squeeze(Sol(:, :, i)), 'fro')^2;
+% end
 
 quality(2) = quality(2) + rank(unfld(Sol, 1));
 quality(2) = quality(2) + rank(unfld(Sol, 2));
 quality(2) = quality(2) + rank(unfld(Sol, 3));
 
-quality(3) = TRComplexity(Sol);
+% quality(3) = TRComplexity(Sol);
 
+end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+function err = normpredict(Y, X, Sol)
+[~, ~, r] = size(Sol);
+err = [0, 0];
+for ll = 1:r
+    err(1) = err(1) + norm(Y{ll} - squeeze(Sol(:, :, ll))'*X{ll}, 'fro')^2;
+    err(2) = err(1)/mean(Y{ll}(:).^2);
+    err(1) = err(1)/numel(Y);
+end
+err = sqrt(err)/r;
 end
