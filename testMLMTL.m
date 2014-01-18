@@ -137,3 +137,5 @@ ylim([0,1]); hold off;
 % 
 % W_tensor = reshape(W, indicators);
 % [p1,p2,p3] = tensorModeRank(W_tensor);ss
+
+

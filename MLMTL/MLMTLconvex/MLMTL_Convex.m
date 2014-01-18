@@ -86,7 +86,8 @@ while true
     L = MLMTL_Objfunc(X,Y,W,B,A,lambda,beta);
     Ls = [Ls,L];
     
-    if( abs(L-oldL)< threshold)
+%     if( abs(L-oldL)< threshold)
+    if(norm(Wmat(1:end)-oldW(1:end)) < threshold)
         fprintf('Converge after %d iteration \n', oit);
         break;
     end
