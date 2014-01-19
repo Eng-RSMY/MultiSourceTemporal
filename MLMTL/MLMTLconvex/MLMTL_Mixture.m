@@ -113,7 +113,7 @@ while true
     
 %     if( abs(L-oldL)< threshold)
     if(norm(Wmat(1:end)-oldW(1:end)) < threshold)
-        fprintf('Converge after %d iteration \n', oit);
+        fprintf('MLMTL_Mixture:Converge after %d iteration \n', oit);
         break;
     end
     oldW=Wmat;

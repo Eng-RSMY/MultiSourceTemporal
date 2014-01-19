@@ -2,22 +2,26 @@ global verbose ;
 verbose =0;
 
 
-folds = [10,10];
+folds = [3,3];
 nTasks = prod(folds);
 X = cell(1, nTasks);
 Y = cell(1, nTasks);
 
 nDim = 50;
+Rank = 3;
 r_convex =[];
 r_mixture =[];
 r_greedy = [];
 nSample = 20; 
 W = zeros(nDim, nTasks);
 
-loop_var = [50:20:200];
+loop_var = [250];
 for nSample = loop_var
 for i = 1:nTasks
-    X{i}=rand(nDim,nSample);
+    X_i=rand(nDim,nSample);
+    [U,S,V] = svd(X_i);
+    X_i = U(:,1:Rank)*S(1:Rank,1:Rank)*V(:,1:Rank)';
+    X{i} = X_i;
     W(:,i) = rand(1,nDim);
     Y{i}=X{i}'*W(:,i);
 end
@@ -28,7 +32,7 @@ lambda = 1e-3;
 % outerNiTPre = 50;
 
 mu = 1e-5;
-max_iter = 5; %% need to change the stop criteria as convergence
+max_iter = 20; %% need to change the stop criteria as convergence
 
 
 threshold = 1e-5;
@@ -51,7 +55,7 @@ toc;
 [ W_r_greedy, qualityGreedy, errGreedy] = solveGreedyOrth(Y, X, mu, max_iter, threshold);
 toc;
 
-end
+
 %% evaluate
 e_convex = norm(W_r_convex- W,'fro')/(nDim*nTasks);
 e_mixture = norm(W_r_mixture- W,'fro')/(nDim*nTasks);
@@ -62,6 +66,8 @@ fprintf('frobenius norm error Convex: %d Mixture: %d Greedy: %d \n ',e_convex,e_
 r_convex = [r_convex,e_convex];
 r_mixture = [r_mixture, e_mixture];
 r_greedy = [r_greedy,e_greedy];
+
+end
 
 
 
