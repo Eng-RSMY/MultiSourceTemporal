@@ -34,13 +34,13 @@ for k = 1:nBlocks
 end
 
 %%
-
-colors = varycolor(nBlocks);
-for k = 1:nBlocks
-    loc = locations(clusters{k},:);
-    scatter(loc(:,1),loc(:,2),30,repmat(colors(k,:),[szBlock,1]),'fill');hold on;
-end
-hold off;
+% 
+% colors = varycolor(nBlocks);
+% for k = 1:nBlocks
+%     loc = locations(clusters{k},:);
+%     scatter(loc(:,1),loc(:,2),30,repmat(colors(k,:),[szBlock,1]),'fill');hold on;
+% end
+% hold off;
 
 %%
 
@@ -74,7 +74,7 @@ if verbose
 end
 
 %%
-pr = 0.4;
+for pr = [0.5,0.3,0.1]
 beta = 1e-2;
 lambda = 216; 
 [TrainIdx, TestIdx]  = crossvalind('HoldOut',nSample,pr);
@@ -110,6 +110,8 @@ MSE_Mixture = MLMTL_Test(X_test,Y_test, W_Mixture);
 
 if verbose
     fprintf('Prediction MSE Convex: %d Mixture:  %d\n ',MSE_Convex,MSE_Mixture);
+end
+
 end
 
 
