@@ -1,4 +1,4 @@
-function [ p1,p2,p3 ] = tensorModeRank( X )
+function [ p1,p2,p3,total ] = tensorModeRank( X )
 %N_MODE_RANK Summary of this function goes here
 %   X is a three-way tensor. this function analyze the structures of the
 %   tensor
@@ -32,6 +32,9 @@ ylim([0,1]);
 p1 = max(S1)/sum(S1);
 p2 = max(S2)/sum(S2);
 p3 = max(S3)/sum(S3);
+
+total = sum([p1,p2,p2];
+
 
 end
 
