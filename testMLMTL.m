@@ -5,12 +5,12 @@
 % beta: hyper_para, lambda: weight of regularizaer
 % outerNiTPre: iteration number 100 is enough
 clear all;
-load 'climateP17'
+% load 'climateP17'
 % Climate dataset has  125 locations in 17 agents, 156 days of training
 % data. Task: predict the values for certain location and certain agents
 
 
-%load 'genomeP'
+load 'genomeP'
 % Genomic dataset has 798 location(??) for 10 speciest, in 6 time stamp
 global verbose;
 verbose = 1;
@@ -72,9 +72,10 @@ fprintf('Data Constructed\n');
 beta = 1e-2;
 outerNiTPre = 200;
 lambdas = logspace(-2,2,5);
+lambda = 216; 
 r_Convex = [];
 r_Mixture = [];
-for pr = [0.2,0.4]
+for pr = [0.4,0.2,0.1]
 [TrainIdx, TestIdx]  = crossvalind('HoldOut',nSample,pr);
 X_train = cell(1,numTask);
 Y_train = cell(1,numTask);
@@ -104,11 +105,11 @@ paras.beta = beta;
 paras.dimModes = dimModes;
 paras.outIter = outerNiTPre;
 
-W_Convex = MLMTL_Crosval(X_train,Y_train,@MLMTL_Convex,@MLMTL_Test,lambdas, paras);
-W_Mixture = MLMTL_Crosval(X_train,Y_train,@MLMTL_Mixture,@MLMTL_Test,lambdas, paras);
+% W_Convex = MLMTL_Crosval(X_train,Y_train,@MLMTL_Convex,@MLMTL_Test,lambdas, paras);
+% W_Mixture = MLMTL_Crosval(X_train,Y_train,@MLMTL_Mixture,@MLMTL_Test,lambdas, paras);
 
-% [ W_Convex ,~, ~ ] = MLMTL_Convex( X, Y, dimModes, beta, lambda, outerNiTPre);
-% [ W_Mixture ,~ ,~] = MLMTL_Mixture( X, Y, dimModes, beta, lambda,outerNiTPre);
+[ W_Convex ,~, ~ ] = MLMTL_Convex( X_train, Y_train, dimModes, beta, lambda, outerNiTPre);
+[ W_Mixture ,~ ,~] = MLMTL_Mixture( X_train, Y_train, dimModes, beta, lambda,outerNiTPre);
 
 % select best parameter
 
