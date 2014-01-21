@@ -74,3 +74,16 @@ end
 % end
 
 tmp = sum(tensor_checkin_counts{1});
+%%
+
+% create a small dataset
+
+nType = length(series);
+series_s = cell(nType,1);
+
+for t = 1:nType
+    tmp = series{t};
+    series_s{t} = tmp(1:60,1:300);
+end
+    
+
