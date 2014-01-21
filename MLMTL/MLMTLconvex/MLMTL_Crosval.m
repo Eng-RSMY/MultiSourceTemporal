@@ -33,7 +33,7 @@ for lambda = lambdas
         [ W_valid ~ ] = feval(Func_train, X_train, Y_train, dimModes, beta, lambda,outIter);
         MSE = feval(Func_test, X_valid,Y_valid, W_valid);
         if verbose
-            fprintf('lambda: %d, fold: %d, mse %d \n',lambda,k,mse);
+            fprintf('lambda: %d, fold: %d, MSE %d \n',lambda,k,MSE);
         end
         err  = err + MSE;        
     end
