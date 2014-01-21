@@ -33,7 +33,7 @@ end
 % save('testGeo.mat');
 
 %%
-% plot([0.5:0.1],[ml_conv',geo_conv',ml_mix',geo_mix']);
-% legend('Overlapped MTMLL','Overlapped GSMLL','Latent MTMLL','Latent GSMLL');
-% 
+plot([0.5:0.1:0.9],[ml_conv',geo_conv',ml_mix',geo_mix']);
+legend('Overlapped MTMLL','Overlapped GSMLL','Latent MTMLL','Latent GSMLL');
+
 

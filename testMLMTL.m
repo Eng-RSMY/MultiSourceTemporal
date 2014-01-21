@@ -10,8 +10,12 @@ clear all;
 % data. Task: predict the values for certain location and certain agents
 
 
-load 'genomeP'
+% load 'genomeP'
 % Genomic dataset has 798 location(??) for 10 speciest, in 6 time stamp
+
+
+load 'tensor_checkin_counts'
+
 global verbose;
 verbose = 1;
 nType = length(series);
@@ -71,11 +75,10 @@ fprintf('Data Constructed\n');
 %%
 beta = 1e-2;
 outerNiTPre = 200;
-lambdas = logspace(-2,2,5);
-lambda = 216; 
-r_Convex = [];
-r_Mixture = [];
-for pr = [0.4,0.2,0.1]
+% r_Convex = [];
+% r_Mixture = [];
+
+pr = 0.2;
 [TrainIdx, TestIdx]  = crossvalind('HoldOut',nSample,pr);
 X_train = cell(1,numTask);
 Y_train = cell(1,numTask);
@@ -105,11 +108,11 @@ paras.beta = beta;
 paras.dimModes = dimModes;
 paras.outIter = outerNiTPre;
 
-% W_Convex = MLMTL_Crosval(X_train,Y_train,@MLMTL_Convex,@MLMTL_Test,lambdas, paras);
-% W_Mixture = MLMTL_Crosval(X_train,Y_train,@MLMTL_Mixture,@MLMTL_Test,lambdas, paras);
+W_Convex = MLMTL_Crosval(X_train,Y_train,@MLMTL_Convex,@MLMTL_Test,lambdas, paras);
+W_Mixture = MLMTL_Crosval(X_train,Y_train,@MLMTL_Mixture,@MLMTL_Test,lambdas, paras);
 
-[ W_Convex ,~, ~ ] = MLMTL_Convex( X_train, Y_train, dimModes, beta, lambda, outerNiTPre);
-[ W_Mixture ,~ ,~] = MLMTL_Mixture( X_train, Y_train, dimModes, beta, lambda,outerNiTPre);
+% [ W_Convex ,~, ~ ] = MLMTL_Convex( X_train, Y_train, dimModes, beta, lambda, outerNiTPre);
+% [ W_Mixture ,~ ,~] = MLMTL_Mixture( X_train, Y_train, dimModes, beta, lambda,outerNiTPre);
 
 % select best parameter
 
@@ -120,23 +123,20 @@ if verbose
     fprintf('Prediction MSE Convex: %d Mixture:  %d\n ',MSE_Convex,MSE_Mixture);
 end
 
-r_Convex = [r_Convex,MSE_Convex];
-r_Mixture = [r_Mixture, MSE_Mixture];
-end
+% r_Convex = [r_Convex,MSE_Convex];
+% r_Mixture = [r_Mixture, MSE_Mixture];
+
 
 %%
 
-plot( 0.1:0.1:0.9,r_Convex(1:end),'b'); hold on;
-plot( 0.1:0.1:0.9,r_Mixture(1:end),'r'); 
-ylim([0,1]); hold off;
+% plot( 0.1:0.1:0.9,r_Convex(1:end),'b'); hold on;
+% plot( 0.1:0.1:0.9,r_Mixture(1:end),'r'); 
+% ylim([0,1]); hold off;
 % legend('Romera-ParedesICML13','Latent approach');
 % save ('MSE_TrainSize.mat');
 % exit;
 
 
-%%
-% 
-% W_tensor = reshape(W, indicators);
-% [p1,p2,p3] = tensorModeRank(W_tensor);ss
+
 
 
