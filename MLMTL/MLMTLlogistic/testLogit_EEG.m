@@ -41,7 +41,7 @@ beta = 1e-2;
 % lambda = 1e-3;
 paras.beta = beta;
 paras.dimModes = dimModes;
-lambdas = logspace(-3,3,1);
+lambdas = logspace(-3,3,8);
 
 % [ W_Cvx ,tensorW ] = MLMTL_Cvx_Logit( X_train, Y_train, dimModes,beta, lambda );
 % [ W_Mix ,tensorW ] = MLMTL_Mix_Logit( X_train, Y_train, dimModes,beta, lambda );
