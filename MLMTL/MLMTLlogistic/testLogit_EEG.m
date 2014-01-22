@@ -1,6 +1,6 @@
 clear;
 clc;
-
+addpath(genpath('~/Documents/MATLAB/MultiSourceTemporal'))
 global verbose;
 verbose =1;
 
