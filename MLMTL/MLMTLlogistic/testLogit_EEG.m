@@ -41,7 +41,7 @@ beta = 1e-2;
 % lambda = 1e-3;
 paras.beta = beta;
 paras.dimModes = dimModes;
-lambdas = logspace(-5,-3,3);
+lambdas = logspace(-8,-5,5);
 
 % [ W_Cvx ,tensorW ] = MLMTL_Cvx_Logit( X_train, Y_train, dimModes,beta, lambda );
 % [ W_Mix ,tensorW ] = MLMTL_Mix_Logit( X_train, Y_train, dimModes,beta, lambda );
@@ -51,6 +51,7 @@ lambdas = logspace(-5,-3,3);
 
 [ Err_Cvx ] = MLMTL_Test_Logit(X_test, Y_test, W_Cvx );
 [ Err_Mix ] = MLMTL_Test_Logit(X_test, Y_test, W_Mix );
+
 fprintf('Prec Cvx %d , Prec Mix %d\n', 1-Err_Cvx, 1-Err_Mix);
 
 

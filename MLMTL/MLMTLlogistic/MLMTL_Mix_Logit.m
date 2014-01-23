@@ -1,7 +1,7 @@
 function [ W ,tensorW ] = MLMTL_Mix_Logit( X, Y, dimModes,beta, lambda  )
 %MLMTL_MIX_LOGIT Summary of this function goes here
 %   Detailed explanation goes here
-
+global verbose;
 outerNiT=1000;
 
 if nargin>5 && ~isempty(outerNiTPre)
