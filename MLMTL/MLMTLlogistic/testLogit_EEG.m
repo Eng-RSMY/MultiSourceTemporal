@@ -45,16 +45,16 @@ end
 fprintf('Data Splitted: Training %d , Testing %d\n', 1-pr, pr);
 
 
-% paras.beta = beta;
-% paras.dimModes = dimModes;
-% lambdas = logspace(-10,-5,5);
+paras.beta = beta;
+paras.dimModes = dimModes;
+lambdas = logspace(-8,-3,10);
 
 
-[ W_Cvx ,tensorW ] = MLMTL_Cvx_Logit( X_train, Y_train, dimModes,beta, lambda_Cvx );
-[ W_Mix ,tensorW ] = MLMTL_Mix_Logit( X_train, Y_train, dimModes,beta, lambda_Mix );
+% [ W_Cvx ,tensorW ] = MLMTL_Cvx_Logit( X_train, Y_train, dimModes,beta, lambda_Cvx );
+% [ W_Mix ,tensorW ] = MLMTL_Mix_Logit( X_train, Y_train, dimModes,beta, lambda_Mix );
 
-% [ W_Cvx ] = MLMTL_Crosval( X_train,Y_train, @MLMTL_Cvx_Logit, @MLMTL_Test_Logit,lambdas, paras);
-% [ W_Mix ] = MLMTL_Crosval( X_train,Y_train, @MLMTL_Mix_Logit, @MLMTL_Test_Logit,lambdas, paras);
+[ W_Cvx ] = MLMTL_Crosval( X_train,Y_train, @MLMTL_Cvx_Logit, @MLMTL_Test_Logit,lambdas, paras);
+[ W_Mix ] = MLMTL_Crosval( X_train,Y_train, @MLMTL_Mix_Logit, @MLMTL_Test_Logit,lambdas, paras);
 
 [ Err_Cvx ] = MLMTL_Test_Logit(X_test, Y_test, W_Cvx );
 [ Err_Mix ] = MLMTL_Test_Logit(X_test, Y_test, W_Mix );
