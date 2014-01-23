@@ -6,9 +6,11 @@ global verbose;
 numTask = length(X_eval);
 N = size(X_eval{1},2);
 K = 10; % 10-fold cross validation
+
 dimModes = paras.dimModes;
 beta = paras.beta;
-outIter = paras.outIter;
+
+% outIter = paras.outIter;
 
 X_train = X_eval;
 Y_train = Y_eval;
@@ -30,10 +32,10 @@ for lambda = lambdas
             X_train{i} = X_eval{i}(:,train);
             Y_train{i} = Y_eval{i}(train);
         end
-        [ W_valid ~ ] = feval(Func_train, X_train, Y_train, dimModes, beta, lambda,outIter);
+        [ W_valid ~ ] = feval(Func_train, X_train, Y_train, dimModes, beta, lambda);
         MSE = feval(Func_test, X_valid,Y_valid, W_valid);
 %         if verbose
-%             fprintf('lambda: %d, Fold: %d, MSE %d \n',lambda,k,MSE);
+%             fprintf('lambda: %d, fold: %d, Err %d \n',lambda,k,MSE);
 %         end
         err  = err + MSE;        
     end
@@ -50,9 +52,10 @@ end
 
 if verbose
     fprintf('selected lambda %d\n',opt_lambda);
-%     plot(errs);
 end
+%     plot(errs);
 
-[ W ~ ] = feval(Func_train, X_train, Y_train, dimModes, beta, lambda, outIter);
+
+[ W ~ ] = feval(Func_train, X_train, Y_train, dimModes, beta, lambda);
 
 

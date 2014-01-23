@@ -1,19 +1,18 @@
-function [Sol, quality, err] = solveGreedyOrth(Y, X, mu, Max_Iter, threshold) % A, test)
+function [Sol, quality, err] = solveGreedyOrth(Y, X, mu, Max_Iter, A, test) % A, test)
 % X and Y are cells of size nTask
 % Y{i} is a matrix of size (nPred) x (nData)
 % X{i} is a matrix of size (nFeature) x (nData)
 
-%change Y{i} into nData x nPred
-for i = 1:length(Y)
-    Y{i}= Y{i}';
-end
-% global evaluate
+% %change Y{i} into nData x nPred
+% for i = 1:length(Y)
+%     Y{i}= Y{i}';
+% end
+global evaluate
 r = length(X);
 [p, n] = size(X{1});
 q = size(Y{1}, 1);
 
 Sol = zeros(p, q, r);
-Sol_old  = zeros(p,q,r);
 
 tempSol = cell(3, 1);
 delta = zeros(3, 1);
@@ -27,20 +26,20 @@ for i = 1:Max_Iter-1
     [delta(2), tempSol{2}] = solveFold2(Yp, X, Sol);
     [delta(3), tempSol{3}] = solveFold3(Yp, X, Sol);
     [~, ix] = max(delta);
-%     if delta(ix)/obj(1) > mu
+    if delta(ix)/obj(1) > mu
      % change the criteria into convergence
-        Sol_old = Sol;
+%         Sol_old = Sol;
         Sol = Sol + tempSol{ix};
         [Yp, Sol, obj(i+1)] = project(Y, X, Sol, i); % Do an orthogonal projection step here
-        if norm(Sol(1:end)-Sol_old(1:end)) < threshold
-            fprintf('Converge after %d iteration\n',i);
-            break;
-        end
-%         if evaluate
-%             quality(i, :) = testQuality(Sol, A)';
-%             err(i, :) = normpredict(test.Y, test.X, Sol);
+%         if norm(Sol(1:end)-Sol_old(1:end)) < threshold
+%             fprintf('Converge after %d iteration\n',i);
+%             break;
 %         end
-    
+        if evaluate
+            quality(i, :) = testQuality(Sol, A)';
+            err(i, :) = normpredict(test.Y, test.X, Sol);
+        end
+    end
 end
 
 % plot(1:i, obj(1:i))
@@ -94,6 +93,9 @@ for i = 1:Max_iter
         fprintf('%c%c%c%c%c%c', 8,8,8,8,8,8);
         fprintf('%5d ', i);
     end
+end
+if verbose
+    fprintf('\n')
 end
 
 Sol = fld(U*B*V', 1, r);
@@ -216,8 +218,9 @@ function quality = testQuality(Sol, A)
 
 quality = [0;0;0];
 % for i = 1:size(Sol, 3)
-%     quality(1) = quality(1) + norm(A - squeeze(Sol(:, :, i)), 'fro')^2;
+%     quality(1) = quality(1) + norm(A - squeeze(Sol(:, :, i))', 'fro')^2;
 % end
+% quality(1) = sqrt(quality(1)/size(Sol, 3))/norm(A, 'fro');
 
 quality(2) = quality(2) + rank(unfld(Sol, 1));
 quality(2) = quality(2) + rank(unfld(Sol, 2));
@@ -233,7 +236,7 @@ err = [0, 0];
 for ll = 1:r
     err(1) = err(1) + norm(Y{ll} - squeeze(Sol(:, :, ll))'*X{ll}, 'fro')^2;
     err(2) = err(1)/mean(Y{ll}(:).^2);
-    err(1) = err(1)/numel(Y);
 end
-err = sqrt(err)/r;
+err(1) = err(1)/size(Y{1}, 2);
+err = sqrt(err/r);
 end

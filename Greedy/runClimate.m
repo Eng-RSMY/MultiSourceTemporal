@@ -8,7 +8,7 @@ load('../data/climateP17.mat')
 nLag = 1;
 nTask = length(series);
 [nLoc, tLen] = size(series{1});
-tTrain = floor(0.6*tLen);
+tTrain = floor(0.5*tLen);
 tTest = tLen - tTrain;
 
 global verbose
@@ -35,43 +35,43 @@ for i = 1:nTask
 end
 
 mu = 1e-8;
-max_iter = 20;
-% [~, qualityGreedy, errGreedy] = solveGreedyOrth(Y, X, mu, max_iter, A, test);
+max_iter = 100;
+[~, qualityGreedy, errGreedy] = solveGreedyOrth(Y, X, mu, max_iter, A, test);
 
 
 %% The Nuclear norm Solution
-X = cell(nTask*nLoc, 1);
-Y = X;
-for i = 1:nTask
-    for j = 1:nLoc
-        Y{j+(i-1)*nLoc} = series{i}(j, nLag+1:tTrain)';
-        X{j+(i-1)*nLoc} = zeros(nLag*nLoc, (tTrain - nLag));
-        for ll = 1:nLag
-            X{j+(i-1)*nLoc}(nLoc*(ll-1)+1:nLoc*ll, :) = series{i}(:, nLag+1-ll:tTrain-ll);
-        end
-    end
-end
-indicators = [nLoc*nLag, nTask, nLoc];
-beta = 2e-2;
-% Run 
-Lambda = logspace(2, 6, 10);
-errNucAll = zeros(length(Lambda), 2);
-qualityNuc = 0*Lambda;
-parfor i = 1:length(Lambda)
-    [~, SolConv] = MLMTL_Mixture( X, Y, indicators, beta, Lambda(i), 250);
-    SolConv = SolConv.data;
-    
-    errNuc = zeros(1, 2);
-    for ll = 1:nTask
-        errNuc(1) = errNuc(1) + norm(test.Y{ll} - squeeze(SolConv(:, ll, :))*test.X{ll}, 'fro')^2;
-        errNuc(2) = errNuc(1)/mean(test.Y{ll}(:).^2);
-        errNuc(1) = errNuc(1)/numel(test.Y{ll});
-    end
-    errNucAll(i, :) = sqrt(errNuc)/nTask;
-    qualityNuc(i) = qualityNuc(i) + rank(unfld(SolConv, 1));
-    qualityNuc(i) = qualityNuc(i) + rank(unfld(SolConv, 2));
-    qualityNuc(i) = qualityNuc(i) + rank(unfld(SolConv, 3));
-    disp(i)
-end
-
-save('comparisonResults3.mat', 'Lambda', 'errNucAll', 'errGreedy', 'qualityGreedy', 'qualityNuc')
+% X = cell(nTask*nLoc, 1);
+% Y = X;
+% for i = 1:nTask
+%     for j = 1:nLoc
+%         Y{j+(i-1)*nLoc} = series{i}(j, nLag+1:tTrain)';
+%         X{j+(i-1)*nLoc} = zeros(nLag*nLoc, (tTrain - nLag));
+%         for ll = 1:nLag
+%             X{j+(i-1)*nLoc}(nLoc*(ll-1)+1:nLoc*ll, :) = series{i}(:, nLag+1-ll:tTrain-ll);
+%         end
+%     end
+% end
+% indicators = [nLoc*nLag, nTask, nLoc];
+% beta = 2e-2;
+% % Run 
+% Lambda = logspace(2, 6, 10);
+% errNucAll = zeros(length(Lambda), 2);
+% qualityNuc = 0*Lambda;
+% parfor i = 1:length(Lambda)
+%     [~, SolConv] = MLMTL_Mixture( X, Y, indicators, beta, Lambda(i), 250);
+%     SolConv = SolConv.data;
+%     
+%     errNuc = zeros(1, 2);
+%     for ll = 1:nTask
+%         errNuc(1) = errNuc(1) + norm(test.Y{ll} - squeeze(SolConv(:, ll, :))*test.X{ll}, 'fro')^2;
+%         errNuc(2) = errNuc(1)/mean(test.Y{ll}(:).^2);
+%         errNuc(1) = errNuc(1)/numel(test.Y{ll});
+%     end
+%     errNucAll(i, :) = sqrt(errNuc)/nTask;
+%     qualityNuc(i) = qualityNuc(i) + rank(unfld(SolConv, 1));
+%     qualityNuc(i) = qualityNuc(i) + rank(unfld(SolConv, 2));
+%     qualityNuc(i) = qualityNuc(i) + rank(unfld(SolConv, 3));
+%     disp(i)
+% end
+% 
+% save('comparisonResults3.mat', 'Lambda', 'errNucAll', 'errGreedy', 'qualityGreedy', 'qualityNuc')
