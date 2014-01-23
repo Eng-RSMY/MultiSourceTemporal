@@ -11,6 +11,11 @@ nSample = nTrial;
 nTasks = nChannel;
 X = cell (1, nTasks);
 Y = cell (1, nTasks);
+dimModes = [nTime, 4,4];
+beta = 1e-2;
+lambda_Cvx = 1e-8;
+lambda_Mix = 1e-5;
+
 
 for t = 1: nTasks
     X{t} = squeeze(series(t,:,:));
@@ -18,7 +23,10 @@ for t = 1: nTasks
 end
 fprintf('Data Constructed\n');
 
-pr = 0.2;
+r_Cvx = [];
+r_Mix = [];
+
+for pr = fliplr(0.1:0.1:0.5)
 
 [TrainIdx, TestIdx]  = crossvalind('HoldOut',nSample,pr);
 X_train = cell(1,nTasks);
@@ -36,21 +44,30 @@ for i = 1:nTasks
 end
 fprintf('Data Splitted: Training %d , Testing %d\n', 1-pr, pr);
 
-dimModes = [nTime, 4,4];
-beta = 1e-2;
-% lambda = 1e-3;
-paras.beta = beta;
-paras.dimModes = dimModes;
-lambdas = logspace(-5,-3,3);
 
-% [ W_Cvx ,tensorW ] = MLMTL_Cvx_Logit( X_train, Y_train, dimModes,beta, lambda );
-% [ W_Mix ,tensorW ] = MLMTL_Mix_Logit( X_train, Y_train, dimModes,beta, lambda );
+% paras.beta = beta;
+% paras.dimModes = dimModes;
+% lambdas = logspace(-10,-5,5);
 
-[ W_Cvx ] = MLMTL_Crosval( X_train,Y_train, @MLMTL_Cvx_Logit, @MLMTL_Test_Logit,lambdas, paras);
-[ W_Mix ] = MLMTL_Crosval( X_train,Y_train, @MLMTL_Mix_Logit, @MLMTL_Test_Logit,lambdas, paras);
+
+[ W_Cvx ,tensorW ] = MLMTL_Cvx_Logit( X_train, Y_train, dimModes,beta, lambda_Cvx );
+[ W_Mix ,tensorW ] = MLMTL_Mix_Logit( X_train, Y_train, dimModes,beta, lambda_Mix );
+
+% [ W_Cvx ] = MLMTL_Crosval( X_train,Y_train, @MLMTL_Cvx_Logit, @MLMTL_Test_Logit,lambdas, paras);
+% [ W_Mix ] = MLMTL_Crosval( X_train,Y_train, @MLMTL_Mix_Logit, @MLMTL_Test_Logit,lambdas, paras);
 
 [ Err_Cvx ] = MLMTL_Test_Logit(X_test, Y_test, W_Cvx );
 [ Err_Mix ] = MLMTL_Test_Logit(X_test, Y_test, W_Mix );
+
 fprintf('Prec Cvx %d , Prec Mix %d\n', 1-Err_Cvx, 1-Err_Mix);
+
+r_Cvx = [r_Cvx, 1-Err_Cvx];
+r_Mix = [r_Mix, 1-Err_Mix];
+end
+
+save('testLogit_EEG.mat');
+fprintf('testLogit_EEG finished\n');
+exit;
+
 
 
