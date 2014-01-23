@@ -96,7 +96,7 @@ while true
     
 %     if( abs(L-oldL)< threshold)
     if((norm(Wmat(1:end)-oldW(1:end)) < threshold) && (verbose))
-        fprintf('MLMTL_Cvx_Logit:Converge after %d iteration \n', oit);
+%         fprintf('MLMTL_Cvx_Logit:Converge after %d iteration \n', oit);
         break;
     end
     
