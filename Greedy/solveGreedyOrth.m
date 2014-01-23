@@ -3,10 +3,6 @@ function [Sol, quality, err] = solveGreedyOrth(Y, X, mu, Max_Iter, A, test) % A,
 % Y{i} is a matrix of size (nPred) x (nData)
 % X{i} is a matrix of size (nFeature) x (nData)
 
-% %change Y{i} into nData x nPred
-% for i = 1:length(Y)
-%     Y{i}= Y{i}';
-% end
 global evaluate
 r = length(X);
 [p, n] = size(X{1});
@@ -27,14 +23,9 @@ for i = 1:Max_Iter-1
     [delta(3), tempSol{3}] = solveFold3(Yp, X, Sol);
     [~, ix] = max(delta);
     if delta(ix)/obj(1) > mu
-     % change the criteria into convergence
-%         Sol_old = Sol;
         Sol = Sol + tempSol{ix};
         [Yp, Sol, obj(i+1)] = project(Y, X, Sol, i); % Do an orthogonal projection step here
-%         if norm(Sol(1:end)-Sol_old(1:end)) < threshold
-%             fprintf('Converge after %d iteration\n',i);
-%             break;
-%         end
+
         if evaluate
             quality(i, :) = testQuality(Sol, A)';
             err(i, :) = normpredict(test.Y, test.X, Sol);
@@ -64,16 +55,15 @@ end
 % Finding the bases
 if order > min(size(matrix))
     order = min(size(matrix));
-    [U, ~, V] = svds(matrix, order);
+    [U, B, V] = svds(matrix, order);
 else
-    [U, ~, V] = svds(matrix, order);
+    [U, B, V] = svds(matrix, order);
 end
 
 Max_iter = 100;
 objs = zeros(1, Max_iter);
 delta = 1e-5;
 t = 1;
-B = zeros(order);
 YB = B;
 
 if verbose; fprintf('Iter #: %5d', 0); end
@@ -217,10 +207,10 @@ end
 function quality = testQuality(Sol, A)
 
 quality = [0;0;0];
-% for i = 1:size(Sol, 3)
-%     quality(1) = quality(1) + norm(A - squeeze(Sol(:, :, i))', 'fro')^2;
-% end
-% quality(1) = sqrt(quality(1)/size(Sol, 3))/norm(A, 'fro');
+for i = 1:size(Sol, 3)
+    quality(1) = quality(1) + norm(A - squeeze(Sol(:, :, i))', 'fro')^2;
+end
+quality(1) = sqrt(quality(1)/size(Sol, 3))/norm(A, 'fro');
 
 quality(2) = quality(2) + rank(unfld(Sol, 1));
 quality(2) = quality(2) + rank(unfld(Sol, 2));
