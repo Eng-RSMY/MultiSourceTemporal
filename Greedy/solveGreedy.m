@@ -1,5 +1,6 @@
-function Sol = solveGreedy(Y, X, mu, Max_Iter)
+function Sol = solveGreedy(Y, X, mu, Max_Iter, A, test)
 
+global evaluate
 r = length(X);
 [p, n] = size(X{1});
 q = size(Y{1}, 1);
@@ -8,6 +9,8 @@ Sol = zeros(p, q, r);
 tempSol = cell(3, 1);
 delta = zeros(3, 1);
 obj = zeros(Max_Iter, 1);
+quality = zeros(Max_Iter, 3);
+err = zeros(Max_Iter, 2);
 for ll = 1:r; obj(1) = obj(1) + norm(Y{ll}, 'fro')^2; end
 for i = 1:Max_Iter-1
     [delta(1), tempSol{1}] = solveFold1(Y, X, Sol);
@@ -20,6 +23,10 @@ for i = 1:Max_Iter-1
         obj(i+1) = obj(i) - delta(ix);
     else 
         break
+    end
+    if evaluate
+        quality(i, :) = testQuality(Sol, A)';
+        err(i, :) = normpredict(test.Y, test.X, Sol);
     end
 end
 plot(1:i, obj(1:i))
@@ -48,7 +55,7 @@ Sol = fld(SS, 1, r);
 
 delta = 0;
 for ll = 1:r
-    delta = delta + norm(Y{ll}, 'fro') - norm(Y{ll} - squeeze(Sol(:, :, ll))'*X{ll}, 'fro');
+    delta = delta + norm(Y{ll}, 'fro')^2 - norm(Y{ll} - squeeze(Sol(:, :, ll))'*X{ll}, 'fro')^2;
 end
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -82,7 +89,7 @@ Sol = fld(SS, 2, r);
 % Computing delta
 delta = 0;
 for ll = 1:r
-    delta = delta + norm(Y{ll}, 'fro') - norm(Y{ll} - squeeze(Sol(:, :, ll))'*X{ll}, 'fro');
+    delta = delta + norm(Y{ll}, 'fro')^2 - norm(Y{ll} - squeeze(Sol(:, :, ll))'*X{ll}, 'fro')^2;
 end
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -108,7 +115,7 @@ Sol = fld(SS, 3, q);
 % Computing delta
 delta = 0;
 for ll = 1:r
-    delta = delta + norm(Y{ll}, 'fro') - norm(Y{ll} - squeeze(Sol(:, :, ll))'*X{ll}, 'fro');
+    delta = delta + norm(Y{ll}, 'fro')^2 - norm(Y{ll} - squeeze(Sol(:, :, ll))'*X{ll}, 'fro')^2;
 end
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -133,4 +140,31 @@ for i = 1:length(Y)
     mp = 2*tr*(Y{i}*X{i}');
     G = G + mp/m - 2*A*(X{i}*X{i}')*(tr^2)/(m^2);
 end
+end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+function quality = testQuality(Sol, A)
+
+quality = [0;0;0];
+for i = 1:size(Sol, 3)
+    quality(1) = quality(1) + norm(A - squeeze(Sol(:, :, i))', 'fro')^2;
+end
+quality(1) = sqrt(quality(1)/size(Sol, 3))/norm(A, 'fro');
+
+quality(2) = quality(2) + rank(unfld(Sol, 1));
+quality(2) = quality(2) + rank(unfld(Sol, 2));
+quality(2) = quality(2) + rank(unfld(Sol, 3));
+
+% quality(3) = TRComplexity(Sol);
+
+end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+function err = normpredict(Y, X, Sol)
+[~, ~, r] = size(Sol);
+err = [0, 0];
+for ll = 1:r
+    err(1) = err(1) + norm(Y{ll} - squeeze(Sol(:, :, ll))'*X{ll}, 'fro')^2;
+    err(2) = err(1)/mean(Y{ll}(:).^2);
+end
+err(1) = err(1)/size(Y{1}, 2);
+err = sqrt(err/r);
 end

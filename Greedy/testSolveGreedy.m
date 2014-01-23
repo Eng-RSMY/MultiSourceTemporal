@@ -12,7 +12,7 @@ p = 20;
 q = 10;
 r = 3;
 n = 1000;
-sig = 0.1;
+sig = 0;
 
 X = cell(r, 1);
 Y = cell(r, 1);
@@ -31,7 +31,7 @@ end
 
 mu = 2e-8;
 max_iter = 50;
-solveGreedyOrth(Y, X, mu, max_iter, A, test);
+% solveGreedyOrth(Y, X, mu, max_iter, A, test);
 
 
-% solveGreedy(Y, X, mu, max_iter);
+solveGreedy(Y, X, mu, max_iter, A, test);

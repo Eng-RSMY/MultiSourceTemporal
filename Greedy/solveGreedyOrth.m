@@ -117,7 +117,7 @@ Sol = fld(SS, 1, r);
 
 delta = 0;
 for ll = 1:r
-    delta = delta + norm(Y{ll}, 'fro') - norm(Y{ll} - squeeze(Sol(:, :, ll))'*X{ll}, 'fro');
+    delta = delta + norm(Y{ll}, 'fro')^2 - norm(Y{ll} - squeeze(Sol(:, :, ll))'*X{ll}, 'fro')^2;
 end
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -151,7 +151,7 @@ Sol = fld(SS, 2, r);
 % Computing delta
 delta = 0;
 for ll = 1:r
-    delta = delta + norm(Y{ll}, 'fro') - norm(Y{ll} - squeeze(Sol(:, :, ll))'*X{ll}, 'fro');
+    delta = delta + norm(Y{ll}, 'fro')^2 - norm(Y{ll} - squeeze(Sol(:, :, ll))'*X{ll}, 'fro')^2;
 end
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -177,7 +177,7 @@ Sol = fld(SS, 3, q);
 % Computing delta
 delta = 0;
 for ll = 1:r
-    delta = delta + norm(Y{ll}, 'fro') - norm(Y{ll} - squeeze(Sol(:, :, ll))'*X{ll}, 'fro');
+    delta = delta + norm(Y{ll}, 'fro')^2 - norm(Y{ll} - squeeze(Sol(:, :, ll))'*X{ll}, 'fro')^2;
 end
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
