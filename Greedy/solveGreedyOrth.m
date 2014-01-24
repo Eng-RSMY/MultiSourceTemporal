@@ -14,7 +14,7 @@ tempSol = cell(3, 1);
 delta = zeros(3, 1);
 obj = zeros(Max_Iter, 1);
 Yp = Y;
-quality = zeros(Max_Iter, 3);
+quality = zeros(Max_Iter, 5);
 err = zeros(Max_Iter, 2);
 for ll = 1:r; obj(1) = obj(1) + norm(Y{ll}, 'fro')^2; end
 for i = 1:Max_Iter-1
@@ -28,9 +28,9 @@ for i = 1:Max_Iter-1
 
         if evaluate
             quality(i+1, :) = testQuality(Sol, A, X, Y)';
-            if ~isempty(test.X)
-                err(i+1, :) = normpredict(test.Y, test.X, Sol); 
-            end
+%             if ~isempty(test.X)
+%                 err(i+1, :) = normpredict(test.Y, test.X, Sol); 
+%             end
         end
     end
 end

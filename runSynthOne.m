@@ -1,22 +1,27 @@
-function runSynthOne
+function [qReg, qGreed] = runSynthOne(tTrain)
 % The goal of this function is to evaluate the performance of the
 % algorithms on the given dataset length
 global verbose
-addpath(genpath('./Greedy/'))
-addpath(genpath('./MLMTL/'))
-addpath('./TTI/nway331/')
 
 % Dataset settings
 rankTensor = 2;     % The CP rank of the tensor
-tTrain = 100;
+% tTrain = 100;
 tValid = 100;
 tTest = 100;
-
-nLag = 1;
 nTask = 10;
 nLoc = 20;
 spRatio = floor(0.25*nLoc);   % How sparse the singular vectors should be
 sig = 0.2;  % Noise Variance
+
+% Running settings
+% Settings for Greedy
+nLag = 1;
+mu = 1e-10;     % Eliminate the effect of mu 
+max_iter = 10;  % Run the greedy algorithm for these many steps
+% Settings for Regularized version
+lamResolution = 1; 
+Lambda = logspace(-4, 5, lamResolution); 
+beta = 2e-2;
 %% Create the dataset
 % Creating the tensor
 A = zeros(nLoc, nLoc, nTask);
@@ -86,8 +91,6 @@ for i = 1:nTask
 end
 % Run the regularized code
 indicators = [nLoc*nLag, nTask, nLoc];
-Lambda = logspace(-4, 5, 2); 
-beta = 2e-2;
 
 err = 0*Lambda;
 % Training phase
@@ -99,8 +102,40 @@ for i = 1:length(Lambda)
 end
 tic
 [~, ix] = min(err);
-[~, SolConv] = MLMTL_Mixture( X, Y, indicators, beta, Lambda(ix), 500);
+[~, SolConv] = MLMTL_Mixture( train.X, train.Y, indicators, beta, Lambda(ix), 500);
 timeReg = toc;
 SolConv = SolConv.data;
 [errReg, lrcompReg, trcompReg, predReg] = testQuality2(SolConv, A, test.Y, test.X);
+qReg = [errReg, lrcompReg, trcompReg, predReg, timeReg];
 %% Run the Greedy Algorithm
+train.X = cell(nTask, 1); train.Y = cell(nTask, 1);
+valid.X = cell(nTask, 1); valid.Y = cell(nTask, 1);
+test.X = cell(nTask, 1); test.Y = cell(nTask, 1);
+for i = 1:nTask
+    train.Y{i} = tr_series{i}(:, nLag+1:tTrain);
+    train.X{i} = zeros(nLag*nLoc, (tTrain - nLag));
+    for ll = 1:nLag
+        train.X{i}(nLoc*(ll-1)+1:nLoc*ll, :) = tr_series{i}(:, nLag+1-ll:tTrain-ll);
+    end
+    valid.Y{i} = v_series{i}(:, nLag+1:tValid);
+    valid.X{i} = zeros(nLag*nLoc, (tValid - nLag));
+    for ll = 1:nLag
+        valid.X{i}(nLoc*(ll-1)+1:nLoc*ll, :) = v_series{i}(:, nLag+1-ll:tValid-ll);
+    end
+    test.Y{i} = te_series{i}(:, nLag+1:tTrain);
+    test.X{i} = zeros(nLag*nLoc, (tTrain - nLag));
+    for ll = 1:nLag
+        test.X{i}(nLoc*(ll-1)+1:nLoc*ll, :) = te_series{i}(:, nLag+1-ll:tTrain-ll);
+    end
+end
+global evaluate
+evaluate = 1;
+[~, qualityGreedy] = solveGreedyOrth(train.Y, train.X, mu, max_iter, A, valid);
+[~, ix] = min(qualityGreedy(2:end, 5));
+max_iter = ix;
+evaluate = 0;
+tic
+Sol = solveGreedyOrth(train.Y, train.X, mu, max_iter, A, valid);
+timeGreed = toc;
+qualityGreedy = testQuality(Sol, A, test.X, test.Y);
+qGreed = [qualityGreedy', timeGreed];
