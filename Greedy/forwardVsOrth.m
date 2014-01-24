@@ -39,7 +39,9 @@ for j = 1:length(sig)
     [~, qSolFor{j}] = solveGreedy(Y, X, mu, max_iter, A, test);
     disp(j)
 end
+save('greedyForOrth.mat', 'qSolFor', 'qSolOrth', 'max_iter', 'sig')
 %% Plotting
+load('greedyForOrth.mat')
 ind = (1:max_iter)';
 for i = 1:6
     figure

@@ -2,6 +2,7 @@
 clc
 clear
 
+addpath('./GreedySubFunc/')
 addpath(genpath('../MLMTL/'))
 addpath('../TTI/nway331/')
 
@@ -36,16 +37,7 @@ for i = 1:length(Lambda)
     [~, SolConv] = MLMTL_Mixture( X, Y, indicators, beta, Lambda(i), 150);
     toc
     SolConv = SolConv.data;
-    for ll = 1:size(SolConv, 2)
-        err(i) = err(i) + norm(A-squeeze(SolConv(:, ll, :)), 'fro')^2;
-    end
-    for ll = 1:size(SolConv, 2)
-        err2(i) = err2(i) + norm(A-squeeze(SolConv(:, ll, :))', 'fro')^2;
-    end
-    ranks(i) = ranks(i) + rank(unfld(SolConv, 1));
-    ranks(i) = ranks(i) + rank(unfld(SolConv, 2));
-    ranks(i) = ranks(i) + rank(unfld(SolConv, 3));
-    trcomp(i) = TRComplexity(SolConv);
+    [err(i), ranks(i), trcomp(i)] = testQuality2(SolConv, A);
     disp(i)
 end
 qualityNuc = [err; ranks; trcomp];
@@ -62,19 +54,23 @@ for i = 1:nTask
         X{i}(nLoc*(ll-1)+1:nLoc*ll, :) = series{i}(:, nLag+1-ll:tLen-ll);
     end
 end
+test.X = [];
+test.Y = [];
 
 mu = 1e-4;
 max_iter = 10;
 tic
-[~, qualityGreedy] = solveGreedyOrth(Y, X, mu, max_iter, A);
+[~, qualityGreedy] = solveGreedyOrth(Y, X, mu, max_iter, A, test);
 toc
+save('tempBench.mat', 'qualityNuc', 'Lambda', 'qualityGreedy')
 %% Print the results
-scatter(sqrt(qualityNuc(1, :)), qualityNuc(2, :), 'b', 'LineWidth',1.5)
+load tempBench.mat
+plot(qualityNuc(1, :), qualityNuc(2, :), 'o', 'LineWidth',3)
 hold on
-scatter(sqrt(qualityGreedy(:, 1)), qualityGreedy(:, 2), '^', 'LineWidth',1.5)
+plot(qualityGreedy(:, 2), qualityGreedy(:, 3), '^', 'LineWidth',3)
 
-figure
-
-scatter(sqrt(qualityNuc(1, :)), qualityNuc(3, :), 'b', 'LineWidth',1.5)
-hold on
-scatter(sqrt(qualityGreedy(:, 1)), qualityGreedy(:, 3), '^', 'LineWidth',1.5)
+% figure
+% 
+% scatter(sqrt(qualityNuc(1, :)), qualityNuc(3, :), 'b', 'LineWidth',1.5)
+% hold on
+% scatter(sqrt(qualityGreedy(:, 1)), qualityGreedy(:, 3), '^', 'LineWidth',1.5)

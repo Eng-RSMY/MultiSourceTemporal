@@ -2,6 +2,7 @@
 clc
 % clear
 
+addpath('./GreedySubFunc/')
 addpath('../TTI/nway331/')
 addpath(genpath('../MLMTL/'))
 load('../data/climateP17.mat')
@@ -36,7 +37,7 @@ end
 
 mu = 1e-8;
 max_iter = 100;
-[~, qualityGreedy, errGreedy] = solveGreedyOrth(Y, X, mu, max_iter, A, test);
+[~, qualityGreedy] = solveGreedy(Y, X, mu, max_iter, A, test);
 
 
 %% The Nuclear norm Solution

@@ -27,8 +27,10 @@ for i = 1:Max_Iter-1
         [Yp, Sol, obj(i+1)] = project(Y, X, Sol, i); % Do an orthogonal projection step here
 
         if evaluate
-            quality(i, :) = testQuality(Sol, A, X, Y)';
-            err(i, :) = normpredict(test.Y, test.X, Sol);
+            quality(i+1, :) = testQuality(Sol, A, X, Y)';
+            if ~isempty(test.X)
+                err(i+1, :) = normpredict(test.Y, test.X, Sol); 
+            end
         end
     end
 end

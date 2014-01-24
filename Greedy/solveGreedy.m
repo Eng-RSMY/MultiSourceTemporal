@@ -1,6 +1,6 @@
 function [Sol, quality] = solveGreedy(Y, X, mu, Max_Iter, A, test)
 
-global evaluate
+global evaluate verbose
 r = length(X);
 [p, n] = size(X{1});
 q = size(Y{1}, 1);
@@ -12,6 +12,7 @@ obj = zeros(Max_Iter, 1);
 quality = zeros(Max_Iter, 3);
 err = zeros(Max_Iter, 2);
 for ll = 1:r; obj(1) = obj(1) + norm(Y{ll}, 'fro')^2; end
+if verbose; fprintf('Iter #: %5d', 0); end
 for i = 1:Max_Iter-1
     [delta(1), tempSol{1}] = solveFold1(Y, X, Sol);
     [delta(2), tempSol{2}] = solveFold2(Y, X, Sol);
@@ -25,11 +26,17 @@ for i = 1:Max_Iter-1
         break
     end
     if evaluate
-        quality(i, :) = testQuality(Sol, A, X, Y)';
-        err(i, :) = normpredict(test.Y, test.X, Sol);
+        quality(i+1, :) = testQuality(Sol, A, X, Y)';
+        err(i+1, :) = normpredict(test.Y, test.X, Sol);
+    end
+    
+    if verbose
+        fprintf('%c%c%c%c%c%c', 8,8,8,8,8,8);
+        fprintf('%5d ', i);
     end
 end
 quality = [obj, quality, err];
 % [obj, ERMSE, LRCp, TKCp, PRMSE, NPRMSE]
 % plot(1:i, obj(1:i))
+if verbose; fprintf('\n'); end
 end
