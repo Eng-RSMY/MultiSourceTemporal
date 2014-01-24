@@ -2,7 +2,7 @@ function [q1, q2, q3, q4] = testQuality2(Sol, A, Y, X)
 % [errReg, rankReg, trcompReg, predReg]
 q1 = 0;
 for i = 1:size(Sol, 2)
-    q1 = q1 + norm(squeeze(A(:,:,i)) - squeeze(Sol(:, i, :)), 'fro')^2/norm(squeeze(A(:,:,i)), 'fro')^2;
+    q1 = q1 + norm(squeeze(A(:,:,i)) - squeeze(Sol(:, i, :)), 'fro')^2; %/norm(squeeze(A(:,:,i)), 'fro')^2;
 end
 q1 = sqrt(q1/size(Sol, 2));
 

@@ -10,16 +10,16 @@ tValid = 100;
 tTest = 100;
 nTask = 10;
 nLoc = 20;
-spRatio = floor(0.25*nLoc);   % How sparse the singular vectors should be
+spRatio = floor(0.75*nLoc);   % How sparse the singular vectors should be
 sig = 0.2;  % Noise Variance
 
 % Running settings
 % Settings for Greedy
 nLag = 1;
 mu = 1e-10;     % Eliminate the effect of mu 
-max_iter = 10;  % Run the greedy algorithm for these many steps
+max_iter = 50;  % Run the greedy algorithm for these many steps
 % Settings for Regularized version
-lamResolution = 1; 
+lamResolution = 8; 
 Lambda = logspace(-4, 5, lamResolution); 
 beta = 2e-2;
 %% Create the dataset
@@ -95,10 +95,10 @@ indicators = [nLoc*nLag, nTask, nLoc];
 err = 0*Lambda;
 % Training phase
 for i = 1:length(Lambda)
-    [~, SolConv] = MLMTL_Mixture( train.X, train.Y, indicators, beta, Lambda(i), 500);
+    [~, SolConv] = MLMTL_Mixture( train.X, train.Y, indicators, beta, Lambda(i), 150);
     SolConv = SolConv.data;
     [~, ~, ~, err(i)] = testQuality2(SolConv, A, valid.Y, valid.X);
-    if verbose; disp(i); end
+    if verbose; fprintf('Reg: %d\n', Lambda(i)); end
 end
 tic
 [~, ix] = min(err);
@@ -122,20 +122,20 @@ for i = 1:nTask
     for ll = 1:nLag
         valid.X{i}(nLoc*(ll-1)+1:nLoc*ll, :) = v_series{i}(:, nLag+1-ll:tValid-ll);
     end
-    test.Y{i} = te_series{i}(:, nLag+1:tTrain);
-    test.X{i} = zeros(nLag*nLoc, (tTrain - nLag));
+    test.Y{i} = te_series{i}(:, nLag+1:tTest);
+    test.X{i} = zeros(nLag*nLoc, (tTest - nLag));
     for ll = 1:nLag
-        test.X{i}(nLoc*(ll-1)+1:nLoc*ll, :) = te_series{i}(:, nLag+1-ll:tTrain-ll);
+        test.X{i}(nLoc*(ll-1)+1:nLoc*ll, :) = te_series{i}(:, nLag+1-ll:tTest-ll);
     end
 end
 global evaluate
 evaluate = 1;
-[~, qualityGreedy] = solveGreedyOrth(train.Y, train.X, mu, max_iter, A, valid);
+[~, qualityGreedy] = solveGreedy(train.Y, train.X, mu, max_iter, A, valid);
 [~, ix] = min(qualityGreedy(2:end, 5));
 max_iter = ix;
 evaluate = 0;
 tic
-Sol = solveGreedyOrth(train.Y, train.X, mu, max_iter, A, valid);
+Sol = solveGreedy(train.Y, train.X, mu, max_iter, A, valid);
 timeGreed = toc;
 qualityGreedy = testQuality(Sol, A, test.X, test.Y);
 qGreed = [qualityGreedy', timeGreed];

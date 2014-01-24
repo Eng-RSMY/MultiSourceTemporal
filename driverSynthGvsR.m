@@ -10,4 +10,13 @@ addpath(genpath('./Greedy/'))
 addpath(genpath('./MLMTL/'))
 addpath('./TTI/nway331/')
 
-[qReg, qGreed] = runSynthOne(100);
+% Greedy Quality: [obj, ERMSE, LRCp, TKCp, PRMSE, NPRMSE, time]
+% REgularized Quality: [errReg, rankReg, trcompReg, predReg, time]
+
+tlen = floor(logspace(1, 3, 8));
+
+qGreed = zeros(length(tlen), 6);
+qReg = zeros(length(tlen), 5);
+parfor i = 1:length(tlen)
+    [qReg(:, i), qGreed(:, i)] = runSynthOne(tlen(i));
+end
