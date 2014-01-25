@@ -48,4 +48,4 @@ for j = 1:nTask
 end
 
 name = sprintf('synth%d_%d', tTrain, id);
-save(['./datasets/' name], 'tr_series', 'v_series', 'te_series', 'A')
+save(['./datasets/' name], 'tr_series', 'v_series')
