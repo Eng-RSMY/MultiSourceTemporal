@@ -3,7 +3,7 @@ global verbose
 global draw
 n = size(series, 1);
 
-delta = 4e-2;
+delta = 10;
 
 MaxIter = 200;
 
@@ -39,6 +39,12 @@ for i = 1:MaxIter
     if verbose;
         fprintf('%c%c%c%c%c%c', 8,8,8,8,8,8);
         fprintf('%5d ', i);
+    end
+    if (obj(i) > 10*obj(1)) || (isnan(obj(i)))
+        for ll = 1:nLag; YS{ll} = zeros(n);  end
+        Yb = 0*b;
+        delta = delta/10;
+        MaxIter = MaxIter + i;
     end
 end
 if verbose; fprintf('\n'); end

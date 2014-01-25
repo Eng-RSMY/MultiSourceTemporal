@@ -21,7 +21,7 @@ for ll = 1:size(Sol, 3)
     quality(4) = quality(4) + norm(Series{ll}(:, 2:T) - squeeze(Sol(:, :, ll))*Series{ll}(:, L:T-1), 'fro')^2;
     quality(5) = quality(5)/mean(mean(Series{ll}(:, 2:T).^2));
 end
-quality(4) = quality(4)/(T-1);
-quality(4:5) = sqrt(quality(4:5)/size(Sol, 3)/(T-1));
+quality(4) = quality(4);
+quality(4:5) = sqrt(quality(4:5)/size(Sol, 3)/numel(Series{1}(:, L:T-1)));
 
 end

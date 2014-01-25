@@ -5,8 +5,8 @@ nLag = 1;
 [~, nLoc, nTask] = size(A);
 
 grad = {@gradGaussian, 'Gaussian'};
-lamResolution = 5; 
-Lambda = logspace(-3, 3, lamResolution); 
+lamResolution = 10; 
+Lambda = logspace(-3, 1, lamResolution); 
 errC = zeros(length(Lambda), 5);
 % Training phase
 Sol = zeros(nLoc, nLoc, nTask);
