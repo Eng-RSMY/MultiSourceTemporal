@@ -2,6 +2,7 @@ function [qFor, qOrth] = runSynthGreedy(name)
 load(['./data/synth/datasets/' name])
 
 [~, nLoc, nTask] = size(A);
+nLag = 1;
 tTrain = size(tr_series{1}, 2);
 tTest = size(te_series{1}, 2);
 tValid = size(v_series{1}, 2);
