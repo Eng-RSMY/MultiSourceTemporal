@@ -26,7 +26,7 @@ tic
 index{1} = nLag+1:size(te_series{1}, 2);
 index{2} = [];
 for j = 1:nTask
-    Sol(:, :, j) = lowrankGLARP(te_series{j}, TLam(i), nLag, index, grad);
+    Sol(:, :, j) = lowrankGLARP(te_series{j}, TLam(ix), nLag, index, grad);
 end
 timeGreed = toc;
 qualityGreedy = testQuality3(Sol, A, te_series);
