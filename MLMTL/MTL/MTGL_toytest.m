@@ -6,4 +6,4 @@ series = cell(1,r);
 for i = 1:r
     series{i} = rand(q,p);
 end
-[ W_tensor ] = MTGL( series,'L211');
+[ W_tensor ] = MTGL( series,'L21', 1e-4);
