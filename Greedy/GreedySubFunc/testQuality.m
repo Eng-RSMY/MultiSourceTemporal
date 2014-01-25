@@ -20,7 +20,7 @@ for ll = 1:size(Sol, 3)
     quality(4) = quality(4) + norm(Y{ll} - squeeze(Sol(:, :, ll))*X{ll}, 'fro')^2;
     quality(5) = quality(5)/mean(Y{ll}(:).^2);
 end
-quality(4) = quality(4)/size(Y{1}, 2);
-quality(4:5) = sqrt(quality(4:5)/size(Sol, 3)/size(X{1}, 2));
+quality(4) = quality(4)/numel(Y{1});
+quality(4:5) = sqrt(quality(4:5)/size(Sol, 3));
 
 end

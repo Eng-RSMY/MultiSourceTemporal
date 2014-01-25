@@ -38,7 +38,7 @@ evaluate = 1;
 %% Forward Greedy
 [~, qualityGreedy] = solveGreedy(train.Y, train.X, mu, max_iter, A, valid);
 [~, ix] = min(qualityGreedy(2:end, 5));
-max_iter2 = ix;
+max_iter2 = ix+1;   % Because it runs until max_iter-1
 evaluate = 0;
 tic
 Sol = solveGreedy(train.Y, train.X, mu, max_iter2, A, valid);
@@ -48,7 +48,7 @@ qFor = [qualityGreedy', timeGreed];
 %% Orth Greedy
 [~, qualityGreedy] = solveGreedyOrth(train.Y, train.X, mu, max_iter, A, valid);
 [~, ix] = min(qualityGreedy(2:end, 5));
-max_iter2 = ix;
+max_iter2 = ix+1;
 evaluate = 0;
 tic
 Sol = solveGreedyOrth(train.Y, train.X, mu, max_iter2, A, valid);
