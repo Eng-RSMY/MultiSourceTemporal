@@ -35,6 +35,7 @@ for ll = 1:nLag
     Solm{ll} = Sol(:, nVar*(ll-1)+1:nVar*ll);
 end
 [err, normerr] = predictSp(series, Solm, b, index{2}, grad{2});
+Solm = Solm{1}; %%%%%%%%%%%%%%%%%%%%%%%
 end
 %% The gradient function
 function [obj, G] = gradLow(series, Sol, b, index, grad)

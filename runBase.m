@@ -14,11 +14,11 @@ qOrth = cell(4, 1);
 for t = 1:length(tLen)
     qSp{t} = zeros(10, 6);
     qSpTemp = qSp{t};
-    for i = 1:10
+    parfor i = 1:10
         name = sprintf('synth%d_%d.mat', tLen(t), i);
-        qSpTemp(i, :) = runSynthBase(name);
+        qSpTemp(i, :) = runSynthBaseLR(name);
     end
     qSp{t} = qSpTemp;
-    save('nuclResultsBase.mat', 'qSp')
+    save('lrResultsSynth.mat', 'qSp')
     disp(t)
 end
