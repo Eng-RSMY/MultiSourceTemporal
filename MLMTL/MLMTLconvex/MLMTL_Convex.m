@@ -1,7 +1,7 @@
 function [ W ,tensorW,Ls] = MLMTL_Convex( X, Y, indicators, beta, lambda, outerNiTPre, thresholdPre, groundW )
 %MLMTL Summary of this function goes here
 %   Detailed explanation goes here
-
+global verbose
 outerNiT=1000;
 if nargin>5 && ~isempty(outerNiTPre)
     outerNiT=outerNiTPre;
@@ -88,7 +88,9 @@ while true
     
 %     if( abs(L-oldL)< threshold)
     if(norm(Wmat(1:end)-oldW(1:end)) < threshold)
-        fprintf('MLMTL_Convex:Converge after %d iteration \n', oit);
+        if verbose
+            fprintf('MLMTL_Convex:Converge after %d iteration \n', oit);
+        end
         break;
     end
     oldW=Wmat;

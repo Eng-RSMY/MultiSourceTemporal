@@ -2,6 +2,7 @@ function [ W ,tensorW, Ls] = MLMTL_Mixture( X, Y, indicators, beta, lambda,outer
 %MLMTL Summary of this function goes here
 %   Detailed explanation goes here
 
+global verbose
 outerNiT=1000;
 
 if nargin>5 && ~isempty(outerNiTPre)
@@ -113,7 +114,9 @@ while true
     
 %     if( abs(L-oldL)< threshold)
     if(norm(Wmat(1:end)-oldW(1:end)) < threshold)
-        fprintf('MLMTL_Mixture:Converge after %d iteration \n', oit);
+        if verbose
+            fprintf('MLMTL_Mixture:Converge after %d iteration \n', oit);
+        end
         break;
     end
     oldW=Wmat;
