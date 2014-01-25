@@ -46,3 +46,4 @@ if verbose; fprintf('\n'); end
 if draw figure; plot(obj); end
 
 [err, normerr] = predictSp(series, S, b, index{2}, grad{2});
+S = S{1};   %% Very temporarily %%%%%%
