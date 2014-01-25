@@ -44,7 +44,6 @@ Sol = solveGreedy(train.Y, train.X, mu, max_iter2, A, valid);
 timeGreed = toc;
 qualityGreedy = testQuality(Sol, A, test.X, test.Y);
 qFor = [qualityGreedy', timeGreed];
-
 %% Orth Greedy
 [~, qualityGreedy] = solveGreedyOrth(train.Y, train.X, mu, max_iter, A, valid);
 [~, ix] = min(qualityGreedy(2:end, 5));
