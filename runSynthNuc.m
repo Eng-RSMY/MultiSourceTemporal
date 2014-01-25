@@ -45,10 +45,10 @@ errC = 0*Lambda;
 errM = errC;
 % Training phase
 for i = 1:length(Lambda)
-    [~, SolMix] = MLMTL_Mixture( train.X, train.Y, indicators, beta, Lambda(i), 500);
+    [~, SolMix] = MLMTL_Mixture( train.X, train.Y, indicators, beta, Lambda(i), 250);
     SolMix = SolMix.data;
     [~, ~, ~, errM(i)] = testQuality2(SolMix, A, valid.Y, valid.X);
-    [~, SolConv] = MLMTL_Convex( train.X, train.Y, indicators, beta, Lambda(i), 500);
+    [~, SolConv] = MLMTL_Convex( train.X, train.Y, indicators, beta, Lambda(i), 250);
     SolConv = SolConv.data;
     [~, ~, ~, errC(i)] = testQuality2(SolConv, A, valid.Y, valid.X);
     if verbose; fprintf('Reg: %d\n', Lambda(i)); end
@@ -56,7 +56,7 @@ end
 % Final evaluations
 [~, ix] = min(errM);
 tic
-[~, SolMix] = MLMTL_Mixture( train.X, train.Y, indicators, beta, Lambda(ix), 500);
+[~, SolMix] = MLMTL_Mixture( train.X, train.Y, indicators, beta, Lambda(ix), 250);
 timeReg = toc;
 SolMix = SolMix.data;
 [errReg, lrcompReg, trcompReg, predReg] = testQuality2(SolMix, A, test.Y, test.X);
@@ -64,7 +64,7 @@ qRegM = [errReg, lrcompReg, trcompReg, predReg, timeReg];
 
 [~, ix] = min(errC);
 tic
-[~, SolConv] = MLMTL_Convex( train.X, train.Y, indicators, beta, Lambda(ix), 500);
+[~, SolConv] = MLMTL_Convex( train.X, train.Y, indicators, beta, Lambda(ix), 250);
 timeReg = toc;
 SolConv = SolConv.data;
 [errReg, lrcompReg, trcompReg, predReg] = testQuality2(SolConv, A, test.Y, test.X);
