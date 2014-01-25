@@ -6,8 +6,8 @@ tTrain = size(tr_series{1}, 2);
 tTest = size(te_series{1}, 2);
 tValid = size(v_series{1}, 2);
 nLag = 1;
-lamResolution = 5; 
-Lambda = logspace(-3, 3, lamResolution); 
+lamResolution = 15; 
+Lambda = logspace(-5, 5, lamResolution); 
 beta = 2e-2;
 
 % Format the datasets
@@ -45,10 +45,10 @@ errC = 0*Lambda;
 errM = errC;
 % Training phase
 for i = 1:length(Lambda)
-    [~, SolMix] = MLMTL_Mixture( train.X, train.Y, indicators, beta, Lambda(i), 150);
+    [~, SolMix] = MLMTL_Mixture( train.X, train.Y, indicators, beta, Lambda(i), 500);
     SolMix = SolMix.data;
     [~, ~, ~, errM(i)] = testQuality2(SolMix, A, valid.Y, valid.X);
-    [~, SolConv] = MLMTL_Convex( train.X, train.Y, indicators, beta, Lambda(i), 150);
+    [~, SolConv] = MLMTL_Convex( train.X, train.Y, indicators, beta, Lambda(i), 500);
     SolConv = SolConv.data;
     [~, ~, ~, errC(i)] = testQuality2(SolConv, A, valid.Y, valid.X);
     if verbose; fprintf('Reg: %d\n', Lambda(i)); end
