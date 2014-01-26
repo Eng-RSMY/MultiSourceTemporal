@@ -1,6 +1,6 @@
 clear;
 clc;
-addpath(genpath('~/Documents/MATLAB/MultiSourceTemporal'));
+addpath(genpath('../../../MultiSourceTemporal'));
 load 'tensor_checkin_small';
 ratio = 0.1;
 lambdas = logspace(-3,3,10);

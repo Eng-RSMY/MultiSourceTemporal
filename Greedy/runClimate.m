@@ -36,8 +36,9 @@ for i = 1:nTask
 end
 
 mu = 1e-20;
-max_iter = 100;
-[~, qualityGreedy] = solveGreedy(Y, X, mu, max_iter, A, test);
+max_iter = 200;
+[~, qualityGreedy] = solveGreedyOrth(Y, X, mu, max_iter, A, test);
+save('qualityGreedyClimate.mat', 'qualityGreedy')
 
 
 %% The Nuclear norm Solution
