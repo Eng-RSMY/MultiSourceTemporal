@@ -10,7 +10,6 @@ tempSol = cell(3, 1);
 delta = zeros(3, 1);
 obj = zeros(Max_Iter, 1);
 quality = zeros(Max_Iter, 5);
-err = zeros(Max_Iter, 2);
 for ll = 1:r; obj(1) = obj(1) + norm(Y{ll}, 'fro')^2; end
 if verbose; fprintf('Iter #: %5d', 0); end
 for i = 1:Max_Iter-1
