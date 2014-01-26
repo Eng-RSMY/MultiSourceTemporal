@@ -1,4 +1,4 @@
-function [Sol, quality] = solveGreedyOrth(Y, X, mu, Max_Iter, A, test) % A, test)
+function [Sol, quality] = solveGreedyOrth(Y, X, mu, Max_Iter, A, test)
 % X and Y are cells of size nTask
 % Y{i} is a matrix of size (nPred) x (nData)
 % X{i} is a matrix of size (nFeature) x (nData)
@@ -27,14 +27,12 @@ for i = 1:Max_Iter-1
         [Yp, Sol, obj(i+1)] = project(Y, X, Sol, i); % Do an orthogonal projection step here
 
         if evaluate
-            quality(i+1, :) = testQuality(Sol, A, X, Y)';
-%             if ~isempty(test.X)
-%                 err(i+1, :) = normpredict(test.Y, test.X, Sol); 
-%             end
+            quality(i+1, :) = testQuality(Sol, A, test.X, test.Y)';
         end
     end
 end
-quality = [obj, quality, err];
+quality = [obj, quality];
+quality(i+1:end, :) = [];
 % [obj, ERMSE, LRCp, TKCp, PRMSE, NPRMSE]
 % plot(1:i, obj(1:i))
 
