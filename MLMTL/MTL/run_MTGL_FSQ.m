@@ -3,7 +3,8 @@ clc;
 addpath(genpath('~/Documents/MATLAB/MultiSourceTemporal'));
 load 'tensor_checkin_small';
 ratio = 0.1;
-lambdas = [-3,3,10];
+lambdas = logspace(-3,3,10);
+
 [Dat_eval , Dat_test] = MTGL_Datpre(series,ratio); 
 
 fprintf('Running Lasso\n');
