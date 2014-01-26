@@ -37,7 +37,7 @@ end
 
 mu = 1e-20;
 max_iter = 100;
-[~, qualityGreedy] = solveGreedyOrth(Y, X, mu, max_iter, A, test);
+[~, qualityGreedy] = solveGreedy(Y, X, mu, max_iter, A, test);
 
 
 %% The Nuclear norm Solution
