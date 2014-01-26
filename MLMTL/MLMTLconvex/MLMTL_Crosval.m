@@ -4,7 +4,7 @@ function [ W , train_time] = MLMTL_Crosval( X_eval,Y_eval, Func_train, Func_test
 
 global verbose;
 
-K = 10; % 10-fold cross validation
+K = 5; % 10-fold cross validation
 
 dimModes = paras.dimModes;
 beta = paras.beta;
@@ -29,7 +29,7 @@ end
 %     plot(errs);
 
 tic;
-[ W ~ ] = feval(Func_train, X_eval, Y_eval, dimModes, beta, opt_lambda,paras);
+[ W ~ ] = feval(Func_train, X_eval, Y_eval, dimModes, beta, opt_lambda);
 train_time = toc;
 
 end
