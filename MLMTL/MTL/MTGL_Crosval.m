@@ -6,29 +6,48 @@ function [ W, opt_lambda, train_time] = MTGL_Crosval( X_eval,Y_eval, funcname, l
 
 
 global verbose;
-numTask = length(X_eval);
 N = size(X_eval{1},1);
 K = 5; % 10-fold cross validation
 
-
-X_train = X_eval;
-Y_train = Y_eval;
-X_valid = X_eval;
-Y_valid = Y_eval;
-
-avg_err=inf;
 opt_lambda = -inf;
 errs = [];
 
-for lambda = lambdas  
-    err =0;
-    indices = crossvalind('Kfold',N,K);
+nLambda = length(lambdas);
+
+
     
+parfor l = 1:nLambda  
+    lambda = lambdas(l);
+    [avg_err] = Avg_Err(X_eval,Y_eval,funcname, K, lambda);
+     errs = [errs,avg_err];
+end
+[~, idx] = min(errs);
+opt_lambda  = lambdas(idx);
+if verbose
+    fprintf('selected lambda %d\n',opt_lambda);
+end
+
+tic;
+[W]  = MTGL_Train(X_eval, Y_eval, funcname, opt_lambda);
+train_time = toc;
+
+end
+
+function [avg_err] = Avg_Err(X_eval,Y_eval,funcname, K, lambda)
+global verbose
+    N = size(X_eval{1},1);
+    numTask = length(X_eval);
+
+    indices = crossvalind('Kfold',N,K);
+    X_train = X_eval;
+    Y_train = Y_eval;
+    X_valid = X_eval;
+    Y_valid = Y_eval;
+    err = 0;
     if verbose
-            fprintf('Fold:');
+        fprintf('Fold:');
     end
     for k = 1:K
-
         validate = (indices ==k); train = ~validate;
         for i = 1:numTask
             X_valid{i} = X_eval{i}(validate,:);
@@ -44,26 +63,10 @@ for lambda = lambdas
         RMSE = Quality.RMSE;
         err  = err + RMSE;        
     end
-    
-    err = err/K;
     if verbose
-        fprintf('\n lambda: %d, avg_err: %d\n',lambda, err);
+        fprintf('\n');
     end
-    errs = [errs,err];
-     if(err < avg_err)
-        opt_lambda = lambda;
-        avg_err = err;
-     end
-end
 
-if verbose
-    fprintf('selected lambda %d\n',opt_lambda);
-end
-
-tic;
-[W]  = MTGL_Train(X_eval, Y_eval, funcname, lambda);
-train_time = toc;
-
-
+    avg_err = err/K;
 end
 
