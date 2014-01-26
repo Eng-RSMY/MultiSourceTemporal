@@ -7,7 +7,7 @@ function [ W, opt_lambda, train_time] = MTGL_Crosval( X_eval,Y_eval, funcname, l
 
 global verbose;
 N = size(X_eval{1},1);
-K = 5; % 10-fold cross validation
+K = 5; % 5-fold cross validation
 
 errs = [];
 
