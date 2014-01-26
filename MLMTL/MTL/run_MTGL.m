@@ -3,7 +3,7 @@ clc;
 addpath(genpath('~/Documents/MATLAB/MultiSourceTemporal'));
 load 'climateP17';
 ratio = 0.1;
-lambdas = [-3,3,10];
+lambdas = logspace(-3,3,10);
 [Dat_eval , Dat_test] = MTGL_Datpre(series,ratio); 
 
 fprintf('Running Lasso\n');
@@ -24,5 +24,3 @@ fprintf('Running Dirty\n');
 Quality = MTGL_Test(Dat_test.X, Dat_test.Y, W);
 fprintf('RMSE %d, NRMSE %d, Rank %d, Time %d\n', Quality.RMSE, Quality.NRMSE,Quality.Rank, train_time);
 save('MTGL_Dirty_climate.mat','Quality','train_time','opt_lambda','W');
-
-exit;
