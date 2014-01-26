@@ -1,4 +1,4 @@
-function [ W ,tensorW,Ls] = MLMTL_Convex( X, Y, indicators, beta, lambda, outerNiTPre, thresholdPre, groundW )
+function [ W ,tensorW,Ls,train_time] = MLMTL_Convex( X, Y, indicators, beta, lambda, outerNiTPre, thresholdPre, groundW )
 %MLMTL Summary of this function goes here
 %   Detailed explanation goes here
 global verbose
@@ -11,6 +11,7 @@ if nargin>6 && ~isempty(thresholdPre)
     threshold=thresholdPre;
 end
 
+tic;
 nTotalTasks=length(Y);
 nAttrs=getNAttrs(X);
 nModes=length(indicators);
@@ -108,13 +109,6 @@ end
 tensorW=W;
 W=tenmat(full(W), 1);
 W=W.data;
+train_time = toc;
 end
 
-function M = shrink(A, s)
-[U L V]=mySVD(A);
-eig=diag(L)-s;
-eig(eig<0)=0;
-eigM=diag(eig);
-L(1:size(eigM,1), 1:size(eigM,2))=eigM;
-M=U*L*V';
-end

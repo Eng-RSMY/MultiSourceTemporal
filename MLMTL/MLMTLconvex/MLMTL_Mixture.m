@@ -1,4 +1,4 @@
-function [ W ,tensorW, Ls] = MLMTL_Mixture( X, Y, indicators, beta, lambda,outerNiTPre, thresholdPre,innerNiTPre, groundW )
+function [ W ,tensorW, Ls , train_time] = MLMTL_Mixture( X, Y, indicators, beta, lambda,outerNiTPre, thresholdPre,innerNiTPre, groundW )
 %MLMTL Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -14,6 +14,7 @@ if nargin>6 && ~isempty(thresholdPre)
     threshold=thresholdPre;
 end
 
+tic;
 nTotalTasks=length(Y);
 nAttrs=getNAttrs(X);
 nModes=length(indicators);
@@ -136,6 +137,8 @@ end
 tensorW=W;
 W=tenmat(full(W), 1);
 W=W.data;
+
+train_time = toc;
 end
 
 

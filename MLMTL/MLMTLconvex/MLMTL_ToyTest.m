@@ -30,6 +30,22 @@ max_iter = 20; %% need to change the stop criteria as convergence
 
 
 threshold = 1e-5;
+lambdas =logspace(-1,1,2);
+
+paras.beta = beta;
+paras.dimModes = dimModes;
+
+for i = 1:nTasks
+    X_i=rand(nDim,nSample);
+    %     [U,S,V] = svd(X_i);
+    %     X_i = U(:,1:Rank)*S(1:Rank,1:Rank)*V(:,1:Rank)';
+    X{i} = X_i;
+    W(:,i) = rand(1,nDim);
+    Y{i}=X{i}'*W(:,i);
+end
+
+W_Convex = MLMTL_Crosval(X,Y,@MLMTL_Convex,@MLMTL_Test,lambdas, paras);
+%%
 
 for nSample = loop_var    
     

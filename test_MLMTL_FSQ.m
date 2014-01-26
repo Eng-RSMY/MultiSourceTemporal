@@ -79,7 +79,7 @@ outerNiTPre = 200;
 % r_Convex = [];
 % r_Mixture = [];
 
-pr = 0.2;
+pr = 0.1;
 [TrainIdx, TestIdx]  = crossvalind('HoldOut',nSample,pr);
 X_train = cell(1,numTask);
 Y_train = cell(1,numTask);
@@ -109,19 +109,25 @@ paras.beta = beta;
 paras.dimModes = dimModes;
 paras.outIter = outerNiTPre;
 
-W_Convex = MLMTL_Crosval(X_train,Y_train,@MLMTL_Convex,@MLMTL_Test,lambdas, paras);
-W_Mixture = MLMTL_Crosval(X_train,Y_train,@MLMTL_Mixture,@MLMTL_Test,lambdas, paras);
+% W_Convex = MLMTL_Crosval(X_train,Y_train,@MLMTL_Convex,@MLMTL_Test,lambdas, paras);
+% W_Mixture = MLMTL_Crosval(X_train,Y_train,@MLMTL_Mixture,@MLMTL_Test,lambdas, paras);
 
-% [ W_Convex ,~, ~ ] = MLMTL_Convex( X_train, Y_train, dimModes, beta, lambda, outerNiTPre);
-% [ W_Mixture ,~ ,~] = MLMTL_Mixture( X_train, Y_train, dimModes, beta, lambda,outerNiTPre);
 
 % select best parameter
+fprintf('Running Overlapped \n');
+[ W_Convex,~, ~, train_time ] = MLMTL_Convex( X_train, Y_train, dimModes, beta, 2.15, outerNiTPre);
+Quality = MLMTL_Test(X_test,Y_test, W_Convex);
+if verbose
+    fprintf('RMSE %d, NRMSE %d, Rank %d, Time %d\n', Quality.RMSE, Quality.NRMSE,Quality.Rank, train_time);
+end
+%%
 
-MSE_Convex = MLMTL_Test(X_test,Y_test, W_Convex);
-MSE_Mixture = MLMTL_Test(X_test,Y_test, W_Mixture);
+fprintf('Running Mixture \n');
+[ W_Mixture ,~ ,~,train_time] = MLMTL_Mixture( X_train, Y_train, dimModes, beta, 10,outerNiTPre);
+Quality = MLMTL_Test(X_test,Y_test, W_Mixture);
 
 if verbose
-    fprintf('Prediction MSE Convex: %d Mixture:  %d\n ',MSE_Convex,MSE_Mixture);
+    fprintf('RMSE %d, NRMSE %d, Rank %d, Time %d\n', Quality.RMSE, Quality.NRMSE,Quality.Rank, train_time);
 end
 
 % r_Convex = [r_Convex,MSE_Convex];

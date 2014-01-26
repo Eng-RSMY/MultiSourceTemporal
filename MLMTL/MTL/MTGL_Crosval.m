@@ -9,13 +9,10 @@ global verbose;
 N = size(X_eval{1},1);
 K = 5; % 10-fold cross validation
 
-opt_lambda = -inf;
 errs = [];
 
 nLambda = length(lambdas);
-
-
-    
+   
 parfor l = 1:nLambda  
     lambda = lambdas(l);
     [avg_err] = Avg_Err(X_eval,Y_eval,funcname, K, lambda);
