@@ -1,4 +1,4 @@
-function [ W , train_time] = MLMTL_Crosval( X_eval,Y_eval, Func_train, Func_test,lambdas, paras)
+function [ W , opt_lambda, train_time] = MLMTL_Crosval( X_eval,Y_eval, Func_train, Func_test,lambdas, paras)
 %MLMTL_CROSVAL Summary of this function goes here
 %   Detailed explanation goes here
 
