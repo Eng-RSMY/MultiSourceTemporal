@@ -56,6 +56,6 @@ end
 %     plot(errs);
 
 
-[ W ~ ] = feval(Func_train, X_train, Y_train, dimModes, beta, lambda);
+[ W ~ ] = feval(Func_train, X_eval, Y_eval, dimModes, beta, lambda);
 
 
