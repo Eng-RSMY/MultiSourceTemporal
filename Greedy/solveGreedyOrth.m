@@ -63,7 +63,7 @@ end
 
 Max_iter = 100;
 objs = zeros(1, Max_iter);
-delta = 1e-5;
+delta = 1e-7;       %% Changed her
 t = 1;
 YB = B;
 
