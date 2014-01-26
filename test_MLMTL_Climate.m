@@ -26,3 +26,7 @@ fprintf('Running Convex\n');
 Quality = MLMTL_Test(Dat_test.X, Dat_test.Y, W);
 fprintf('RMSE %d, NRMSE %d, Rank %d, Time %d\n', Quality.RMSE, Quality.NRMSE,Quality.Rank, train_time);
 save('MLMTL_Convex_climateP3.mat','Quality','train_time','opt_lambda','W');
+
+exit;
+
+
