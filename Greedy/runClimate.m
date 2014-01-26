@@ -1,6 +1,6 @@
 % Run Climate
 clc
-% clear
+clear
 
 addpath('./GreedySubFunc/')
 addpath('../TTI/nway331/')
@@ -9,7 +9,7 @@ load('../data/climateP17.mat')
 nLag = 1;
 nTask = length(series);
 [nLoc, tLen] = size(series{1});
-tTrain = floor(0.5*tLen);
+tTrain = floor(0.9*tLen);
 tTest = tLen - tTrain;
 
 global verbose
@@ -18,7 +18,7 @@ global evaluate
 evaluate = 1;
 
 %% Create the matrices
-A = zeros(nLoc);
+A = zeros(nLoc, nLoc, nTask);
 X = cell(nTask, 1);
 Y = cell(nTask, 1);
 test.X = cell(nTask, 1);
@@ -35,9 +35,9 @@ for i = 1:nTask
     end
 end
 
-mu = 1e-8;
+mu = 1e-20;
 max_iter = 100;
-[~, qualityGreedy] = solveGreedy(Y, X, mu, max_iter, A, test);
+[~, qualityGreedy] = solveGreedyOrth(Y, X, mu, max_iter, A, test);
 
 
 %% The Nuclear norm Solution
