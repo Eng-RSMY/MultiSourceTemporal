@@ -7,5 +7,6 @@ lambdas = [-3,3,10];
 [Dat_eval , Dat_test] = MTGL_Datpre(series,ratio); 
 [W,opt_lambda,train_time] = MTGL_Crosval(Dat_eval.X, Dat_eval.Y, 'Lasso',lambdas);
 Quality = MTGL_Test(Dat_test.X, Dat_test.Y, W);
+fprintf('RMSE %d, NRMSE %d, Rank %d, Time %d\n', Quality.RMSE, Quality.NRMSE,Quality.Rank, train_time);
 save('MTGL_climate_rst.mat','Quality','train_time','opt_lambda');
 exit;

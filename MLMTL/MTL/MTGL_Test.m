@@ -17,7 +17,7 @@ end
 Quality.RMSE = sqrt(mean(MSE));
 Quality.NRMSE = sqrt(mean(NMSE));
 
-Quality.rank = rank(W);
+Quality.Rank = rank(W);
 
 end
 
