@@ -10,7 +10,7 @@ nTasks = nChannel;
 X = cell (1, nTasks);
 Y = cell (1, nTasks);
 
-
+label(label==0)=-1;% change the input requirement
 
 for t = 1: nTasks
     X{t} = squeeze(series(t,:,:))';
