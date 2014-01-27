@@ -1,6 +1,6 @@
 clc;
 clear;
-addpath(genpath('../../MultiSourceTemporal'));
+addpath(genpath('~/Documents/MATLAB/MultiSourceTemporal'));
 tLen = [10, 50, 100, 200];
 
 Qualities = cell(4,10);
@@ -11,7 +11,7 @@ for t = 1:length(tLen)
     for iter = 1:10
         fprintf('Iter  %d ', iter);
         name = sprintf('synth%d_%d.mat', tLen(t), iter);
-        data = load(['./data/synth/datasets/' name]);
+        data = load([name]);
         tr_series = data.tr_series;
         te_series = data.te_series;
         A = data.A;
@@ -46,7 +46,7 @@ for t = 1:length(tLen)
     for iter = 1:10
         fprintf('Iter  %d ', iter);
         name = sprintf('synth%d_%d.mat', tLen(t), iter);
-        data = load(['./data/synth/datasets/' name]);
+        data = load([name]);
         tr_series = data.tr_series;
         te_series = data.te_series;
         A = data.A;
@@ -74,7 +74,7 @@ for t = 1:length(tLen)
 end
 
 save('Synth_MLMTL_Mixture.mat','Qualities','Ws');
-
+exit;
 
 
 

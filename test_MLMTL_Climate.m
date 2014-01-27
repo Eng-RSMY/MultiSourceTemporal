@@ -1,5 +1,5 @@
 addpath(genpath('.'));
-load 'climateP3'
+load 'climateP4'
 
 nType = length(series);
 [nLoc, ~] = size(series{1});
@@ -19,13 +19,13 @@ fprintf('Running Mixture\n');
 [W,opt_lambda,train_time] = MLMTL_Crosval(Dat_eval.X, Dat_eval.Y, @MLMTL_Mixture,@MLMTL_Test,lambdas, paras);
 Quality = MLMTL_Test(Dat_test.X, Dat_test.Y, W);
 fprintf('RMSE %d, NRMSE %d, Rank %d, Time %d\n', Quality.RMSE, Quality.NRMSE,Quality.Rank, train_time);
-save('MLMTL_Mixture_climateP3.mat','Quality','train_time','opt_lambda','W');
+save('MLMTL_Mixture_climateP4.mat','Quality','train_time','opt_lambda','W');
 
 fprintf('Running Convex\n');
 [W,opt_lambda,train_time] = MLMTL_Crosval(Dat_eval.X, Dat_eval.Y, @MLMTL_Convex,@MLMTL_Test,lambdas, paras);
 Quality = MLMTL_Test(Dat_test.X, Dat_test.Y, W);
 fprintf('RMSE %d, NRMSE %d, Rank %d, Time %d\n', Quality.RMSE, Quality.NRMSE,Quality.Rank, train_time);
-save('MLMTL_Convex_climateP3.mat','Quality','train_time','opt_lambda','W');
+save('MLMTL_Convex_climateP4.mat','Quality','train_time','opt_lambda','W');
 
 exit;
 
