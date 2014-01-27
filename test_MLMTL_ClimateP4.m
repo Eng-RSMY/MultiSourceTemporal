@@ -5,8 +5,9 @@ nType = length(series);
 [nLoc, ~] = size(series{1});
 
 ratio = 0.1;
-lambdas = logspace(-3,3,10);
-beta = 1e-2;
+% lambdas = logspace(-3,3,10);
+lambdas = logspace(2,3,4);
+beta = 1e-3;
 dimModes = [nLoc, nLoc,nType];  
 paras.beta = beta;
 paras.dimModes = dimModes;
