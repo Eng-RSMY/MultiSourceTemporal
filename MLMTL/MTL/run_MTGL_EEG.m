@@ -9,13 +9,13 @@ lambdas = logspace(-3,3,10);
 fprintf('Running Lasso\n');
 
 [W,opt_lambda,train_time] = MTGL_Logit_Crosval(Dat_eval.X, Dat_eval.Y, 'LassoLogit',lambdas);
-Quality = MTGL_Test(Dat_test.X, Dat_test.Y, W);
+Quality = MTGL_Logit_Test(Dat_test.X, Dat_test.Y, W);
 fprintf('RMSE %d, Time %d\n', Quality.RMSE, train_time);
 save('MTGL_Lasso_EEG.mat','Quality','train_time','opt_lambda','W');
 
 fprintf('Running L21\n');
 [W,opt_lambda,train_time] = MTGL_Logit_Crosval(Dat_eval.X, Dat_eval.Y, 'L21Logit',lambdas);
-Quality = MTGL_Test(Dat_test.X, Dat_test.Y, W);
+Quality = MTGL_Logit_Test(Dat_test.X, Dat_test.Y, W);
 fprintf('RMSE %d, Time %d\n', Quality.RMSE, train_time);
 save('MTGL_L21_EEG.mat','Quality','train_time','opt_lambda','W');
 
