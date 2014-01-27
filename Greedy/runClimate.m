@@ -5,9 +5,9 @@ clear
 addpath('./GreedySubFunc/')
 addpath('../TTI/nway331/')
 addpath(genpath('../MLMTL/'))
-% load('../data/climateP17.mat')
-load('../data/climateP4.mat')
-load('../data/Foursquare/tensor_checkin_small.mat')
+load('../data/climateP17.mat')
+% load('../data/climateP4.mat')
+% load('../data/Foursquare/tensor_checkin_small.mat')
 nLag = 1;
 nTask = length(series);
 [nLoc, tLen] = size(series{1});
@@ -38,7 +38,7 @@ for i = 1:nTask
 end
 
 mu = 1e-20;
-max_iter = 100;
+max_iter = 10;
 [~, qualityGreedy] = solveGreedyOrth(Y, X, mu, max_iter, A, test);
 save('qualityForClimate3.mat', 'qualityGreedy')
 %% The Nuclear norm Solution
