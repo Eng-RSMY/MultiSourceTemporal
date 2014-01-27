@@ -1,6 +1,6 @@
-function synthGen(tTrain, id)
+function synthGenSLR(tTrain, id)
 
-rankTensor = 2;     % The CP rank of the tensor
+rankTensor = 1;     % The CP rank of the tensor
 % tTrain = 100;
 tValid = 100;
 tTest = 100;
@@ -18,7 +18,13 @@ for i = 1:rankTensor
     AA = u*v';
     w = 0.9 + 0.1*rand(nTask, 1);
     for j = 1:nTask
-        A(:, :, j) = w(j)*AA;
+        index = randperm(nLoc^2);
+        index(nLoc+1:end) = [];
+        AB = zeros(nLoc);
+        AB(index) = 1/nLoc;
+        AB = AB + w(j)*AA;
+        AB = 0.9* AB/norm(AB);
+        A(:, :, j) = AB;
     end
 end
 
@@ -49,9 +55,10 @@ for j = 1:nTask
     sumvals = sumvals + norm(tr_series{j}) + norm(v_series{j}) + norm(te_series{j});
 end
 
+
 if sumvals > 10^4*nTask*nLoc^2
     synthGen(tTrain, id)
 else
     name = sprintf('synth%d_%d', tTrain, id);
-    save(['./datasets/' name], 'tr_series', 'v_series', 'te_series', 'A')
+    save(['./datasets2/' name], 'tr_series', 'v_series', 'te_series', 'A')
 end

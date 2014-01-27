@@ -1,8 +1,8 @@
 % Run Greedies
 clc
 clear
-addpath(genpath('./MLMTL/'))
-addpath(genpath('./Greedy/'))
+addpath(genpath('../MLMTL/'))
+addpath(genpath('../Greedy/'))
 
 global verbose
 verbose = 0;
