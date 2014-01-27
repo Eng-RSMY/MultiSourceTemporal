@@ -47,7 +47,7 @@ fprintf('Data Splitted: Training %d , Testing %d\n', 1-pr, pr);
 
 paras.beta = beta;
 paras.dimModes = dimModes;
-lambdas = logspace(-8,-3,10);
+lambdas = logspace(-10,10,10);
 
 
 % [ W_Cvx ,tensorW ] = MLMTL_Cvx_Logit( X_train, Y_train, dimModes,beta, lambda_Cvx );
