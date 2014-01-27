@@ -3,6 +3,12 @@ global verbose
 global draw
 n = size(series, 1);
 
+if length(grad) == 3
+    lrSol = grad{3};
+else
+    lrSol = zeros(n);
+end
+
 delta = 10;
 
 MaxIter = 200;
@@ -20,7 +26,9 @@ t = 1;
 obj = zeros(MaxIter, 1);
 if verbose; fprintf('Iter #: %5d', 0); end
 for i = 1:MaxIter
-    [obj(i), G, Gb] = feval(grad{1}, series, YS, Yb, index{1});
+    tmp = YS;   %% Not good.  Fix this part
+    tmp{1} = tmp{1} + lrSol;
+    [obj(i), G, Gb] = feval(grad{1}, series, tmp, Yb, index{1});
     
     t_new = (1+sqrt(1+4*t^2))/2;
     b_new = Yb - delta*Gb;
