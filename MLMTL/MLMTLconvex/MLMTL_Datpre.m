@@ -33,7 +33,13 @@ for type = 1:nType
 end
 %%
 
-
+if (ratio ==0 )
+    data_eval.X = X;
+    data_eval.Y = Y;
+    data_test = 0;
+    warning('Validating Set Size Zero','Dat_pre');
+    return
+end
 [TrainIdx, TestIdx]  = crossvalind('HoldOut',nSample,ratio);
 X_train = cell(1,numTask);
 Y_train = cell(1,numTask);

@@ -1,4 +1,4 @@
-function Quality = MLMTL_Test(X_test,Y_test, W)
+function Quality = MLMTL_Test(X_test,Y_test, W, W0)
 %MLMTL_TEST Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -19,7 +19,13 @@ Z = Z/(nSample * numTask);
 
 Quality.RMSE = sqrt(mean(MSE));
 Quality.NRMSE = sqrt(mean(MSE)/Z);
-
 Quality.Rank = rank(W);
+
+if (nargin >3)
+    Quality.RMSE_est = sqrt(norm(W-W0,'fro')^2/10);
+end
+end
+
+
 %fprintf('Mean Square Error: %d', MSE);
 
