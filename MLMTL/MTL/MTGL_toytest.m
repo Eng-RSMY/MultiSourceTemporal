@@ -12,9 +12,9 @@ ratio = 0.1;
 lambdas = [-1,1,2];
 [Dat_eval , Dat_test] = MTGL_Datpre(series,ratio); 
 
-[W,opt_lambda,train_time] = MTGL_Crosval(Dat_eval.X, Dat_eval.Y, 'Lasso',lambdas);
+[W,opt_lambda,train_time] = MTGL_Crosval(Dat_eval.X, Dat_eval.Y, 'LassoLogit',lambdas);
 Quality = MTGL_Test(Dat_test.X, Dat_test.Y, W);
 fprintf('RMSE %d, NRMSE %d, Rank %d, Time %d\n', Quality.RMSE, Quality.NRMSE,Quality.Rank, train_time);
 
-save('quality.mat','Quality');
+% save('quality.mat','Quality');
 
