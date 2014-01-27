@@ -1,4 +1,4 @@
-function [ Err ] = MLMTL_Test_Logit(X_test, Y_test, W )
+function [ Quality ] = MLMTL_Test_Logit(X_test, Y_test, W )
 %MLMTL_LOGIT_TEST Summary : classification prection
 %   Detailed explanation goes here
 
@@ -12,4 +12,7 @@ for t = 1 : nTasks
 end
 
 Err = 1-  nTrue/ (nTasks * N);
+Quality.RMSE = Err;
+
+
 
