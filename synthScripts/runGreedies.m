@@ -1,5 +1,6 @@
 % Run Greedies
 
+addpath(genpath('../'))
 global verbose
 verbose = 0;
 tLen = [10, 50, 100, 200];
@@ -14,6 +15,6 @@ for t = 1:length(tLen)
     end
     qFor{t} = qForTemp;
     qOrth{t} = qOrthTemp;
-    save('greedyResultsSynth.mat', 'qFor', 'qOrth')
+    save('greedyResultsSynthSLR.mat', 'qFor', 'qOrth')
     disp(t)
 end
