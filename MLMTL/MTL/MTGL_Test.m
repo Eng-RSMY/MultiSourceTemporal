@@ -1,4 +1,4 @@
-function [ Quality ] = MTGL_Test( X_test, Y_test, W )
+function [ Quality ] = MTGL_Test( X_test, Y_test, W ,W0)
 %MTGL_TEST Summary : X: 1 x nTasks, each nSample x nDim matrix
 % Y: 1x nTasks cell, W: weight matrix
 % Quality: Structure of RMSE, NRMSE, Rank, Time
@@ -22,6 +22,10 @@ Quality.RMSE = sqrt(mean(MSE));
 Quality.NRMSE = sqrt(mean(MSE)/Z);
 
 Quality.Rank = rank(W);
+
+if (nargin >3)
+    Quality.RMSE_est = sqrt(norm(W-W0,'fro')^2/10);
+end
 
 end
 

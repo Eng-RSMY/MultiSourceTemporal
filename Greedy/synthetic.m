@@ -18,4 +18,4 @@ for j = 1:r
     end
 end
 
-save('synthBench.mat', 'series', 'A')
+% save('synthBench.mat', 'series', 'A')

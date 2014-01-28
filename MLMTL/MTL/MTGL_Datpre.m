@@ -34,7 +34,15 @@ end
 %%
 
 
+if (ratio ==0 )
+    data_eval.X = X;
+    data_eval.Y = Y;
+    data_test = 0;
+    return
+end
+
 [TrainIdx, TestIdx]  = crossvalind('HoldOut',nSample,ratio);
+
 X_train = cell(1,numTask);
 Y_train = cell(1,numTask);
 X_test = X_train;
