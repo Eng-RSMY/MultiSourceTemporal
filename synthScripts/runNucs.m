@@ -14,12 +14,12 @@ for t = 1:length(tLen)
     qOrth{t} = qFor{t};
     qForTemp = qFor{t};
     qOrthTemp = qOrth{t};
-    for i = 1:10
+    parfor i = 1:10
         name = sprintf('synth%d_%d.mat', tLen(t), i);
         [qForTemp(i, :), qOrthTemp(i, :)] = runSynthNuc(name);
     end
     qFor{t} = qForTemp;
     qOrth{t} = qOrthTemp;
-    save('nuclResultsSynth.mat', 'qFor', 'qOrth')
+    save('nuclResultsSynthSLR.mat', 'qFor', 'qOrth')
     disp(t)
 end
