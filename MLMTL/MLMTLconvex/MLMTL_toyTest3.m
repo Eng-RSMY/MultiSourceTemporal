@@ -76,9 +76,6 @@ end
 save('Synth_MLMTL_Mixture.mat','Qualities','Ws');
 exit;
 
-
-
-
 %%
 
 

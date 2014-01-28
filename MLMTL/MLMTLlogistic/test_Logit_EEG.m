@@ -26,7 +26,7 @@ fprintf('Data Constructed\n');
 r_Cvx = [];
 r_Mix = [];
 
-for pr = fliplr(0.1:0.1:0.5)
+for pr = 0.1
 
 [TrainIdx, TestIdx]  = crossvalind('HoldOut',nSample,pr);
 X_train = cell(1,nTasks);
@@ -47,7 +47,7 @@ fprintf('Data Splitted: Training %d , Testing %d\n', 1-pr, pr);
 
 paras.beta = beta;
 paras.dimModes = dimModes;
-lambdas = logspace(-8,-3,10);
+lambdas = logspace(-10,10,10);
 
 
 % [ W_Cvx ,tensorW ] = MLMTL_Cvx_Logit( X_train, Y_train, dimModes,beta, lambda_Cvx );
@@ -59,10 +59,8 @@ lambdas = logspace(-8,-3,10);
 [ Err_Cvx ] = MLMTL_Test_Logit(X_test, Y_test, W_Cvx );
 [ Err_Mix ] = MLMTL_Test_Logit(X_test, Y_test, W_Mix );
 
-fprintf('Prec Cvx %d , Prec Mix %d\n', 1-Err_Cvx, 1-Err_Mix);
+fprintf('Error Cvx %d , Error Mix %d\n', Err_Cvx, Err_Mix);
 
-r_Cvx = [r_Cvx, 1-Err_Cvx];
-r_Mix = [r_Mix, 1-Err_Mix];
 end
 
 save('testLogit_EEG.mat');
