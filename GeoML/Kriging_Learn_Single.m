@@ -13,7 +13,7 @@ nBlocks =  5;
 szBlock = nLoc / nBlocks;
 
 [nLoc, nTime] = size(series{1});
-
+%%
 numTask = nLoc ;
 [~, ~, ~, dist] = kmeans(locations, nBlocks);
 
