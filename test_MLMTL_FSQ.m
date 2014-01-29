@@ -18,6 +18,16 @@ verbose = 1;
 beta = 1e-2;
 ratio = 0.1;
 outerNiTPre = 100;
+
+nType = length(series);
+[nLoc, ~] = size(series{1});
+
+ratio = 0.1;
+% lambdas = logspace(-3,3,10);
+
+beta = 1e-3;
+dimModes = [nLoc, nLoc,nType]; 
+
 [Dat_eval , Dat_test] = MLMTL_Datpre(series,ratio); 
 
 %% train-test (with cross validation)
@@ -25,9 +35,9 @@ outerNiTPre = 100;
 % lambdas = logspace(-3,3,10);
 % lambda = 3.162278e+02;
 
-paras.beta = beta;
-paras.dimModes = dimModes;
-paras.outIter = outerNiTPre;
+% paras.beta = beta;
+% paras.dimModes = dimModes;
+% paras.outIter = outerNiTPre;
 
 % W_Convex = MLMTL_Crosval(X_train,Y_train,@MLMTL_Convex,@MLMTL_Test,lambdas, paras);
 % W_Mixture = MLMTL_Crosval(X_train,Y_train,@MLMTL_Mixture,@MLMTL_Test,lambdas, paras);
