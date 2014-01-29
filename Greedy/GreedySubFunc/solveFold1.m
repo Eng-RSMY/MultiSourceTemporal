@@ -10,10 +10,16 @@ for ll = 1:r
     XX( p*(ll-1)+1:p*ll , n*(ll-1)+1:n*ll ) = X{ll};
     YY( : , n*(ll-1)+1:n*ll ) = Y{ll};
 end
-Q = XX*(YY'*YY)*(XX');
+Q = XX*YY';
+Q = Q*Q';
 P = XX*XX';
-[~, lamU] = approxEV(YY'*YY, 1e-4);
+% My solution
+[~, lamU] = approxEV(YY*YY', 1e-4);   % Change this to svds
 [v, ~] = approxEV(Q-lamU*P, 1e-4);
+% Matlab's solution
+% [~, lamU] = eigs(YY'*YY, 1);
+% [v, ~] = eigs(Q-lamU*P, 1);
+
 u = (YY*XX'*v)/(v'*P*v);
 SS = u*v';
 Sol = fld(SS, 1, r);

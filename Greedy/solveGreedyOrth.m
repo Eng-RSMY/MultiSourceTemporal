@@ -22,14 +22,14 @@ for i = 1:Max_Iter-1
     [delta(2), tempSol{2}] = solveFold2(Yp, X, Sol);
     [delta(3), tempSol{3}] = solveFold3(Yp, X, Sol);
     [~, ix] = max(delta);
-    if delta(ix)/obj(1) > mu
+%    if delta(ix)/obj(1) > mu
         Sol = Sol + tempSol{ix};
         [Yp, Sol, obj(i+1)] = project(Y, X, Sol, i); % Do an orthogonal projection step here
 
         if evaluate
             quality(i+1, :) = testQuality(Sol, A, test.X, test.Y)';
         end
-    end
+%    end
 end
 quality = [obj, quality];
 quality(i+1:end, :) = [];

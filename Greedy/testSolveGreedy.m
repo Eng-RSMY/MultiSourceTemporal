@@ -8,11 +8,11 @@ global verbose
 verbose = 0;
 
 global evaluate
-evaluate = 1;
+evaluate = 0;
 
 p = 20;
 q = 10;
-r = 3;
+r = 10;
 n = 1000;
 sig = 0.3;
 
@@ -33,7 +33,9 @@ end
 
 mu = 2e-8;
 max_iter = 50;
-solveGreedyOrth(Y, X, mu, max_iter, A, test);
+% solveGreedyOrth(Y, X, mu, max_iter, A, test);
 
-
+profile on
 solveGreedy(Y, X, mu, max_iter, A, test);
+profile off
+profile viewer
