@@ -1,39 +1,30 @@
 clear;
 clc;
-addpath(genpath('GeoML'));
+addpath(genpath('~/Documents/MATLAB/MultiSourceTemporal'));
 lambda = 316;
 beta = 1e-2;
 thres = 1e-4;
 
-data  = load('./data/climateP17.mat');
-dimModes = [125,125,17];
+data  = load('climateP17.mat');
+nType = length(data.series);
 
-rank_Cvx = [];
-rank_Cvx_geo = [];
-rank_Mix = [];
-rank_Mix_geo = [];
 
-for pr = fliplr(0.3)
-%     fprintf('start Geo-spatio Multi-linear Learning \n');
+ratio = 0.1;
+
+fprintf('start Multi-task Multi-linear Learning \n');
+for type = 1:nType
 %     [W_Cvx_geo, W_Mix_geo,~,~] = Kriging_Learn(data, lambda, beta ,pr);
-    fprintf('start Multi-task Multi-linear Learning \n');
-    [W_Cvx,W_Mix,~,~] = MLMTL_Learn(data, lambda, beta, pr);
-
-%     
-%     [~,~,~,ratio] = tensorModeRank(reshape(W_Cvx, dimModes));
-%     rank_Cvx = [rank_Cvx, ratio];
-%     [~,~,~,ratio] = tensorModeRank(reshape(W_Mix, dimModes));
-%     rank_Mix= [rank_Mix, ratio];
-%     [~,~,~,ratio] = tensorModeRank(reshape(W_Cvx_geo, dimModes));
-%     rank_Cvx_geo = [rank_Cvx_geo, ratio];
-%     [~,~,~,ratio] = tensorModeRank(reshape(W_Mix_geo, dimModes));
-%     rank_Mix_geo= [rank_Mix_geo, ratio];   
+    fprintf('type %d\n', type);
+    [W_Cvx,W_Mix,Quality_Cvx,Quality_Mix] = Kriging_Learn_Single(data, lambda, beta, ratio, type);
+    fname = strcat('./GeoML/MLGeo_ClimateP17_',int2str(type),'.mat');
+    save(fname,'W_Cvx','W_Mix','Quality_Cvx','Quality_Mix');
+ 
 end
 
-% save('testGeo.mat');
+exit;
 
 %%
-plot([0.5:0.1:0.9],[ml_conv',geo_conv',ml_mix',geo_mix']);
-legend('Overlapped MTMLL','Overlapped GSMLL','Latent MTMLL','Latent GSMLL');
+% plot([0.5:0.1:0.9],[ml_conv',geo_conv',ml_mix',geo_mix']);
+% legend('Overlapped MTMLL','Overlapped GSMLL','Latent MTMLL','Latent GSMLL');
 
 
