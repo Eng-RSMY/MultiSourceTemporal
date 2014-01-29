@@ -17,8 +17,7 @@ for type = 1:nType
     fprintf('type %d\n', type);
     [W_Cvx,W_Mix,Quality_Cvx,Quality_Mix] = Kriging_Learn_Single(data, lambda, beta, ratio, type);
     fname = strcat('./GeoML/MLGeo_ClimateP17_',int2str(type),'.mat');
-    save(fname,'W_Cvx','W_Mix','Quality_Cvx','Quality_Mix');
- 
+    save(fname,'W_Cvx','W_Mix','Quality_Cvx','Quality_Mix'); 
 end
 
 exit;
