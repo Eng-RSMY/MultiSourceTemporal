@@ -12,7 +12,7 @@ nType = length(data.series);
 ratio = 0.1;
 
 fprintf('start Multi-task Multi-linear Learning \n');
-for type = 1:nType
+for type = 2:nType
 %     [W_Cvx_geo, W_Mix_geo,~,~] = Kriging_Learn(data, lambda, beta ,pr);
     fprintf('type %d\n', type);
     [W_Cvx,W_Mix,Quality_Cvx,Quality_Mix] = Kriging_Learn_Single(data, lambda, beta, ratio, type);
