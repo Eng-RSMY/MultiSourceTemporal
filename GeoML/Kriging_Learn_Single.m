@@ -46,7 +46,7 @@ agent = series{type};
 for k = 1:nBlocks
     for j = 1:szBlock
         loc = clusters{k}(j);
-        task_idx= (k-1)*szBlock + j;
+        task_idx= (type-1)*nLoc + (k-1)*szBlock + j;
 
 
          features = zeros(nLoc,nSample);
