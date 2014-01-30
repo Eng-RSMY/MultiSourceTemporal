@@ -4,7 +4,7 @@ clear
 samples = [10, 50, 100, 200];
 
 % for i = 1:4
-     i =2;
+    i =1;
     load greedyResultsSynth.mat
     
     forward = [qFor{1}(:, i), qFor{2}(:, i), qFor{3}(:, i), qFor{4}(:, i)]/3;
@@ -59,7 +59,7 @@ samples = [10, 50, 100, 200];
         for i = 1:N
             W = Ws{t,i};
 %             [RMSE_est(t,i),SVs1{t,i}] =  cal_LatentRank(W,1e-2);% Qualities{t,i}.Rank;
-%                RMSE_est(t,i) =  Qualities{t,i}.RMSE;
+               RMSE_est(t,i) =  Qualities{t,i}.RMSE_est;
         end
     end
     RMSE_est = RMSE_est';
@@ -75,7 +75,7 @@ samples = [10, 50, 100, 200];
         for i = 1:N
             W = Ws{t,i};
 %             [RMSE_est(t,i),SVs2{t,i}] =   cal_LatentRank(W,1e-2); % Qualities{t,i}.Rank;
-%             RMSE_est(t,i) =  Qualities{t,i}.RMSE;
+            RMSE_est(t,i) =  Qualities{t,i}.RMSE_est;
         end
     end
     RMSE_est = RMSE_est';
@@ -107,16 +107,17 @@ samples = [10, 50, 100, 200];
     hold all
     errorbar(samples, forwardMean, forwardSD)
     errorbar(samples, orthMean, orthSD)
+    
     errorbar(samples, convexMean, convexSD)
     errorbar(samples, mixtureMean, mixtureSD)
 
      
     errorbar(samples, lowrankMean, lowrankSD)
 %     errorbar(samples, sparsemean, sparsesd)
-%     errorbar(samples, l1mean, l1sd)
-%     errorbar(samples, l21mean, l21sd)
-%     errorbar(samples, dirtymean, dirtysd)
-   legend('forward', 'orthogonal', 'overlapped', 'mixture', 'low-rank')
+    errorbar(samples, L1Mean, L1SD)
+    errorbar(samples, L21Mean, L21SD)
+    errorbar(samples, DirtyMean, DirtySD)
+%    legend('forward', 'orthogonal', 'overlapped', 'mixture', 'low-rank')
 
-%     legend('forward', 'orthogonal', 'overlapped', 'mixture', 'low-rank',  'mtl: l1', 'mtl: l21', 'mtl: dirty')
+    legend('Forward', 'Orthogonal', 'Overlapped', 'Mixture', 'Trace',  'MTL: L1', 'MTL: L21', 'MTL: Dirty')
     xlabel('# of samples')

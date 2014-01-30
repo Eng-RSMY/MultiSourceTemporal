@@ -48,7 +48,16 @@ elseif(strcmp(funcname,'L21Logit'))
 
     [W funcVal] = Logistic_L21(X, Y, lambda, opts);
     
-    
+elseif(strcmp(funcname,'CMTL'))
+    opts.init = 0;      % guess start point from data.
+    opts.tFlag = 1;     % terminate after relative objective value does not changes much.
+    opts.tol = 10^-6;   % tolerance.
+    opts.maxIter = 1500; % maximum iteration number of optimization.
+
+    rho_1 = 10;
+    rho_2 = 10^-1;
+    clus_num =17;
+    W = Least_CMTL(X, Y, rho_1, rho_2, clus_num, opts);
 
 else
     error('Input error:function name must be Lasso,L21 or Dirty');
