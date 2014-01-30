@@ -65,8 +65,17 @@ elseif(strcmp(funcname,'Dirty'))
     rho_1 = 350;%   rho1: group sparsity regularization parameter
     rho_2 = lambda;%   rho2: elementwise sparsity regularization parameter
     [W funcVal P Q] = Least_Dirty(X, Y, rho_1, rho_2, opts);
+    
+elseif(strcmp(funcname,'CMTL'))
+    opts.init = 0;      % guess start point from data.
+    opts.tFlag = 1;     % terminate after relative objective value does not changes much.
+    opts.tol = 10^-6;   % tolerance.
+    opts.maxIter = 1500; % maximum iteration number of optimization.
 
-else
+    rho_1 = lambda;
+    rho_2 = 10^-1;
+    clus_num =17;
+    W = Least_CMTL(X, Y, rho_1, rho_2, clus_num, opts);else
     error('Input error:function name must be Lasso,L21 or Dirty');
 end
 

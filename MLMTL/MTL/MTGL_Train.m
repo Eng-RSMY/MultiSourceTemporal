@@ -54,7 +54,7 @@ elseif(strcmp(funcname,'CMTL'))
     opts.tol = 10^-6;   % tolerance.
     opts.maxIter = 1500; % maximum iteration number of optimization.
 
-    rho_1 = 10;
+    rho_1 = lambda;
     rho_2 = 10^-1;
     clus_num =17;
     W = Least_CMTL(X, Y, rho_1, rho_2, clus_num, opts);

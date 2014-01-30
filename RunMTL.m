@@ -11,16 +11,20 @@ tLen = [10, 50, 100, 200];
 qL1 = cell(4, 1);
 qL21 = cell(4, 1);
 qDirty = cell(4, 1);
+qCMTL = cell(4, 1);
 for t = 1:length(tLen)
-    qL1{t} = zeros(10, 6); qL21{t} = qL1{t}; qDirty{t} = qL1{t};
-    qL1temp = qL1{t}; qL21temp = qL21{t}; qDirtytemp = qDirty{t};
+    qL1{t} = zeros(10, 6); qL21{t} = qL1{t}; qDirty{t} = qL1{t};qCMTL{t} = qL1{t};
+    qL1temp = qL1{t}; qL21temp = qL21{t}; qDirtytemp = qDirty{t};qCMTLtemp = qCMTL{t};
     parfor i = 1:10
         name = sprintf('synth%d_%d.mat', tLen(t), i);
-        [qL1temp(i, :), qL21temp(i, :), qDirtytemp(i, :)] = runSynthMTL(name);
+%         [qL1temp(i, :), qL21temp(i, :), qDirtytemp(i, :), qCMTLtemp(i,:)] = runSynthMTL(name);
+            [~, ~, ~, qCMTLtemp(i,:)] = runSynthMTL(name);
     end
     qL1{t} = qL1temp;
     qL21{t} = qL21temp;
     qDirty{t} = qDirtytemp;
-    save('mtlResultsSynth.mat', 'qL1', 'qL21', 'qDirty')
+    qCMTL{t} = qCMTL;
+%     save('mtlResultsSynth.mat', 'qL1', 'qL21', 'qDirty')
+    save('CMTLResultsSynth.mat','qCMTL');
     disp(t)
 end
