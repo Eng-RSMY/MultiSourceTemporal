@@ -7,7 +7,7 @@ for ll = 1:nLag
     mu = mu + S{ll}*series(:, index-ll);
 end
 pred = linkglm(mu, fname);
-err = norm(pred - series(:, index), 'fro')/T/nVar;
+err = norm(pred - series(:, index), 'fro')/sqrt(T*nVar);
 normerr = norm(pred-series(:, index), 'fro')/T/nVar/mean(mean(abs(series(:, index))));
 
 % hold all
