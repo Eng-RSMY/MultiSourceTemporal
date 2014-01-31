@@ -35,6 +35,7 @@ for i = 1:Max_Iter-1
 end
 quality = [obj, quality];
 % [obj, ERMSE, LRCp, TKCp, PRMSE, NPRMSE]
+quality(i+1:end, :) = [];
 % plot(1:i, obj(1:i))
 if verbose; fprintf('\n'); end
 end
