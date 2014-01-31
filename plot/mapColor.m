@@ -55,7 +55,8 @@ end
 
 pcolorm(LAT,LON,results)
 
-h = geoshow(ax(1), states(indexConus),  'FaceColor', stateColor);
+geoshow(ax(1), states(indexConus),  'FaceColor', 'None');
+
 for k = 1:3
     setm(ax(k), 'Frame', 'off', 'Grid', 'off',...
         'ParallelLabel', 'off', 'MeridianLabel', 'off')

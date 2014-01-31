@@ -26,7 +26,7 @@ indexAlaska = strcmp('Alaska',names);
 indexConus = 1:numel(states);
 indexConus(indexHawaii|indexAlaska) = [];
 stateColor = [0.8 1 0.8];
-geoshow(ax(1), states(indexConus),  'FaceColor', stateColor)
+geoshow(ax(1), states(indexConus),  'FaceColor', 'None')
 for k = 1:3
     setm(ax(k), 'Frame', 'off', 'Grid', 'off',...
         'ParallelLabel', 'off', 'MeridianLabel', 'off')
@@ -34,12 +34,12 @@ end
 
 
 
-% load Group_idx
-% colors = colormap(hsv(5));
-% for i = 1:5
-%     loc = locations(idx==i,:);
-%     h = plotm(loc,'ks');
-%     set(h,'MarkerSize',5,'MarkerFaceColor',colors(i,:));
-% end
-% 
+load Group_idx
+colors = colormap(hsv(5));
+for i = 1:5
+    loc = locations(idx==i,:);
+    h = plotm(loc,'ks');
+    set(h,'MarkerSize',5,'MarkerFaceColor',colors(i,:));
+end
+
 
