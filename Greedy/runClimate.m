@@ -5,11 +5,11 @@ clear
 addpath('./GreedySubFunc/')
 addpath('../TTI/nway331/')
 addpath(genpath('../MLMTL/'))
-% load('../data/climateP17.mat')
+load('../data/climateP17.mat')
 % load('../data/climateP4.mat')
 % load('../data/synth/datasets/synth200_9.mat')
-load('../data/Foursquare/norm_4sq_small.mat')
-nLag = 1;
+% load('../data/Foursquare/norm_4sq.mat')
+nLag = 3;
 nTask = length(series);
 [nLoc, tLen] = size(series{1});
 tTrain = floor(0.9*tLen);
@@ -21,7 +21,7 @@ global evaluate
 evaluate = 1;
 
 %% Create the matrices
-A = zeros(nLoc, nLoc, nTask);
+A = zeros(nLoc, nLoc*nLag, nTask);
 X = cell(nTask, 1);
 Y = cell(nTask, 1);
 test.X = cell(nTask, 1);
