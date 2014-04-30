@@ -52,7 +52,7 @@ elseif(strcmp(funcname,'CMTL'))
     opts.init = 0;      % guess start point from data.
     opts.tFlag = 1;     % terminate after relative objective value does not changes much.
     opts.tol = 10^-6;   % tolerance.
-    opts.maxIter = 1500; % maximum iteration number of optimization.
+    opts.maxIter = 500; % maximum iteration number of optimization.
 
     rho_1 = lambda;
     rho_2 = 10^-1;

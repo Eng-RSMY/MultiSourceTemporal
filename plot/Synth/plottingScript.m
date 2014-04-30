@@ -7,11 +7,11 @@ samples = [10, 50, 100, 200];
     i =1;
     load greedyResultsSynth.mat
     
-    forward = [qFor{1}(:, i), qFor{2}(:, i), qFor{3}(:, i), qFor{4}(:, i)]/3;
+    forward = [qFor{1}(:, i), qFor{2}(:, i), qFor{3}(:, i), qFor{4}(:, i)];
     forwardMean = mean(forward, 1);
     forwardSD = std(forward, 0, 1);
     
-    orth = [qOrth{1}(:, i), qOrth{2}(:, i), qOrth{3}(:, i), qOrth{4}(:, i)]/3;
+    orth = [qOrth{1}(:, i), qOrth{2}(:, i), qOrth{3}(:, i), qOrth{4}(:, i)];
     orthMean = mean(orth, 1);
     orthSD = std(orth, 0, 1);
     
@@ -26,7 +26,7 @@ samples = [10, 50, 100, 200];
 
 
     load lrResultsSynth.mat
-    lowrank = [qSp{1}(:, i), qSp{2}(:, i), qSp{3}(:, i), qSp{4}(:, i)]/3;
+    lowrank = [qSp{1}(:, i), qSp{2}(:, i), qSp{3}(:, i), qSp{4}(:, i)];
     lowrankMean = mean(lowrank, 1);
     lowrankSD = std(lowrank, 0, 1);
     
@@ -36,17 +36,22 @@ samples = [10, 50, 100, 200];
     sparseSD = std(sparse, 0, 1);
     
     load mtlResultsSynth.mat
-    L1 = [qL1{1}(:, i), qL1{2}(:, i), qL1{3}(:, i), qL1{4}(:, i)]/3;
+    L1 = [qL1{1}(:, i), qL1{2}(:, i), qL1{3}(:, i), qL1{4}(:, i)];
     L1Mean = mean(L1, 1);
     L1SD = std(L1, 0, 1);
     
-    L21 = [qL21{1}(:, i), qL21{2}(:, i), qL21{3}(:, i), qL21{4}(:, i)]/3;
+    L21 = [qL21{1}(:, i), qL21{2}(:, i), qL21{3}(:, i), qL21{4}(:, i)];
     L21Mean = mean(L21, 1);
     L21SD = std(L21, 0, 1);
     
-    Dirty = [qDirty{1}(:, i), qDirty{2}(:, i), qDirty{3}(:, i), qDirty{4}(:, i)]/3;
+    Dirty = [qDirty{1}(:, i), qDirty{2}(:, i), qDirty{3}(:, i), qDirty{4}(:, i)];
     DirtyMean = mean(Dirty, 1);
     DirtySD = std(Dirty, 0, 1);
+    
+    load CMTLResultsSynth.mat
+    CMTL = [qDirty{1}(:, i), qDirty{2}(:, i), qDirty{3}(:, i), qDirty{4}(:, i)];
+    CMTLMean = mean(CMTL, 1);
+    CMTLSD = std(CMTL, 0, 1);
  
     
     %%
@@ -117,7 +122,8 @@ samples = [10, 50, 100, 200];
     errorbar(samples, L1Mean, L1SD)
     errorbar(samples, L21Mean, L21SD)
     errorbar(samples, DirtyMean, DirtySD)
+    errorbar(samples, CMTLMean,CMTLSD);
 %    legend('forward', 'orthogonal', 'overlapped', 'mixture', 'low-rank')
 
-    legend('Forward', 'Orthogonal', 'Overlapped', 'Mixture', 'Trace',  'MTL: L1', 'MTL: L21', 'MTL: Dirty')
+    legend('Forward', 'Orthogonal', 'Overlapped', 'Mixture', 'Trace',  'MTL-L1', 'MTL-L21', 'MTL-Dirty','CMTL')
     xlabel('# of samples')
