@@ -16,7 +16,7 @@ function [xopt,fs,niter,dx] = grad_descent_A1(G_1,A,X,Y,eta_in)
 % Author: James T. Allison, Assistant Professor, University of Illinois at
 % Urbana-Champaign
 % Date: 3/4/12
-
+global verbose;
 
 % termination tolerance
 tol = 1e-2;
@@ -53,15 +53,19 @@ while and(df>=tol, and(niter <= maxiter, dx >= dxmin))
     niter = niter + 1;
     dx = norm(xnew-x);
     fnew = feval(@objc_nonConvex, G_1,[xnew,A(2:end)], X,Y);
-    if fnew >f
-        display('Function value increase');
-        error('step size too big');
+    if and(fnew >f,verbose)
+        display('Function value increase: shrink step size');
+       %         error('step size too big');
+        eta = eta/10;
+        continue;
     end
     df = abs(fnew - f);
     x = xnew;
     f = fnew;    
     fs =  [fs,f];
-    disp(f);
+    if verbose
+        disp(f);
+    end
 end
 display(['Converge after ' num2str(niter) ' iterations' ])
 
