@@ -24,7 +24,7 @@ for type = 1:nType
 
      for sample = 1:nSample
          features(:,sample) = series{type}(:,sample);
-         labels(sample) = series{type}(loc,sample+1);
+         labels(sample) = series{type}(loc,sample+1);% lag =1
      end
 
      X{task_idx} = features;
