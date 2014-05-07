@@ -1,5 +1,5 @@
 function qFor = runSynthBase(name)
-load(['./data/synth/datasets/' name])
+load(['./data/synth/datasets3/' name])
 global verbose
 nLag = 1;
 [~, nLoc, nTask] = size(A);
@@ -29,3 +29,4 @@ end
 timeGreed = toc;
 qualityGreedy = testQuality3(Sol, A, te_series);
 qFor = [qualityGreedy, timeGreed];
+save('result/synth/BaseResultsSynth.mat','qFor');

@@ -1,5 +1,5 @@
 function [qL1, qL21, qDirty , qCMTL] = runSynthMTL(name)
-load(['./data/synth/datasets/' name])
+load(['./data/synth/datasets3/' name])
 global verbose
 % [~, nLoc, nTask] = size(A);
 % tTrain = size(tr_series{1}, 2);

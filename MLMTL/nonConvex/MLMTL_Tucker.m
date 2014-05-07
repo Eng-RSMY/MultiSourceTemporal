@@ -36,12 +36,15 @@ for iter = 1:maxIter
     [A{1} f_A{1}] = grad_descent_A1(G_1, A, X, Y,1e-4);
 
     % minimize over An
-    for n = 2:nDims
-        fprintf('Minimize over A%d\n',n);
 
-        [A{n},f_An] = grad_descent_An(G_1,A,X,Y,n , 1e-4);
-        f_A{n} = f_An;
-    end
+    fprintf('Minimize over A2\n');
+    [A{2},f_An] = grad_descent_An(G_1,A,X,Y,2 , 1e-4);
+    f_A{2} = f_An;
+    
+    fprintf('Minimize over A3\n');
+    [A{3},f_An] = grad_descent_An(G_1,A,X,Y,3 , 1e-3);
+    f_A{3} = f_An;
+
 
 end
 

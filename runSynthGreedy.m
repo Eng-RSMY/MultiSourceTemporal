@@ -1,5 +1,5 @@
 function [qFor, qOrth] = runSynthGreedy(name)
-load(['./data/synth/datasets/' name])
+load(['./data/synth/datasets3/' name])
 
 [~, nLoc, nTask] = size(A);
 nLag = 1;
@@ -36,15 +36,15 @@ global evaluate
 evaluate = 1;
 
 %% Forward Greedy
-[~, qualitygreedy] = solvegreedy(train.y, train.x, mu, max_iter, a, valid);
-[~, ix] = min(qualitygreedy(2:end, 5));
+[~, qualityGreedy] = solveGreedy(train.Y, train.X, mu, max_iter, A, valid);
+[~, ix] = min(qualityGreedy(2:end, 5));
 max_iter2 = ix+1;   % because it runs until max_iter-1
 evaluate = 0;
 tic
-sol = solvegreedy(train.y, train.x, mu, max_iter2, a, valid);
-timegreed = toc;
-qualitygreedy = testquality(sol, a, test.x, test.y);
-qfor = [qualitygreedy', timegreed];
+Sol = solveGreedy(train.Y, train.X, mu, max_iter2, A, valid);
+timeGreed = toc;
+qualityGreedy = testQuality(Sol, A, test.X, test.Y);
+qFor = [qualityGreedy', timeGreed];
 
 %% Orth Greedy
 [~, qualityGreedy] = solveGreedyOrth(train.Y, train.X, mu, max_iter, A, valid);

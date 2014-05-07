@@ -10,10 +10,11 @@ for t = 1:length(tLen)
     qOrth{t} = qFor{t};
     parfor i = 1:10
         name = sprintf('synth%d_%d.mat', tLen(t), i);
-        [qForTemp(i, :), qOrthTemp(i, :)] = runSynthGreedy(name);
+        [qForTemp(i, :), qOrthTemp(i, :)] = runSynthGreedy(name);  
     end
+   
     qFor{t} = qForTemp;
     qOrth{t} = qOrthTemp;
-    save('greedyResultsSynth.mat', 'qFor', 'qOrth')
+    save('result/synth/greedyResultsSynth.mat', 'qFor', 'qOrth')
     disp(t)
 end

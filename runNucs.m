@@ -20,6 +20,6 @@ for t = 1:length(tLen)
     end
     qFor{t} = qForTemp;
     qOrth{t} = qOrthTemp;
-    save('nuclResultsSynth.mat', 'qFor', 'qOrth')
+    save('result/synth/nuclResultsSynth.mat', 'qFor', 'qOrth')
     disp(t)
 end

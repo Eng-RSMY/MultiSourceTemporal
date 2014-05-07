@@ -19,12 +19,12 @@ for t = 1:length(tLen)
         name = sprintf('synth%d_%d.mat', tLen(t), i);
 %         [qL1temp(i, :), qL21temp(i, :), qDirtytemp(i, :), qCMTLtemp(i,:)] = runSynthMTL(name);
             [~, ~, ~, qCMTLtemp(i,:)] = runSynthMTL(name);
+            display('good');
     end
     qL1{t} = qL1temp;
     qL21{t} = qL21temp;
     qDirty{t} = qDirtytemp;
     qCMTL{t} = qCMTL;
 %     save('mtlResultsSynth.mat', 'qL1', 'qL21', 'qDirty')
-    save('CMTLResultsSynth.mat','qCMTL');
-    disp(t)
+    save('result/synth/CMTLResultsSynth.mat','qCMTL');
 end
