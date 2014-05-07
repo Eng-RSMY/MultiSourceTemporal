@@ -1,4 +1,4 @@
-function [xopt,fs,niter,dx] = grad_descent_G(x0,A,X,Y, eta_in)
+function [xopt,fs,eta] = grad_descent_G(x0,A,X,Y, eta_in, alpha)
 % grad_descent.m demonstrates how the gradient descent method can be used
 % to solve a simple unconstrained optimization problem. Taking large step
 % sizes can lead to algorithm instability. The variable alpha below
@@ -22,7 +22,7 @@ global verbose;
 tol = 1e-2;
 
 % maximum number of allowed iterations
-maxiter = 1000;
+maxiter = 500;
 
 % minimum allowed perturbation
 dxmin = 1e-6;
@@ -35,12 +35,12 @@ end
 % initialize gradient norm, optimization vector, iteration counter, perturbation
 df = inf; x = x0; niter = 0; dx = inf;
 fs = [];
-f = feval(@objc_G,x,A,X,Y);
+f = feval(@objc_nonConvex, x,A,X,Y ,alpha);
 
 % gradient descent algorithm:
 while and(df>=tol, and(niter <= maxiter, dx >= dxmin))
     % calculate gradient:
-    g = feval(@grad_G, x, A, X, Y);
+    g = feval(@grad_G, x, A, X, Y ,alpha);
     % take step:
     xnew = x - eta*g;
     % check step
@@ -52,12 +52,11 @@ while and(df>=tol, and(niter <= maxiter, dx >= dxmin))
     % update termination metrics
     niter = niter + 1;
     dx = norm(xnew-x);
-    fnew = feval(@objc_nonConvex, xnew,A,X,Y);
-    if and(fnew >f,verbose)
+    fnew = feval(@objc_nonConvex, xnew,A,X,Y ,alpha);
+    if  and(fnew >f,verbose)
         display('Function value increase: shrink step size');
-%         error('step size too big');
         eta = eta/10;
-        continue
+        continue;
     end
     df = abs(fnew - f);
     x = xnew;
@@ -67,41 +66,18 @@ while and(df>=tol, and(niter <= maxiter, dx >= dxmin))
         disp(f);
     end
 end
-display(['Converge after ' num2str(niter) ' iterations' ])
-
+if verbose
+    display(['G converge after ' num2str(niter) ' iterations' ])
+end
 xopt = x;
-niter = niter - 1;
 end
 
 
-function [ objc_val ] = objc_G(G_1, A, X, Y )
-%OBJC_G Summary of this function goes here
-%   Detailed explanation goes here
-
-alpha = 0.5;
-nTasks = length(Y);
-nSamples = size(A{1},2);
-nDims = length(A);
-
-outer_prod = A{nDims};
-for d = fliplr(2:nDims-1)
-    outer_prod = kron(outer_prod,A{d});
-end
-
-W_1 =  A{1}*G_1 *outer_prod';
-objc_val = 0;
-for t = 1:nTasks
-     objc_val= objc_val +norm(X{t}'*W_1(:,t)- Y{t})^2 + alpha*norm(G_1,'fro')^2 ;
-end
-    
-end
-
-
-function [ grad_val ] = grad_G( G_1, A, X, Y)
+function [ grad_val ] = grad_G( G_1, A, X, Y, alpha)
 %GRAD_G Summary of this function goes here
 %   Detailed explanation goes here
 
-alpha = 0.5;
+
 nDims = length(A);
 nTasks = length(Y);
 nSamples = size(X{1},2);
