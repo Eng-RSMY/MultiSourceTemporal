@@ -1,5 +1,5 @@
 % Run Greedies
-
+addpath(genpath('.'));
 global verbose
 verbose = 0;
 tLen = [10, 50, 100, 200];
