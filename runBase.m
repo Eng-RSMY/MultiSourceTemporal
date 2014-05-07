@@ -19,6 +19,6 @@ for t = 1:length(tLen)
         qSpTemp(i, :) = runSynthBase(name);
     end
     qSp{t} = qSpTemp;
-    save('sparseResultsSynth.mat', 'qSp')
+    save('result/synth/sparseResultsSynth.mat', 'qSp')
     disp(t)
 end
