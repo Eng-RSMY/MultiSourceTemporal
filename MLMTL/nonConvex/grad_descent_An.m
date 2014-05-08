@@ -1,4 +1,4 @@
-function [xopt,fs,niter,dx] = grad_descent_An(G_1,A,X,Y,n ,eta_in)
+function [xopt,fs,eta] = grad_descent_An(G_1,A,X,Y,n ,eta_in, alpha)
 % grad_descent.m demonstrates how the gradient descent method can be used
 % to solve a simple unconstrained optimization problem. Taking large step
 % sizes can lead to algorithm instability. The variable alpha below
@@ -22,7 +22,7 @@ global verbose;
 tol = 1e-2;
 
 % maximum number of allowed iterations
-maxiter = 1000;
+maxiter = 500;
 
 % minimum allowed perturbation
 dxmin = 1e-6;
@@ -36,13 +36,13 @@ end
 % initialize gradient norm, optimization vector, iteration counter, perturbation
 df = inf; x = A{n}; niter = 0; dx = inf;
 fs = [];
-f = feval(@objc_nonConvex,G_1,A,X,Y);
+f = feval(@objc_nonConvex,G_1,A,X,Y,alpha);
 
 % gradient descent algorithm:
 while and(df>=tol, and(niter <= maxiter, dx >= dxmin))
     % calculate gradient:
     A{n} = x;
-    g = feval(@grad_An, G_1, A, X, Y,n);
+    g = feval(@grad_An, G_1, A, X, Y,n ,alpha);
     % take step:
     xnew = x - eta*g;
     % check step
@@ -55,7 +55,7 @@ while and(df>=tol, and(niter <= maxiter, dx >= dxmin))
     niter = niter + 1;
     dx = norm(xnew-x);
     A{n} = xnew;
-    fnew = feval(@objc_nonConvex, G_1,A, X,Y);
+    fnew = feval(@objc_nonConvex, G_1,A, X,Y ,alpha);
     if and(fnew >f,verbose)
         display('Function value increase: shrink step size');
         %         error('step size too big');
@@ -70,15 +70,14 @@ while and(df>=tol, and(niter <= maxiter, dx >= dxmin))
         disp(f);
     end
 end
-display(['Converge after ' num2str(niter) ' iterations' ])
-
+if verbose
+    display(['A' num2str(n) converge after ' num2str(niter) ' iterations' ])
+end
 xopt = x;
-niter = niter - 1;
 end
 
 
-function [ grad_val ] = grad_An(G_1, A, X,Y,n )
-    alpha = 0.5;
+function [ grad_val ] = grad_An(G_1, A, X,Y,n,alpha )
     nDims = length(A);
     nTasks = length(Y);
     nSamples= size(X{1},2);

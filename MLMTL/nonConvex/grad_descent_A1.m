@@ -1,4 +1,4 @@
-function [xopt,fs,niter,dx] = grad_descent_A1(G_1,A,X,Y,eta_in)
+function [xopt,fs,eta] = grad_descent_A1(G_1,A,X,Y,eta_in ,alpha)
 % grad_descent.m demonstrates how the gradient descent method can be used
 % to solve a simple unconstrained optimization problem. Taking large step
 % sizes can lead to algorithm instability. The variable alpha below
@@ -22,7 +22,7 @@ global verbose;
 tol = 1e-2;
 
 % maximum number of allowed iterations
-maxiter = 1000;
+maxiter = 500;
 
 % minimum allowed perturbation
 dxmin = 1e-6;
@@ -35,12 +35,12 @@ end
 % initialize gradient norm, optimization vector, iteration counter, perturbation
 df = inf; x = A{1}; niter = 0; dx = inf;
 fs = [];
-f = feval(@objc_nonConvex,G_1,[x,A(2:end)],X,Y);
+f = feval(@objc_nonConvex,G_1,[x,A(2:end)],X,Y ,alpha);
 
 % gradient descent algorithm:
 while and(df>=tol, and(niter <= maxiter, dx >= dxmin))
     % calculate gradient:
-    g = feval(@grad_A1, G_1, [x,A(2:end)], X, Y);
+    g = feval(@grad_A1, G_1, [x,A(2:end)], X, Y ,alpha);
     % take step:
     xnew = x - eta*g;
     % check step
@@ -52,8 +52,8 @@ while and(df>=tol, and(niter <= maxiter, dx >= dxmin))
     % update termination metrics
     niter = niter + 1;
     dx = norm(xnew-x);
-    fnew = feval(@objc_nonConvex, G_1,[xnew,A(2:end)], X,Y);
-    if and(fnew >f,verbose)
+    fnew = feval(@objc_nonConvex, G_1,[xnew,A(2:end)], X,Y ,alpha);
+    if  and(fnew >f,verbose)
         display('Function value increase: shrink step size');
        %         error('step size too big');
         eta = eta/10;
@@ -67,19 +67,18 @@ while and(df>=tol, and(niter <= maxiter, dx >= dxmin))
         disp(f);
     end
 end
-display(['Converge after ' num2str(niter) ' iterations' ])
-
+if verbose
+    display(['A1 converge after ' num2str(niter) ' iterations' ])
+end
 xopt = x;
-niter = niter - 1;
 end
 
 
 
 
-function [ grad_val ] = grad_A1(G_1, A, X,Y)
+function [ grad_val ] = grad_A1(G_1, A, X,Y ,alpha)
 %GRAD_A1 Summary of this function goes here
 %   Detailed explanation goes here
-alpha = 0.5;
 nDims = length(A);
 nTasks = length(Y);
 nSamples = size(X{1},2);
