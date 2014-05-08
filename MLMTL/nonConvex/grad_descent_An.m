@@ -48,7 +48,8 @@ while and(df>=tol, and(niter <= maxiter, dx >= dxmin))
     % check step
     if ~isfinite(xnew)
         display(['Number of iterations: ' num2str(niter)])
-        error('x is inf or NaN')
+        break;
+%         error('x is inf or NaN')
     end
 
     % update termination metrics
