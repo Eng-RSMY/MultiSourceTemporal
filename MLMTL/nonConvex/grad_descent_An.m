@@ -72,7 +72,7 @@ while and(df>=tol, and(niter <= maxiter, dx >= dxmin))
     end
 end
 if verbose
-    display(['A' num2str(n) converge after ' num2str(niter) ' iterations' ])
+    display(['A' num2str(n) 'converge after ' num2str(niter) ' iterations' ])
 end
 xopt = x;
 end
