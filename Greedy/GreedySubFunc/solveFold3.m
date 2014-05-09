@@ -7,6 +7,7 @@ Max_Iter = 100;
 obj = zeros(Max_Iter, 1);
 A = ones(q, p);
 step = 1e-3;
+
 for i = 1:Max_Iter
     [obj(i), G] = findGrad3(Y, X, A);
     A = A + step * G;

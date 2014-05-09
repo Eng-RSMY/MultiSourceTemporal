@@ -7,8 +7,8 @@ addpath(genpath('./Greedy/'))
 global verbose
 verbose = 0;
 tLen = [10, 50, 100, 200];
-qFor = cell(4, 1);
-qOrth = cell(4, 1);
+% qFor = cell(4, 1);
+% qOrth = cell(4, 1);
 
 
 % for t = 1:length(tLen)
@@ -31,6 +31,8 @@ qOrth = cell(4, 1);
 %%
 Ranks = [1:10];
 maxIter = 5;
+qFor = cell(10, 1);
+qOrth = cell(10, 1);
 for rnk = Ranks
     qFor{rnk} = zeros(maxIter, 5);
     qOrth{rnk} = qFor{rnk};

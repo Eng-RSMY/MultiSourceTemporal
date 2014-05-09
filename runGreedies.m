@@ -5,8 +5,8 @@ addpath(genpath('.'));
 global verbose
 verbose = 0;
 tLen = [10, 50, 100, 200];
-qFor = cell(4, 1);
-qOrth = cell(4, 1);
+% qFor = cell(4, 1);
+% qOrth = cell(4, 1);
 % for t = 1:length(tLen)
 %     qFor{t} = zeros(10, 6);
 %     qOrth{t} = qFor{t};
@@ -25,8 +25,10 @@ qOrth = cell(4, 1);
 % comparison with Ranks 
 maxIter = 5;
 Ranks = 1:10;
-path = './data/synth/datasets4/';
-for rnk = 1:length(Ranks)
+qFor = cell(10, 1);
+qOrth = cell(10, 1);
+path = './data/synth/datasets5/';
+for rnk = 1:1%length(Ranks)
     qFor{rnk} = zeros(maxIter, 6);
     qOrth{rnk} = qFor{rnk};
     parfor i = 1:maxIter
@@ -37,7 +39,7 @@ for rnk = 1:length(Ranks)
    
     qFor{rnk} = qForTemp;
     qOrth{rnk} = qOrthTemp;
-    save('result/synth/greedyResultsSynth_rk.mat', 'qFor', 'qOrth');
+    save('result/synth/greedyResultsSynth_rk2_1.mat', 'qFor', 'qOrth');
     disp(rnk);
 
 end

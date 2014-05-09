@@ -5,9 +5,13 @@ function [delta, Sol] = solveFold2(Y, X, Sol)
 [q, p, r] = size(Sol);
 P = cell(r, 1);
 Q = P;
+lam = 1e-4;
+
 % Create the Q, P matrices
 for ll = 1:r
     P{ll} = X{ll}*X{ll}';
+    P{ll} = P{ll}+lam*eye(size(P{ll}));
+
     Q{ll} = X{ll}*(Y{ll}'*Y{ll})*(X{ll}');
 end
 
