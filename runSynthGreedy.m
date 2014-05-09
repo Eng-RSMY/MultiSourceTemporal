@@ -1,5 +1,5 @@
 function [qFor, qOrth] = runSynthGreedy(name)
-load(['./data/synth/datasets3/' name])
+load(name)
 
 [~, nLoc, nTask] = size(A);
 nLag = 1;

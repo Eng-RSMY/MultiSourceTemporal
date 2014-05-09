@@ -1,5 +1,5 @@
 function [qRegC, qRegM] = runSynthNuc(name)
-load(['./data/synth/datasets3/' name])
+load(name)
 global verbose
 [~, nLoc, nTask] = size(A);
 tTrain = size(tr_series{1}, 2);

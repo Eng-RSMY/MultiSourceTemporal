@@ -1,15 +1,18 @@
 nTasks = 10;
-maxIter = 10;
+maxIter = 5;
 te_sz = 100;
-tr_szs = [10,50,100,200];
+% tr_szs = [10,50,100,200];
+tr_sz = 20;
 v_sz = 100;
-rnk = 3;
+% rnk = 3;
+ranks = [1:10];
 p = 20;
 % T = 300;
 sig = 0.5;
+path = './data/synth/datasets4/synth_rk';
 
 for iter = 1:maxIter
-    for tr_sz = tr_szs
+    for rnk = ranks
         A_1 = randn(p, rnk)*randn(rnk, p);
         sig1 = svds(A_1, 1);
         A_1 = A_1/(sig1*1.2);
@@ -27,7 +30,7 @@ for iter = 1:maxIter
         te_series = tsGen(A,te_sz);
         v_series = tsGen(A,v_sz);
         tr_series = tsGen(A,tr_sz);
-        fname = strcat('./data/synth/datasets3/synth',int2str(tr_sz),'_',int2str(iter),'.mat');
+        fname = strcat(path,int2str(rnk),'_',int2str(iter),'.mat');
         save(fname,'te_series','v_series','tr_series','A');
 
     end
