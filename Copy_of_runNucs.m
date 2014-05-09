@@ -44,6 +44,6 @@ for rnk = Ranks
     end
     qFor{rnk} = qForTemp;
     qOrth{rnk} = qOrthTemp;
-    save('result/synth/nuclResultsSynth_rk.mat', 'qFor', 'qOrth')
+    save('result/synth/nuclResultsSynth_rk2.mat', 'qFor', 'qOrth')
     disp(rnk)
 end
