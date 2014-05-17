@@ -1,4 +1,5 @@
 % create missing data points, 
+clear; clc;
 load 'climateP3.mat'
 
 nTasks = length(series);

@@ -2,7 +2,7 @@
 % compute the covariance for the partial index
 % 1. simple kriging --- 4.25? exponential covairance ( depends only on
 % distance )
-sigma_0 = 0; sigma_1=0.01; theta_1 = 10; theta_2=1;
+sigma_0 = 0; sigma_1=0.01; theta_1 = 1; theta_2=1;
 cov_val = exp_cov(names(:,2:3), sigma_0, sigma_1, theta_1, theta_2);
 
 
@@ -22,15 +22,15 @@ end
 % evaluate performance
 err_RMSE = zeros(nTasks,1);
 for t = 1:nTasks
-    err_RMSE(t) = sqrt(norm(kriging_est{t} - series{t}(missing_idx,:),'fro')^2/nTime);
+    err_RMSE(t) = sqrt(norm(kriging_est{t} - series{t}(missing_idx,:),'fro')^2/(nTime*nMissing));
 end
 
 %% 
 % visualization
-subplot(3,1,1);
-A = randi([10,60],100,100);
-colormap('hot')
-imagesc(A)
+% subplot(3,1,1);
+% A = randi([10,60],100,100);
+% colormap('hot')
+% imagesc(A)
 
 
 
