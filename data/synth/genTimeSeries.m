@@ -2,13 +2,13 @@ nTasks = 10;
 maxIter = 5;
 te_sz = 100;
 % tr_szs = [10,50,100,200];
-tr_sz = 200;
+tr_sz = 50;
 v_sz = 100;
 % rnk = 3;
-ranks = [1:10];
+ranks = [1:5];
 p = 20;
 % T = 300;
-sig = 0.5;
+sig = 0.2;
 path = './data/synth/datasets5/synth_rk';
 
 for iter = 1:maxIter

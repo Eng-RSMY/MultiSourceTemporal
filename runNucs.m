@@ -29,23 +29,23 @@ tLen = [10, 50, 100, 200];
 % end
 
 %%
-Ranks = [1:10];
+Ranks = [1:5];
 maxIter = 5;
-qFor = cell(10, 1);
-qOrth = cell(10, 1);
+qFor = cell(5, 1);
+qOrth = cell(5, 1);
 for rnk = Ranks
     qFor{rnk} = zeros(maxIter, 5);
     qOrth{rnk} = qFor{rnk};
     qForTemp = qFor{rnk};
     qOrthTemp = qOrth{rnk};
     for i = 1:maxIter
-        path = './data/synth/datasets4/';
+        path = './data/synth/datasets5/';
         fname = sprintf('synth_rk%d_%d.mat', rnk, i);
         name= strcat(path, fname);
         [qForTemp(i, :), qOrthTemp(i, :)] = runSynthNuc(name);
     end
     qFor{rnk} = qForTemp;
     qOrth{rnk} = qOrthTemp;
-    save('result/synth/nuclResultsSynth_rk.mat', 'qFor', 'qOrth')
+    save('result/synth/nuclResultsSynth_rk2_2.mat', 'qFor', 'qOrth')
     disp(rnk)
 end

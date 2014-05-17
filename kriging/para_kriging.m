@@ -1,4 +1,5 @@
-% create missing data points, 
+% create missing data points, use base functions for covariance
+clc; clear;
 load 'climateP3.mat'
 
 nTasks = length(series);

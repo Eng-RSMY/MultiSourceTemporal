@@ -24,9 +24,9 @@ tLen = [10, 50, 100, 200];
 %% 
 % comparison with Ranks 
 maxIter = 5;
-Ranks = 1:10;
-qFor = cell(10, 1);
-qOrth = cell(10, 1);
+Ranks = 1:5;
+qFor = cell(5, 1);
+qOrth = cell(5, 1);
 path = './data/synth/datasets5/';
 for rnk = 1:1%length(Ranks)
     qFor{rnk} = zeros(maxIter, 6);
@@ -39,7 +39,7 @@ for rnk = 1:1%length(Ranks)
    
     qFor{rnk} = qForTemp;
     qOrth{rnk} = qOrthTemp;
-    save('result/synth/greedyResultsSynth_rk2_1.mat', 'qFor', 'qOrth');
+    save('result/synth/greedyResultsSynth_rk_2_2.mat', 'qFor', 'qOrth');
     disp(rnk);
 
 end
