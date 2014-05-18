@@ -39,7 +39,7 @@ for rnk = 1:1%length(Ranks)
    
     qFor{rnk} = qForTemp;
     qOrth{rnk} = qOrthTemp;
-    save('result/synth/greedyResultsSynth_rk_2_2.mat', 'qFor', 'qOrth');
+    save('result/synth/greedyResultsSynth_rk_2_taha.mat', 'qFor', 'qOrth');
     disp(rnk);
 
 end
