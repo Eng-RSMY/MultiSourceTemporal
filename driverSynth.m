@@ -24,5 +24,5 @@ grad = {@gradGaussian, 'Gaussian'};
 % grad = {@gradGumbel, 'Gumbel'};
 [S, err, normerr] = sparseGLARP(series, lambda(2), nLag, index, grad);
 disp(norm(S{1} - A, 'fro')/norm(A, 'fro'))
-disp(err)
-disp(normerr)
+disp(err);
+disp(normerr);
