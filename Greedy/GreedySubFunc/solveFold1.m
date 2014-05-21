@@ -4,7 +4,7 @@ function [delta, Sol] = solveFold1(Y, X, Sol)
 % objective function
 [q, p, r] = size(Sol);
 n = size(X{1}, 2);
-lam = 1e-4;
+lam = 1e-3;
 XX = zeros(p*r, n*r);
 YY = zeros(q, n*r);
 for ll = 1:r
@@ -15,12 +15,12 @@ Q = XX*YY';
 Q = Q*Q';
 P = XX*XX';
 
-P = P+lam*eye(size(P));
 % My solution
 % [~, lamU] = approxEV(YY*YY', 1e-4);   % Change this to svds
 % [v, ~] = approxEV(Q-lamU*P, 1e-4);
 % Matlab's solution
 [~, lamU] = eigs(YY*YY', 1);
+lamU = lamU*(1-lam);
 [v, ~] = eigs(Q-lamU*P, 1);
 
 u = (YY*XX'*v)/(v'*P*v);

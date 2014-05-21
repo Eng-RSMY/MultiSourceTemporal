@@ -10,7 +10,6 @@ lam = 1e-4;
 % Create the Q, P matrices
 for ll = 1:r
     P{ll} = X{ll}*X{ll}';
-    P{ll} = P{ll}+lam*eye(size(P{ll}));
 
     Q{ll} = X{ll}*(Y{ll}'*Y{ll})*(X{ll}');
 end
@@ -22,7 +21,7 @@ u = ones(p, 1);
 step = 1e-4;
 for i = 1:Max_Iter
     [obj(i), G] = findGrad2(Q, P, u);
-    u = u + step * G;
+    u = u + step * (G-2*u*lam);    % Added for regularization
 end
 
 v = zeros(q*r, 1);

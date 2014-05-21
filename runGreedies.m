@@ -28,7 +28,11 @@ Ranks = 1:5;
 qFor = cell(5, 1);
 qOrth = cell(5, 1);
 path = './data/synth/datasets5/';
+<<<<<<< HEAD
 for rnk = 1:Ranks%length(Ranks)
+=======
+for rnk = 1:length(Ranks)
+>>>>>>> d217cc6b8cdd00243ef1e6ec7bd1c8d05781a592
     qFor{rnk} = zeros(maxIter, 6);
     qOrth{rnk} = qFor{rnk};
     parfor i = 1:maxIter
@@ -39,7 +43,7 @@ for rnk = 1:Ranks%length(Ranks)
    
     qFor{rnk} = qForTemp;
     qOrth{rnk} = qOrthTemp;
-    save('result/synth/greedyResultsSynth_rk_2_2.mat', 'qFor', 'qOrth');
+    save('result/synth/greedyResultsSynth_rk_2_taha.mat', 'qFor', 'qOrth');
     disp(rnk);
 
 end
