@@ -2,6 +2,7 @@ function [W , tensorW ] = MLMTL_Tucker( X, Y, Ps, alpha )
 %TUCKER Summary of this function goes here
 %   Detailed explanation goes here: implementation of the Tucker product
 %   algorithm in Multilinear Multitask Learning
+% TBD: solve the inf problem in the output
 global verbose;
 verbose = 0;
 maxIter = 8;
