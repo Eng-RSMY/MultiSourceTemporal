@@ -3,10 +3,10 @@ clear; clc;
 load 'climateP3.mat'
 
 nTasks = length(series);
-[nLoc , nTime] = size(series{1});
+[nLocs , nTime] = size(series{1});
 
-nMissing = 10;
-missing_idx = randi([1,nLoc], 1,nMissing);
+nMissing = 10; nObserve = nLocs-nMissing;
+missing_idx = randi([1,nLocs], 1,nMissing);
 observe_idx = setdiff(1:108,missing_idx);
 
 

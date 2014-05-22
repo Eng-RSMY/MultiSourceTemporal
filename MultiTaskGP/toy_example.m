@@ -12,7 +12,7 @@ function toy_example()
 rand('state',18);
 randn('state',20);
 M = 2;    % Number of tasks
-D = 1;    % Dimensionality of input space. try D=1 and D=2
+D = 2;    % Dimensionality of input space. try D=1 and D=2
 covfunc_x = 'covSEard'; % Covariance function on input space
 
 if (D==1)
