@@ -1,4 +1,4 @@
-function [ Ypred ] = multitask_GP( covfunc_x ,xtrain, ytrain ,N,M,D, idx_train ) 
+function [ Ypred ] = multitask_GP( covfunc_x ,xtrain, ytrain , idx_train, xtest, N,M,D) 
 %MULTITASK_GP Summary of this function goes here
 %   Detailed explanation goes here
 % M: nTasks
@@ -38,7 +38,6 @@ theta_kx_learnt = logtheta_all0(nlf+1 : nlf+Ltheta_x);
 theta_sigma_learnt = logtheta_all0(nlf+Ltheta_x+1:end);
 
 % 6. Making predictions at all points on all tasks
-xtest = x;
 Ntest = size(xtest,1);
 [alpha, Kf, L, Kxstar] = alpha_mtgp(logtheta_all0, covfunc_x, xtrain, ytrain,...
 				    M, irank, nx, ind_kf_train, ...
@@ -63,7 +62,7 @@ Lf0 = chol(Kf0)';
 theta_lf0 = lowtri2vec_inchol(Lf0,M,irank);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function theta_sigma0 = init_sigma(M);
+function theta_sigma0 = init_sigma(M)
 theta_sigma0 =  (1e-7)*rand(M,1);  
 
 
