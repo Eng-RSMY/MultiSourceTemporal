@@ -1,3 +1,4 @@
+%% Toy test
 nTasks = 3;
 nSamples = 10;
 nObserve= 5;
@@ -8,13 +9,13 @@ for t = 1: nTasks
 end
 Dims = [nObserve,nObserve ,nTasks];
 [W fs] = para_kriging(X, beta, Dims);
-%%
-clear; clc; genData_ClimateP3;
+%% Climate P3
+clear; clc; genData_ClimateP3; % Removes some TS for krigging
 beta = 1e-2; lambda = 1e-3;
 nTasks = length(series_partial);
 [nObserve nSamples] = size(series_partial{1});
 Dims = [nObserve, nObserve, nTasks];
-[W fs] = para_kriging(series_partial, beta,lambda, Dims);
+[W fs] = para_kriging(series_partial, beta,lambda, Dims); % Main function call
 
 
 Sigma = zeros(Dims);
@@ -25,7 +26,7 @@ for t= 1:nTasks
     Sigma (:,:,t) = inv(W(:,:,t) * W(:,:,t)');
 end
 
-%%
+%% Plotting covariance 
 
 D = squareform(pdist(names(observe_idx,2:end), 'euclidean'));
 dist = D( observe_idx(1),:);
