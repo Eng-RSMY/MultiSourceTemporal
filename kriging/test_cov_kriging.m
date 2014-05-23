@@ -1,3 +1,5 @@
+addpath(genpath('../'))
+
 clear; clc;
 genData_ClimateP3;
 
@@ -33,7 +35,7 @@ sigma = 1e-1;
 for t = 1: nTasks   
     for  time = 1:nTime
     kout = nwreg(cov_emp(:,:,t), names(observe_idx,2:3), names(missing_idx,2:3), sigma);
-    kriging_est{t}(:,time) = kout'/W(:,:,t) * series_partial{t}(:,time);
+    kriging_est{t}(:,time) = (kout'/cov_emp(:,:,t))* series_partial{t}(:,time);
     end
 end
 
