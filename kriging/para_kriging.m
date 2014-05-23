@@ -5,7 +5,7 @@ function [W fs] = para_kriging(X,beta,lambda, Dims)
 
 
 
-maxIter = 20;
+maxIter = 200;
 maxGDIter  = 50;
 eta = 1e-6;
 nSamples = size(X{1},2);

@@ -1,3 +1,7 @@
+clc
+clear
+addpath(genpath('../'))
+
 %% Toy test
 nTasks = 3;
 nSamples = 10;
@@ -8,14 +12,14 @@ for t = 1: nTasks
     X{t} = rand([nObserve,nSamples]);
 end
 Dims = [nObserve,nObserve ,nTasks];
-[W fs] = para_kriging(X, beta, Dims);
+% [W, fs] = para_kriging(X, beta, 1, Dims);  % Added 1 just to be compatible with the function call
 %% Climate P3
 clear; clc; genData_ClimateP3; % Removes some TS for krigging
 beta = 1e-2; lambda = 1e-3;
 nTasks = length(series_partial);
-[nObserve nSamples] = size(series_partial{1});
+[nObserve, nSamples] = size(series_partial{1});
 Dims = [nObserve, nObserve, nTasks];
-[W fs] = para_kriging(series_partial, beta,lambda, Dims); % Main function call
+[W, fs] = para_kriging(series_partial, beta,lambda, Dims); % Main function call
 
 
 Sigma = zeros(Dims);
@@ -23,7 +27,7 @@ Omega = zeros(Dims);
 task = 3;
 for t= 1:nTasks
     Omega (:,:,t) = W(:,:,t) * W(:,:,t)';
-    Sigma (:,:,t) = inv(W(:,:,t) * W(:,:,t)');
+    Sigma (:,:,t) = inv(Omega (:,:,t));
 end
 
 %% Plotting covariance 
