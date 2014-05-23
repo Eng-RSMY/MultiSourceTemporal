@@ -1,0 +1,2709 @@
+<HTML>
+
+<HEAD>
+
+<META NAME="Author" CONTENT="Yves Gratton">
+
+<TITLE>MATLAB Kriging Toolbox</TITLE>
+
+</HEAD>
+
+<BODY>
+
+
+
+<P ALIGN="CENTER"><FONT FACE="Helvetica"
+SIZE="+2"><STRONG></STRONG></FONT><FONT FACE="Helvetica"
+SIZE="+2"><STRONG>MATLAB Kriging Toolbox</STRONG></FONT></P>
+
+<P ALIGN="CENTER"><FONT FACE="Helvetica" SIZE="-1"><STRONG>(version
+3.0:  f&eacute;vrier 1998)</STRONG></FONT></P>
+
+<P ALIGN="CENTER"><FONT FACE="Helvetica" SIZE="-1"><STRONG>Note:
+During conversion from a Word document to html, the figures were
+either lost or only partially converted.  Please use the <a
+href="english.doc">original Word document</a> in order to see all
+equations and other figures.
+</STRONG></FONT></P>
+
+<P ALIGN="CENTER"><FONT FACE="Helvetica" SIZE="-1"><STRONG>Caroline
+Lafleur</STRONG></FONT></P>
+
+<P ALIGN="CENTER"><FONT FACE="Helvetica"
+SIZE="-1">INRS-Oc&eacute;anologie, 310 All&eacute;e des Ursulines,
+Rimouski, Qc., Canada, G5L 3A1</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1">The Matlab Kringing Toolbox is
+free and hence no support or warranty are provided.</FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Specifications</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">The Kriging Toolbox version 3.0
+is matlab 5.1 and 5.2 compatible under Windows 95.  It is an upgrade
+of version 2.0 which has been compiled under matlab 4.2.  Please
+note that this upgrade only uses 2-D matrices even though the new
+matlab version supports greater matrix dimensions.</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1">This toolbox can be used "as it
+is" without other matlab toolbox except the probability functions
+(chi).  However, it may also use the leastsq.m function from
+Matlab's Opimization toolbox (see fitvario.m).  The mex files have
+been compiled with Microsoft Fortran Power station V4.0 for Matlab
+5.1.  As far as we have been able to test, they also work with
+Matlab 5.2.  </FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1">The Chi Toolbox is necessary for
+normality study.  It is provided with the Kriging
+Toolbox.</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG>Description</STRONG>
+</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">The development of this toolbox
+is based on the necessity of using objective analysis of scalars in
+2 or 3 dimensions in physical oceanography.  This type of
+interpolation usually gives better results than standard
+interpolation methods.  Furthermore, it has the non-negligible
+advantage of giving estimates of interpolation errors.</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1">This toolbox is almost entirely
+made up of functions from the book by Deutsch and Journel (1992) and
+from the paper by Marcotte (1991).  The variogram functions are
+MEX-files compiled from the former while the cokriging functions
+were published, in Matlab format, in Marcotte's 1991 paper.  All the
+parameters and examples can be found, in English, in the two
+publications.  The book by Journel and Huijbregts (1992) is the best
+book on semivariograms.  A complete example of optimal estimation in
+physical oceanography can be found in the paper by Denman and
+Freeland (1985).  As well, kridemo shows outlines of a 2-D objective
+analysis.</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1">Denman, K.L.  and H.J.
+Freeland, 1985.  Correlation Scales, Objective Mapping and a
+Statistical Test of Geostrophy over the Continental Shelf.  J.  Mar.
+Res., 43:  517-539.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Deutsch, C.  V and A.  G.
+Journel, 1992.  <EM>GSLIB:  Geostatistical Software Library and
+User's Guide</EM>.  Oxford University Press, Oxford, 340
+p.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Journel, A.G.  and C.J.
+Huijbregts, 1992.  <EM>Mining Geostatistics</EM>.  Academic Press,
+New York, 600 p.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Marcotte, D.  1991.  Cokrigeage
+with MATLAB.  Computers &amp; Geosciences.  17(9):
+1265-1280.</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG>Comments, suggestions or
+questions?</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Many functions are still not
+completely tested.  Please report any bugs or problems to</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1">Caroline Lafleur,
+INRS-Oc&eacute;anologie, T&eacute;l:  (418) 724 1650 poste
+1296</FONT></P>
+
+<P><FONT FACE="Helvetica"
+SIZE="-1">caroline_lafleur@uqar.uquebec.ca</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1">Yves Gratton,
+INRS-Oc&eacute;anologie, T&eacute;l:  (418) 724 1741</FONT></P>
+
+<P><FONT FACE="Helvetica"
+SIZE="-1">yves_gratton@uqar.uquebec.ca</FONT></P>
+
+
+<P><FONT FACE="Helvetica"><STRONG>Kriging Toolbox
+Contents</STRONG></FONT><FONT FACE="Helvetica" SIZE="-1"></FONT></P>
+
+
+
+<P><FONT FACE="Helvetica"> <STRONG>Variogram
+functions</STRONG></FONT><FONT FACE="Helvetica"
+SIZE="-1"><STRONG></STRONG></FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"> confint Confidence
+intervals.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> fitvario Optimization of
+variogr.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> fitvari2 Optimization of
+variogr2 (without the Optimization Toolbox).</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> fun Called from fitvario to
+estimate variograms.  </FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> gam2 MEX-file called from
+vario2dr.  </FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> gam3 MEX-file called from
+vario3dr.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> gamv2 MEX-file called from
+vario2di.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> gamv2uv MEX-file called from
+var2diuv.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> gamv3 MEX-file called from
+vario3di.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> mrqmin Least-square fitting:
+Levenberg-Marquardt method.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> outvario Output of variogram
+functions.  </FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> variogr Models of semivariogram
+and correlogram.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> variogr2 variogr for fitting
+procedures not using the Optimization Toolbox.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> vario2di Variogram of
+irregularly spaced 2-D data.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> vario2dr Variogram of regularly
+spaced 2-D data.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> vario3di Variogram of
+irregularly spaced 3-D data.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> vario3dr Variogram of regularly
+spaced 3-D data.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> var2diuv Variogram of
+irregularly spaced 2-D vectors.</FONT></P>
+
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG> </STRONG></FONT><FONT
+FACE="Helvetica"><STRONG>Kriging functions</STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"></FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"> barnes 2-D spatial filter for
+kriged data.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> cokri Point or block cokriging
+in D dimensions.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> cokri2 Cokriging function
+called from cokri.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> davis Point kriging using
+Davis' set of equations.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> filresp Barnes' filter response
+in the wavelength domain.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> tintore Application of Barnes'
+filter with the Tintor&eacute;'s parameters (1991).</FONT></P>
+
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"> </FONT><FONT
+FACE="Helvetica"><STRONG>Related functions</STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> </FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> covsrt Transform the covariance
+matrix of mrqmin.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> d&eacute;plie Vector to matrix
+transformation.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> gaussj Linear equation solution
+by Gauss-Jordan elimination.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> kregrid Matrix (m x 2) of 2-D
+grid coordinates.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> kregrid3 Matrix (m x 3) of 3-D
+grid coordinates.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> kridemo Kriging Toolbox
+demo.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> ksone MEX-file called from
+kstest.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> kstest Kolmogorov-Smirnov
+normality test.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> mat3dp Get a value out of a
+pseudo 3-D matrix.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> mat4dp Get a value out of a
+pseudo 4-D matrix.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> means Mean function called from
+cokri2.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> mrqcof M-file called from
+mrqmin.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> trans Translation function
+called from cokri2.</FONT></P>
+
+
+
+
+<P><FONT FACE="Helvetica"><STRONG>Variogram
+Options</STRONG></FONT><FONT FACE="Helvetica" SIZE="-1"></FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1">Available variograms are:
+</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1">1.  Semivariogram:  <img
+src="engli0{image0}.gif" width="167" height="52" align=bottom
+></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">2.  Cross semivariogram:  <img
+src="engli0{image1}.gif" width="217" height="52" align=bottom
+></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">3.  Covariance:  <img
+src="engli0{image2}.gif" width="249" height="52" align=bottom >
+</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">4.  Correlogram:  <img
+src="engli0{image3}.gif" width="91" height="54" align=bottom
+></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">5.  General relative
+semivariogram:  <img src="engli0{image4}.gif" width="226"
+height="83" align=bottom ></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">6.  Pairwise relative
+semivariogram:  <img src="engli0{image5}.gif" width="191"
+height="54" align=bottom ></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">7.  Semivariogram of logarithms:
+<img src="engli0{image6}.gif" width="219" height="52" align=bottom
+></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">8.  Semirodogram:  <img
+src="engli0{image7}.gif" width="176" height="52" align=bottom
+></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">9.  Semimadogram:  <img
+src="engli0{image8}.gif" width="165" height="52" align=bottom
+></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">10.  Semivariogramme indicator:
+<img src="engli0{image9}.gif" width="154" height="55" align=bottom
+></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"><U>Variable
+descriptions:</U></FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1">C(h) = covariance as a function
+of distance h; C(0) gives the variance.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">g(h) = semivariance = [ C(0) -
+C(h) ].</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">h = separation
+vector.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">N(h) = number of sample
+pairs</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">xi,yi = value of the sample pair
+separated by vector h:  xi is the value at the start (or tail) and
+yi is the value at the end (or head) of interval h.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">zi,zi' et yi,yi' = same as
+(xi,yi) in the cross semivariogram:  yi and zi are the values at the
+start and yi' and zi' are the values at the end of interval
+h.</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1">For more information, please
+consult Deutsch and Journel (1992).</FONT></P>
+
+
+
+<P><FONT FACE="Helvetica"><STRONG>Kriging
+Options</STRONG></FONT><FONT FACE="Helvetica" SIZE="-1"></FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1">Available kriging options are:
+</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"> simple cokriging </FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> ordinary cokriging with one
+nonbias condition (Isaaks and Srivastava)</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> ordinary cokriging with p
+nonbias condition</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> universal cokriging with drift
+of order 1</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> universal cokriging with drift
+of order 2</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">99.  cokriging is not performed,
+only sample variance sv is computed</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1">Cokriging means kriging with
+more than one variable.  When the cokriging program is called with
+only one variable at a time, the results will be those of simple
+kriging, ordinary kriging, universal kriging, point kriging or block
+kriging.  More details can be found in the paper of Marcotte
+(1991).</FONT></P>
+
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG> </STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica"><STRONG>Chi Toolbox
+Contents</STRONG></FONT><FONT FACE="Helvetica" SIZE="-1"></FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1">This toolbox is used by the
+normality test.  The included functions compute the Chi-squared
+probability function and the percentage points of the probability
+function.  The m-files were downloaded from the matlab public site:
+</FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><EM>http://www.mathworks.com/ftp/statv4/shtml</EM></FONT></P>
+
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG>Probability function
+c<SUP>2</SUP></STRONG></FONT><FONT FACE="Helvetica"
+SIZE="-1"><SUP></SUP></FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"> chiprob Probability of
+observing a given c<SUP>2</SUP>value.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> chitable c<SUP>2</SUP> value
+for a given probability.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> chiaux Function called from
+chitable.</FONT></P>
+
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><U>Toolbox
+author:</U></FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1">Peter R.  Shaw</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Woods Hole Oceanographic
+Institution, Woods Hole, MA 02543</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">(508) 457-2000 ext.
+2473</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">pshaw@whoi.edu</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><U>Note</U>:  Optimization
+Toolbox needed</FONT></P>
+
+
+
+<P><FONT FACE="Helvetica"><STRONG>barnes</STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"></FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Purpose</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">2-D spatial filter for kriged
+data.</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"><STRONG>Synopsis</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">F = barnes (xi, yi, zi, c,
+g)</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"><STRONG>Description</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">The Barnes' filter is a low-pass
+2-D filter whose mathematical description is:</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><img src="engli0{image10}.gif"
+width="162" height="28" align=bottom ></FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1">where <img
+src="engli0{image11}.gif" width="163" height="102" align=bottom > ,
+<img src="engli0{image12}.gif" width="232" height="102" align=bottom
+> , </FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"><img src="engli0{image13}.gif"
+width="178" height="29" align=bottom > and <img
+src="engli0{image14}.gif" width="186" height="29" align=bottom
+>.</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><U>Input
+variables:</U></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">xi:  column grid
+coordinates</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">yi:  row grid
+coordinates</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">zi:  grid data</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">c, g:  filter
+parameters</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><U>Output
+variable:</U></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">F:  filtered data </FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Example</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">The tintore function provides a
+good example of spatial filters in physical oceanography.</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"><STRONG>References</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Maddox, R.A., 1980.  An
+Objective Technique for Separating Macroscale and Mesoscale Features
+in Meteorological Data.  Monthly Weather Rev., 108:
+1108-1121.<STRONG></STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Tintor&eacute; et al., 1991.
+Mesoscale Dynamics and Vertical Motion in the Alboran Sea.  J.
+Phys.  Oceanogr., 21:  811-823.</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"><STRONG>See also</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">tintore, filresp</FONT></P>
+
+
+
+<P><FONT FACE="Helvetica"><STRONG>cokri / cokri2</STRONG></FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"></FONT><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Purpose</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">cokri:  Point or block cokriging
+in D dimensions.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">cokri2:  Cokriging function
+called from cokri.</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"><STRONG>Synopsis</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">[x0s, s, sv, id, l] = cokri (x,
+x0, model, c, itype, avg, block, nd, ival, nk, rad, ntok,
+d)</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">[x0s, s, id, l, k0] = cokri2 (x,
+x0, id, model, c, sv, itype, avg, ng, d)</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"><STRONG>Description</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Cokriging means kriging with
+more than one variable.  When cokri is called with only one variable
+at a time, the results will be those of simple kriging, ordinary
+kriging, universal kriging, point kriging or block kriging.  More
+details can be found in the paper of Marcotte (1991).</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1">Available kriging options are:
+</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"> simple cokriging </FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> ordinary cokriging with one
+nonbias condition (Isaaks and Srivastava)</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> ordinary cokriging with p
+nonbias condition</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> universal cokriging with drift
+of order 1</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> universal cokriging with drift
+of order 2</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">99.cokriging is not performed,
+only sv is computed</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1">Available semivariogram models
+are:</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"> nugget effect</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> exponential model</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> gaussian model</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> spherical model</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> linear model</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> quadratic model</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> power (h<SUP>d</SUP>)
+model</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> logarithmic</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> sinc(h)</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> Bessel [ Jo (h) ]</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> exp(-h) * cos(dh)</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> exp(-h) * Jo(dh)</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> exp(-h<SUP>2</SUP>) *
+cos(dh)</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> exp(-h<SUP>2</SUP>) *
+Jo(dh)</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> exp(-h<SUP>2</SUP>) * (1 -
+dh<SUP>2</SUP>)</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> 1 - 3*min(h,1) +
+2*min(h,1)</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> h * log(max(h,eps))</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1">New models can be added quite
+easily since models are calculated using the eval
+function.</FONT></P>
+
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><U>Input
+variables:</U></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">x:  data matrix [x y z var1 var2
+...]</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">x0:  grid coordinates [xi yi
+zi]</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">model:  [models, a (h=r/a),
+rotation angles].</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">No rotation angle is required
+for an isotropic distribution.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Example:  model = [1 10; 4 30]
+means that the distribution is isotropic and that it is represented
+by a nugget effect of range 10 plus a spherical model of range
+30.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">c:  amplitudes of the
+models</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">itype:  kriging
+option</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">block:  vector (1 x D), giving
+the size of the block to estimate; for point cokriging:  block =
+ones(1,D)</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">nd:  Vector (1 x D), giving the
+discretization grid for block cokriging; for point cokriging:  nd =
+ones(1,D)</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">ival:  Code for
+cross-validation.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> 0:  no
+cross-validation</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> 1:  cross-validation is
+performed by removing one variable at a</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> time at a given
+location.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> 2:  cross-validation is
+performed by removing all variables at a</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> given location.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">nk:  number of nearest neighbors
+in x matrix to use in the cokriging.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">rad:  search radius.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">ntok:  points in x0 will be
+kriged by groups of ntok grid points.  </FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">d:  model coefficients.  This
+coefficient has been added to the original Marcotte's function.
+Warning:  In cokri, models are defined in terms of h = r/a.  In
+variogr, the dependent variable is r and hence d = b*a (see
+variogr).</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><U>Output
+variables</U></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">x0s:  kriged data matrix at x0
+locations.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">s:  kriged data variance matrix
+at x0 locations.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">sv:  variance of each
+variable.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">id, l see Marcotte
+(1991)</FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Reference</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Marcotte, D.  1991.  Cokrigeage
+with matlab.  Computers &amp; Geosciences.  17(9):
+1265-1280.</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"><STRONG>See also</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">cokri2, variogr, trans,
+means<STRONG></STRONG></FONT></P>
+
+
+
+<P><FONT FACE="Helvetica"><STRONG>confint</STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Purpose</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Confidence intervals.</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"><STRONG>Synopsis</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">[k2, k1] = confint (g, m,
+S2)</FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Description</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Confidence intervals for the
+structure function</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1">CONF {k2 variance k1}
+(1)</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1">The structure function is a
+measure of the variance of a given variable as a function of
+distance.  The estimation of the confidence intervals in such a case
+is given by (1).</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1">k1 = (n-1) * S<SUP>2</SUP> /
+c1</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">k2 = (n-1) * S<SUP>2</SUP> / c2
+(2)</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> </FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">where n = sample size =
+m+1</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">m = number of degrees of
+freedom</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">S<SUP>2</SUP> = variance of the
+sample</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">c1 and c2 are determined by the
+solution to the equations</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1">F(c1) = (1-g) /2</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">F(c2) = (1+g) /2 (3)</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1">where g = confidence level (95%,
+99% or the like)</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">F = <img
+src="engli0{image15}.gif" width="15" height="20" align=bottom >
+distribution</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1">Solutions are obtained by
+function chitable (Chi Toolbox).</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"><STRONG>References</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Denman, K.  L.  and H.  J.
+Freeland (1985).  Correlation Scales, Objective Mapping and a
+Statistical Test of Geostrophy over the Continental Shelf.  J.  of
+Mar.  Res., 43:  517-539.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Kreyszig, E., 1988.
+<EM>Advanced Engineering Mathematics</EM>, sixth ed., John Wiley
+&amp; Sons, New York, p.1252</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG>See
+also</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">chitable</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT><FONT
+FACE="Helvetica"><STRONG>davis</STRONG></FONT><FONT FACE="Helvetica"
+SIZE="-1"><STRONG></STRONG></FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG>Purpose</STRONG>
+</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Point kriging using Davis' set
+of equations A W = B</FONT></P>
+
+
+<P><FONT FACE="Times New Roman" SIZE="-1"></FONT><FONT FACE="Times
+New Roman" SIZE="-1"> </FONT><FONT FACE="Helvetica"
+SIZE="-1">where</FONT><FONT FACE="Times New Roman" SIZE="-1"> <img
+src="engli0{image16}.gif" width="245" height="108" align=bottom >,
+<img src="engli0{image17}.gif" width="67" height="102" align=bottom
+> </FONT><FONT FACE="Helvetica" SIZE="-1">and</FONT><FONT
+FACE="Times New Roman" SIZE="-1"> <img src="engli0{image18}.gif"
+width="83" height="105" align=bottom >.</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1">The g(h<SUB>ik</SUB>) is the
+semivariance of sample pairs separated by distance h<SUB>ik</SUB>.
+Non bias conditions require the sum of W<SUB>i</SUB> to be equal to
+1.  In that case, one more degree of freedom must be introduced with
+the use of a Lagrange multiplier<img src="engli0{image19}.gif"
+width="14" height="21" align=bottom > in order to minimize the
+estimation error.</FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Synopsis</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">[Zp, Sp] = davis (data, x0,
+model, a, d, c, A)</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"><STRONG>Description</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Available models are:</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"> <MULTICOL COLS="2" WIDTH="507"
+GUTTER="46"> nugget effect</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> exponential model</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> gaussian model</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> spherical model</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> linear model</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> quadratic model</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> power model
+(h<SUP>d</SUP>)</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> logarithmic model</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> sinc(h)</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> Bessel [ Jo (h) ]</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> exp(-h) * cos(dh)</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> exp(-h) * Jo(dh)</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> exp(-h<SUP>2</SUP>) *
+cos(dh)</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> exp(-h<SUP>2</SUP>) *
+Jo(dh)</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> exp(-h<SUP>2</SUP>) * (1 - dh
+<SUP>2</SUP>)</FONT></P>
+
+<BR WP="BR1"><BR WP="BR2"></MULTICOL>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><U>Input
+variables:</U></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">data:  data [x y
+variable]</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">x0:  grid coordinates [xi
+yi]</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">model:  semivariogram
+model</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">a:  semivariogram range
+</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">d:  model coefficient (different
+from coefficient b of variogr, same as d in cokri)</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">c:  model amplitude</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">A:  g(h<SUB>ik</SUB>) matrix if
+already calculated; if not, ignore that input.</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><U>Output
+variables:</U></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Zp:  kriged data matrix at x0
+positions</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Sp:  variance of kriged data at
+x0 positions</FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Reference</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Davis, J.C.  1986.
+<EM>Statistics and Data Analysis in Geology</EM>, 2nd ed., John
+Wiley &amp; Sons, New York, 289 p.</FONT></P>
+
+
+<P><FONT FACE="Helvetica"><STRONG>deplie</STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Purpose</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Vector to matrix
+transformation.</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"><STRONG>Synopsis</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">mat = deplie (y, nx,
+ny)</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"><STRONG>Description</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Transformation of a vector y
+into a matrix mat of size ny x nx.</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><U>Input
+variables:</U></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">y:  row or column
+vector</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">nx:  number of columns in matrix
+mat</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">ny:  number of rows in matrix
+mat</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><U></U></FONT><FONT
+FACE="Helvetica" SIZE="-1"><U>Output variable:</U></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">mat:  matrix</FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Example</STRONG></FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1">y = [(1:10) (1:10)
+(1:10)];</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1">deplie (y, 10, 3) = 1 2 3 4 5 6
+7 8 9 10</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> 1 2 3 4 5 6 7 8 9 10</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> 1 2 3 4 5 6 7 8 9 10</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG>See
+also</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">kregrid</FONT></P>
+
+
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT><FONT
+FACE="Helvetica"><STRONG>filresp</STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Purpose</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Barnes' filter response in the
+wavelength domain.</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"><STRONG>Synopsis</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">R = filresp (c, g)</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"><STRONG>Description</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Barnes' filter response in the
+wavelength domain is given by:</FONT></P>
+
+
+<P><FONT FACE="Times New Roman" SIZE="-1"></FONT><FONT FACE="Times
+New Roman" SIZE="-1"><img src="engli0{image20}.gif" width="137"
+height="29" align=bottom > </FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1">where</FONT><FONT FACE="Times
+New Roman" SIZE="-1"> </FONT><FONT FACE="Helvetica" SIZE="-1"><img
+src="engli0{image21}.gif" width="140" height="29" align=bottom >, c
+and g are the filter parameters and l is the wavelength.</FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Example</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"><center><img
+src="engli0{image22}.gif" width="1" height="1"
+></center></FONT><FONT FACE="Times New Roman" SIZE="-1"><center><img
+src="engli0{image23}.gif" width="287" height="287"
+></center></FONT><FONT FACE="Helvetica" SIZE="-1"></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">f2 =
+filresp(200,0.6);</FONT></P>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"><STRONG>References</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Barnes, S.L.,1973.  Mesoscale
+Objective Map Analysis Using Weighted Time Series Observations.
+NOAA Tech.  Memo.  ERL NSSL-62, 60 p.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Maddox, R.A., 1980.  An
+Objective Technique for Separating Macroscale and Mesoscale Features
+in Meteorological Data.  Mon.  Wea.  Rev., 108,
+1108:1121.</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG>See
+also</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">barnes, tintore</FONT></P>
+
+
+<P><FONT FACE="Helvetica"><STRONG>fitvario / fitvari2 /
+fun</STRONG></FONT><FONT FACE="Helvetica" SIZE="-1"></FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Purpose</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">fitvario:  Optimization of
+variogr.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">fitvari2:  Optimization of
+variogr2 (without the Optimization Toolbox).</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">fun:  Called from fitvario to
+estimate variograms.</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"><STRONG>Synopsis</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">fitvario (model, data, a)
+</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">fitvario (model, data, a,
+b)</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">fitvari2 (model, data, a, b,
+C)</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">f = fun (lam, data)</FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Description</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Least-square fitting of
+semivariogram model coefficients a, b and C.</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><U>Input
+variables:</U></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">model:  model type (see
+variogr)</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">data(:,1):  x-axis (distance)
+(gam(:,1))</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">data(:,2):  y-axis (variance)
+(gam(:,2))</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">a, b et C:  starting values of
+coefficients a, b and C of variogr</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><U>Output:</U></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">The graphical output shows the
+plot of the semivariance as a function of the distance.
+Experimental results appear as symbols.  The plain line gives the
+best fit for the model chosen.  The optimal values of a, b and C are
+also displayed on the graph.</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><center><img
+src="engli0{image24}.gif" width="1" height="1"
+></center></FONT><FONT FACE="Times New Roman" SIZE="-1"><center><img
+src="engli0{image25}.gif" width="323" height="277"
+></center></FONT><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Example</STRONG></FONT></P>
+
+<MULTICOL COLS="2" WIDTH="340" GUTTER="46">
+
+<P><FONT FACE="Helvetica" SIZE="-1">r = (0:10)';</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">x = 1 - exp(-r);</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">fitvario(2,[r x],2) </FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">fitvari2(2,[r
+x],2,0,1.5)</FONT></P>
+
+
+<BR WP="BR1"><BR WP="BR2"></MULTICOL>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"><STRONG>See also</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">leastsq into the Optimization
+Toolbox, variogr, variogr2</FONT></P>
+
+
+
+<P><FONT FACE="Helvetica"><STRONG>gam2, gamv2, gamv2uv gam3,
+gamv3</STRONG></FONT><FONT FACE="Helvetica"
+SIZE="-1"><STRONG></STRONG></FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Purpose</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">MEX-file called from vario2dr,
+vario2di, var2diuv, vario3dr and vario3di.</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"><STRONG>Synopsis</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">[np, gam, hm, tm, hv, tv] = gam2
+(nlag, nx, ny, ndir, ixd, iyd, vr, tmin, tmax, nvarg, ivtail,
+ivhead, ivtype, nvar)</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">[np, dis, gam, hm, tm, hv, tv] =
+gamv2 (nd, x, y, vr, tmin, tmax, nlag, xlag, xltol, ndir, azm, atol,
+bandw, nvarg, ivtail, ivhead, ivtype, nvar)</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">[np, dis, gam, hm, tm, hv, tv] =
+gamv2uv (nd, x, y, u, v, tmin, tmax, nlag, xlag, xltol, ndir, azm,
+atol, bandw, nvarg, ivtail, ivhead, ivtype, nvar, option)</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">[np, gam, hm, tm, hv, tv] = gam3
+(nlag, nx, ny, nz, ndir, ixd, iyd, izd, vr, tmin, tmax, nvarg,
+ivtail, ivhead, ivtype, nvar)</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">[np, dis, gam, hm, tm, hv, tv] =
+gamv3 (nd, x, y, z, vr, tmin, tmax, nlag, xlag, xltol, ndir, azm,
+atol, bandwh, dip, dtol, bandwd, nvarg, ivtail, ivhead, ivtype,
+nvar)</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"><STRONG>Description</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">The description of inputs and
+outputs is given in vario2dr, vario2di, var2diuv, vario3dr and
+vario3di.  These functions are MEX-files compiled from source
+Fortran codes gam2.for, gamv2.for, gam3.for and gamv3.for of GSLIB
+(Deutsch et Journel, 1992).</FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Reference</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Deutsch, C.  V and A.  G.
+Journel,1992.<EM> GSLIB:  Geostatistical Software Library and User's
+Guide</EM>.  Oxford University Press, Oxford, 340 p.</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"><STRONG>See also</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">vario2dr, vario2di, vario3dr,
+vario3di, var2diuv</FONT></P>
+
+
+
+<P><FONT FACE="Helvetica"><STRONG>kregrid /
+kregrid3</STRONG></FONT><FONT FACE="Helvetica"
+SIZE="-1"><STRONG></STRONG></FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Purpose</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Matrix (m x 2) of 2-D grid
+coordinates.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Matrix (m x 3) of 3-D grid
+coordinates.</FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Synopsis</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">y = kregrid (x0, dx, xf, y0, dy,
+yf)</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">y = kregrid3 (x0, dx, xf, y0,
+dy, yf, z0, dz, zf)</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"><STRONG>Description</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Grid (x,y) coordinates are
+reshape in an m x 2 matrix.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Grid (x,y,z) coordinates are
+reshape in an m x 3 matrix.</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><U>Input
+variables:</U></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">(x0,y0,z0):  (x,y,z) position of
+the lower left corner of the grid</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">(xf, yf, zf):  (x,y,z) position
+of the upper right corner of the grid</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">dx:  x grid interval </FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">dy:  y grid interval</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">dz:  z grid interval</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><U>Output
+variable:</U></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">y:  m x 2 or m x 3 matrix of
+grid coordinates</FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Example</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Let us say that we want to
+generate the following grid:</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><img src="engli0{image26}.gif"
+width="132" height="55" align=bottom > </FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1">y = kregrid (1, 1, 3, 0, 5,
+5)</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1">y =</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">1 0</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">2 0</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">3 0</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">1 5</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">2 5</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">3 5</FONT></P>
+
+
+
+
+<P><FONT FACE="Helvetica"><STRONG>ksone</STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"></FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Purpose</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">MEX-file called from
+kstest.</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"><STRONG>Synopsis</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">[d, prob] = ksone (sample, n,
+normal)</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"><STRONG>Description</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">MEX-file compiled from the
+source Fortran code ksone.for, a Numerical Recipes subroutine.  A
+comparison is made between the sample cumulative distribution and a
+normal cumulative distribution.</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><U>Input
+variables</U>:</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">sample:  standardized sample
+(mean(sample) = 0 et std(sample) = 1) </FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">n:  number of data in the sample
+</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">normal:  normal cumulative
+distribution ranging from 0 to 1</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><U>Output
+variable:</U></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">d:  K-S statistic</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">prob:  significance level.
+Small values show that the sample cumulative distribution is
+significantly different from normal.</FONT></P>
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Reference</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Press, W et al.  1992.
+<EM>Numerical Recipes in Fortran, The Art of Scientific
+Computing</EM>, second ed., Cambridge University Press, Cambridge, p
+619.</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"><STRONG>See also</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">kstest</FONT></P>
+
+
+
+<P><FONT FACE="Helvetica"><STRONG>kstest</STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"></FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Purpose</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Kolmogorov-Smirnov normality
+test.</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"><STRONG>Synopsis</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">[d, prob] = kstest
+(sample)</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"><STRONG>Description</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Normality test with the ksone
+MEX-file.</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><U>Input
+variables</U>:</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">sample:  sample </FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><U>Output
+variable:</U></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">d:  K-S statistic</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">prob:  significance level.
+Small values show that the sample cumulative distribution is
+significantly different from normal.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> </FONT></P>
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Example</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Normality test of a vector of
+normally distributed random numbers:</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> </FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">data = randn(100,1);</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">[d,prob] =
+kstest(data)</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1">d =</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> 0.0456</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1">prob =</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">
+0.9854<STRONG></STRONG></FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>References</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Kreyszig, E., 1988.
+<EM>Advanced Engineering Mathematics</EM>, sixth ed., John Wiley
+&amp; Sons, New York, p.1211.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Legendre, L.  and Legendre, P.
+(1983) Numerical Ecology.  Developments in Environment Modeling 3.
+Elsevier, New York, 419p.</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG>See
+also</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">ksone</FONT></P>
+
+
+
+<P><FONT FACE="Helvetica"><STRONG>mat3dp</STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"></FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Purpose</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Get a value out of a pseudo 3-D
+matrix.</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"><STRONG>Synopsis</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">r = mat3d ( mat, d3, i, j, k
+)</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"><STRONG>Description</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">A pseudo 3-D matrix is a 2-D
+matrix made up of successive 2-D slices.</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><U>Input
+variables:</U></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">mat:  pseudo 3-D
+matrix</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">d3:  number of levels in the
+third dimension </FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">i:  position in the first
+dimension</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">j:  position in the second
+dimension</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">k:  position in the third
+dimension</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><U>Output
+variable:</U></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">r:  value corresponding to
+mat(i,j,k)</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"><STRONG>Example</STRONG></FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1">x =</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> 1.0 1.2</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> 1.5 1.7</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> 2.0 2.2</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> 2.5 2.7</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> 3.0 3.2</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> 3.5 3.7</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1">mat3dp (x, 3, 1, 2, 2) =
+2.2<STRONG></STRONG></FONT></P>
+
+
+
+<P><FONT FACE="Helvetica"><STRONG></STRONG></FONT><FONT
+FACE="Helvetica"><STRONG>mat4dp</STRONG></FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Purpose</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Get a value out of a pseudo 4-D
+matrix.</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"><STRONG>Synopsis</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">r = mat4d (mat, d3, d4, ii, jj,
+kk, ll)</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"><STRONG>Description</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">A pseudo 4-D matrix is a 2-D
+matrix made up of successive pseudo 3-D matrices.</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><U>Input
+variables:</U></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">mat:  pseudo 4-D
+matrix</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">d3:  number of levels in the
+third dimension</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">d4:  number of levels in the
+fourth dimension</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">ii:  position in the first
+dimension</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">jj:  position in the second
+dimension</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">kk:  position in the third
+dimension</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">ll:  position in the fourth
+dimension</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><U>Output
+variable:</U></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">r:  value corresponding to
+mat(ii,jj,kk,ll)</FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Example</STRONG></FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1">x =</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> 1.0 1.2</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> 1.5 1.7</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> 2.0 2.2</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> 2.5 2.7</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> 3.0 3.2</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> 3.5 3.7</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> 4.0 4.2</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"> 4.5 4.7</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1">mat4dp (x, 2, 2, 1, 2, 2, 1) =
+2.2<STRONG></STRONG></FONT></P>
+
+
+
+<P><FONT FACE="Helvetica"><STRONG>means</STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"></FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Purpose</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Mean function called from
+cokri2.</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"><STRONG>Synopsis</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">y = means (x)</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"><STRONG>Description</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Average or mean value.  The only
+difference with matlab function mean is for a row vector.  Means
+returns the same row vector instead of the mean value of the
+elements of the row.</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><U>Input
+variable:</U></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">x:  a vector or a
+matrix</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><U>Output
+variable:</U></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">y:  row vector of the mean of
+each column</FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Example</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Let us consider the following
+matrix:</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1">x = 1.0 1.5 2.0 2.5 3.0
+3.5</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">1.2 1.7 2.2 2.7 3.2
+3.7</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1">means (x) = 1.1 1.6 2.1 2.6 3.1
+3.6</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1">mean (x) = 1.1 1.6 2.1 2.6 3.1
+3.6</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1">whereas</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1">means (x(1,:)) = 1.0 1.5 2.0 2.5
+3.0 3.5</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1">mean (x(1,:)) = 2.25</FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Reference</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Marcotte, D., 1991.  Cokrigeage
+with MATLAB.  Computers &amp; Geosciences.  17(9):
+1265-1280.</FONT></P>
+
+
+
+<P><FONT FACE="Helvetica"><STRONG>mrqmin / mrqcof / covsrt /
+gaussj</STRONG></FONT><FONT FACE="Helvetica" SIZE="-1"></FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Purpose</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">mrqmin:  Least-square fitting:
+Levenberg-Marquardt method.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">mrqcof:  M-file called from
+mrqmin.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">covsrt:  Transform the
+covariance matrix of mrqmin.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">gaussj:  Linear equation
+solution by Gauss-Jordan elimination.</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"><STRONG>Synopsis</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">[covari, alpha, chisq, alamda,
+a] = mrqmin (x ,y ,sig ,ndata, a, ia, ma, nca, funcs, alamda,
+model)</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">[alpha, beta, chisq] = mrqcof
+(x, y, sig, ndata, a, ia, ma, nalp, funcs, model)</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">covari = covsrt (npc, ma, ia,
+mfit, covari)</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">[a, b] = gaussj (a, n, np, b, m,
+mp)</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"><STRONG>Description</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Levenberg-Marquardt method,
+attempting to reduce the value <EM>c</EM> of a fit between a set of
+data points x(ndata), y(ndata) with standard deviations sig(ndata),
+and a nonlinear function dependent on ma coefficients
+a(1:ma).</FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Reference</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Press, W et al.  1992.
+<EM>Numerical Recipes in Fortran, The Art of Scientific
+Computing</EM>, second ed., Cambridge University Press, Cambridge, p
+680.<STRONG></STRONG></FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG>See
+also</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">fitvario2</FONT></P>
+
+
+<P><FONT FACE="Helvetica"><STRONG>outvario</STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"></FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Purpose</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Output of variogram
+functions.</FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Synopsis</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">[np, gam, hm, tm, hv, tv] =
+outvario (nlg, in7, ndir, nvarg, in1, in2, in3, in4, in5,...  in6,
+ivtype)</FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Description</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">This function is only used to
+reorganize the outputs of gam2, gamv2, gam3 and gamv3.</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG>See
+also</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">vario2di, vario2dr, var2diuv,
+vario3di, vario3dr</FONT></P>
+
+
+
+<P><FONT FACE="Helvetica"><STRONG>tintore</STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Purpose</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Application of Barnes' filter
+with the Tintor&eacute;'s parameters (1991).</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"><STRONG>Synopsis</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">[F2, Fb] = tintore (xi, yi,
+zi)</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"><STRONG>Description</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">This function is an example of
+Barnes' filter to separate mesoscale from macroscale features in
+physical oceanography.  The filter parameters are those established
+by Tintor&eacute; et al.  (1991).</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><U>Input
+variables:</U></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">xi:  vector of the x grid
+coordinates (positions of the columns of zi)</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">yi:  vector of the y grid
+coordinates (positions of the rows of zi)</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">zi:  grid data (size(zi) =
+[length(yi), length(xi)])</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><U>Output
+variables:</U></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">F2:  macroscale
+structure</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Fb:  mesoscale
+structure</FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Reference</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Tintor&eacute; et al., 1991.
+Mesoscale Dynamics and Vertical Motion in the Alboran Sea, J.  Phys.
+Oceanogr., 21:811-823.</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG>See
+also</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">barnes, filresp</FONT></P>
+
+
+
+
+
+<P><FONT FACE="Helvetica"><STRONG>trans</STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"></FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Purpose</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Translation function called from
+cokri2.</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"><STRONG>Synopsis</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">cx = trans (cx, model,
+im)</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"><STRONG>Description</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">This function takes as input
+original coordinates and returns the rotated and reduced coordinates
+following specifications described in the semivariogram
+model.</FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Reference</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Marcotte, D., 1991.  Cokrigeage
+with MATLAB.  Computers &amp; Geosciences.  17 (9):
+1265-1280.</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG>See
+also</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">cokri2</FONT></P>
+
+
+
+
+<P><FONT FACE="Helvetica"><STRONG>variogr /
+variogr2</STRONG></FONT><FONT FACE="Helvetica" SIZE="-1"></FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Purpose</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">variogr:  Models of
+semivariogram and correlogram.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">variogr2:  variogr for fitting
+procedures not using the Optimization Toolbox.</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"><STRONG>Synopsis</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">y = variogr (type, r, a, C, b)
+for semivariograms</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">y = variogr (-type, r, a, C, b)
+for correlograms</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">y = variogr2 (type, r, a, C, b)
+for semivariograms</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">y = variogr2 (-type, r, a, C, b)
+for correlograms</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"><STRONG>Description</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">This function is used to obtain
+the theoretical curve of the variance of a sample as a function of
+the sample pair distance.  </FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1">Available model options
+are:</FONT></P>
+
+
+<MULTICOL COLS="2" WIDTH="507" GUTTER="46">
+
+<P><FONT FACE="Helvetica" SIZE="-1"><U></U><EM>With a
+sill</EM></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">1.  spherical</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">2.  exponential</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">3.  gaussian</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">4.  quadratic (in
+preparation)</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><U></U></FONT><FONT
+FACE="Helvetica" SIZE="-1"><EM>Without a sill</EM><U></U></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">5.  linear<U></U></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">10.  logarithmic (in
+preparation)</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">11.  power of r (in preparation)
+</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1"><EM>Hole effects</EM></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">20.  C * ( 1 - sin(b*r) / r
+)</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">21.  C * ( 1 - exp(-r/a) *
+cos(b*r) )</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">22.  C * ( 1 + exp(-r/a) *
+cos(b*r) )</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">23.  C * ( 1 - exp(-r/a) *
+cos(r*b) )</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">24.  C * (1 -
+exp(-(r/a)<SUP>2</SUP>) * cos(b*r) )</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">25.  C * ( 1 - J<SUB> 0</SUB>
+(b*r) )</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">26.  C * ( 1 - J<SUB>0</SUB>
+(b*r) * exp(-r/a) )</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">27.  C * ( 1 -
+exp(-(r/a)<SUP>2</SUP>) * J<SUB>0</SUB> (b*r) )</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">28.  C * ( 1 -
+exp(-(r/a)<SUP>2</SUP>) * (1 - br<SUP>2</SUP>)</FONT></P>
+
+<BR WP="BR1"><BR WP="BR2"></MULTICOL>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Any new types can be easily
+added to the list.</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><U>Input
+variables:</U></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">r:  distance vector</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">a:  range</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">C:  amplitude</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">b:  coefficient used in the
+models 20</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">type:  variogram type</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><U>Output
+variable:</U></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">y:  variance as a function of r
+</FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Reference</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Journel, A.G.  and C.J.
+Huijbregts, 1992.  <EM>Mining Geostatistics</EM>.  Academic
+Press,</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">New York, 600 p.</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"> <STRONG>See
+also</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">fitvario</FONT></P>
+
+
+<P><FONT FACE="Helvetica"><STRONG>vario2di</STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Purpose</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Variogram of irregularly spaced
+2-D data.</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"><STRONG>Synopsis</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">[np, gam, hm, tm, hv, tv] =
+vario2di (nd, x, y, vr, nlag, xlag, xltol, ndir, azm, atol, bandw,
+nvarg, ivtail, ivhead, ivtype, nvar)</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"><STRONG>Description</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">This function is used to
+calculate the variograms of a sample which is irregularly
+distributed on a plane.</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><U>Input
+variables:</U></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">nd:  number of data (no missing
+values)</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">x(nd):  x coordinates of the
+data set</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">y(nd):  y coordinates of the
+data set</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">vr(nd,nvar):  data
+values</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">nlag:  number of lags to
+calculate</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">xlag:  length of the unit
+lag</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">xltol:  distance tolerance (if
+&lt;0 then set to xlag/2)</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">ndir:  number of directions to
+consider</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">azm(ndir):  azimuth angle of
+direction (measured positive degrees clockwise from NS).</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">atol(ndir):  azimuth (half
+window) tolerances</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">bandw(ndir):  maximum
+bandwidth</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">nvarg:  number of variograms to
+compute</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">ivtail(nvarg):  variable for the
+tail of each variogram</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">ivhead(nvarg):  variable for the
+head of each variogram</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">ivtype(nvarg):  type of
+variogram to compute</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">nvar:  number of
+variables</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><U>Output
+variables:</U></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">np:  number of pairs</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">gam:  semivariogram, covariance,
+correlogram,...  values</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">hm:  mean of the tail
+data</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">tm:  mean of the head
+data</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">hv:  variance of the tail
+data</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">tv:  variance of the head
+data</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1">The first column of each output
+variable is the vector of the corresponding distances.  The first
+row of each output variable is the vector of the corresponding
+variogram numbers.  If more than one direction is calculated, the
+values of the output variables for the other directions are added at
+the end of the outputs of the first one.  More details can be found
+in Deutsch et Journel (1992).<STRONG></STRONG></FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Reference</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Deutsch, C.  V and A.  G.
+Journel (1992<EM>) GSLIB:  Geostatistical Software Library and
+User's Guide.</EM> Oxford University Press, Oxford, 340
+p.</FONT></P>
+
+
+
+
+<P><FONT FACE="Helvetica"><STRONG>vario2dr</STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"><STRONG> </STRONG></FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Purpose</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Variogram of regularly spaced
+2-D data.</FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Synopsis</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">[np, gam, hm, tm, hv, tv] =
+vario2dr (nlag, nx, ny, ndir, ixd, iyd, vr, nvarg, ivtail, ivhead,
+ivtype, nvar)</FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Description</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">This function is used to
+calculate the variograms of a sample which is regularly distributed
+on a plane.</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><U></U></FONT><FONT
+FACE="Helvetica" SIZE="-1"><U>Input variables:</U></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">nlag:  number of lags to
+calculate</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">nx:  number of units in x
+(number of columns)</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">ny:  number of units in y
+(number of lines)</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">ndir:  number of directions to
+consider</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">ixd(ndir):  x indicator of
+direction - number of x grid columns that must be shifted to move
+from a node on the grid to the next nearest node on the grid which
+lies on the directional vector.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">iyd(ndir):  y indicator of
+direction - similar to ixd, number of grid lines that must be
+shifted to nearest node which lies on the directional
+vector</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">vr(nx,ny*nvar):  3-D array of
+data.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">nvarg:  number of variograms to
+compute</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">ivtail(nvarg):  variable for the
+tail of each variogram</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">ivhead(nvarg):  variable for the
+head of each variogram</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">ivtype(nvarg):  type of
+variogram to compute</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">nvar:  number of
+variables</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><U>Output
+variables:</U></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">np:  number of pairs</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">gam:  semivariogram, covariance,
+correlogram,...  values</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">hm:  mean of the tail
+data</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">tm:  mean of the head
+data</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">hv:  variance of the tail
+data</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">tv:  variance of the head
+data</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1">The first column of each output
+variable is the vector of the corresponding distances.  The first
+row of each output variable is the vector of the corresponding
+variogram numbers.  If more than one direction is calculated, the
+values of the output variables for the other directions are added at
+the end of the outputs of the first one.  More details can be found
+in Deutsch et Journel (1992).<STRONG></STRONG></FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Reference</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Deutsch, C.  V and A.  G.
+Journel (1992<EM>) GSLIB:  Geostatistical Software Library and
+User's Guide.</EM> Oxford University Press, Oxford, 340
+p.</FONT></P>
+
+
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT><FONT
+FACE="Helvetica"><STRONG>vario3di</STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"></FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Purpose</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Variogram of irregularly spaced
+3-D data.</FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Synopsis</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">[np, gam, hm, tm, hv, tv] =
+vario3di (nd, x, y, z, vr, nlag, xlag, xltol, ndir, azm, atol,
+bandwh, dip, dtol, bandwd, nvarg, ivtail, ivhead, ivtype,
+nvar)</FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Description</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">This function is used to
+calculate the variograms of a sample which is irregularly
+distributed in space.</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><U>Input
+variables:</U></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">nd:  number of data</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">x(nd):  x coordinates of the
+data set</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">y(nd):  y coordinates of the
+data set</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">z(nd):  z coordinates of the
+data set</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">vr(nd,nvar):  data
+values</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">nlag:  number of lags to
+calculate</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">xlag:  length of the unit
+lag</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">xltol:  distance tolerance (if
+&lt;0 then set to xlag/2)</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">ndir:  number of directions to
+consider</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">azm(ndir):  azimuth angle of
+direction (measured positive degrees clockwise from NS)</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">atol(ndir):  azimuth (half
+window) tolerances</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">bandwh:  maximum horizontal
+bandwidth</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">dip(ndir):  dip angle of
+direction (measured in negative degrees down from
+horizontal)</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">dtol(ndir):  dip (half window)
+tolerances</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">bandwd:  maximum vertical
+bandwidth</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">nvarg:  number of variograms to
+compute</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">ivtail(nvarg):  variable for the
+tail of each variogram</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">ivhead(nvarg):  variable for the
+head of each variogram</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">ivtype(nvarg):  type of
+variogram to compute</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">nvar:  number of
+variables</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><U></U></FONT><FONT
+FACE="Helvetica" SIZE="-1"><U>Output variables:</U></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">np:  number of pairs</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">gam:  semivariogram, covariance,
+correlogram,...  values</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">hm:  mean of the tail
+data</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">tm:  mean of the head
+data</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">hv:  variance of the tail
+data</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">tv:  variance of the head
+data</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1">The first column of each output
+variable is the vector of the corresponding distances.  The first
+row of each output variable is the vector of the corresponding
+variogram numbers.  If more than one direction is calculated, the
+values of the output variables for the other directions are added at
+the end of the outputs of the first one.  More details can be found
+in Deutsch et Journel (1992).<STRONG></STRONG></FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Reference</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Deutsch, C.  V and A.  G.
+Journel (1992<EM>) GSLIB:  Geostatistical Software Library and
+User's Guide.</EM> Oxford University Press, Oxford, 340
+p.</FONT></P>
+
+
+
+
+<P><FONT FACE="Helvetica"><STRONG>vario3dr</STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Purpose</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Variogram of regularly spaced
+3-D data.</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"><STRONG>Synopsis</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">[np, gam, hm, tm, hv, tv] =
+var2diuv (nd, x, y, u, v, nlag, xlag, xltol, ndir, azm, atol, bandw,
+nvarg, ivtail, ivhead, ivtype, nvar,option)</FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Description</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">This function is used to
+calculate the variograms of a sample which is regularly distributed
+in space.</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><U>Input
+variables:</U></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">nlag:  maximum number of lags to
+be calculated</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">nx:  number of units in x
+(number of columns)</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">ny:  number of units in y
+(number of lines)</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">nz:  number of units in z
+(number of levels)</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">ndir:  number of directions to
+consider</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">ixd(ndir):  x (column) indicator
+of direction - number of grid columns that must be shifted to move
+from a node on the grid to the next nearest node on the grid which
+lies on the directional vector</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">iyd(ndir):  y (line) indicator
+of direction - similar to ixd, number of grid lines that must be
+shifted to nearest node which lies on the directional
+vector</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">izd(ndir):  z (level) indicator
+of direction - similar to ixd, number of grid levels that must
+shifted to nearest node of directional vector</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">nv:  the number of
+variables</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">vr(nx,ny*nz*nvar):  4-D array of
+data</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">nvarg:  number of variograms to
+compute</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">ivtail(nvarg):  variable for the
+tail of the variogram</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">ivhead(nvarg):  variable for the
+head of the variogram</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">ivtype(nvarg):  type of
+variogram to compute</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">nvar:  number of
+variables</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><U></U></FONT><FONT
+FACE="Helvetica" SIZE="-1"><U>Output variables:</U></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">np:  number of pairs</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">gam:  semivariogram, covariance,
+correlogram,...  values</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">hm:  mean of the tail
+data</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">tm:  mean of the head
+data</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">hv:  variance of the tail
+data</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">tv:  variance of the head
+data</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1">The first column of each output
+variable is the vector of the corresponding distances.  The first
+row of each output variable is the vector of the corresponding
+variogram numbers.  If more than one direction is calculated, the
+values of the output variables for the other directions are added at
+the end of the outputs of the first one.  More details can be found
+in Deutsch et Journel (1992).<STRONG></STRONG></FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Reference</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Deutsch, C.  V and A.  G.
+Journel (1992) <EM>GSLIB:  Geostatistical Software Library and
+User's Guide</EM>.  Oxford University Press, Oxford, 340
+p.</FONT></P>
+
+
+
+
+<P><FONT FACE="Helvetica"><STRONG>var2diuv</STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Purpose</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Variogram of irregularly spaced
+2-D vectors.</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><STRONG></STRONG></FONT><FONT
+FACE="Helvetica" SIZE="-1"><STRONG>Synopsis</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">[np, gam, hm, tm, hv, tv] =
+var2diuv (nd, x, y, u, v, nlag, xlag, xltol, ndir, azm, atol, bandw,
+nvarg, ivtail, ivhead, ivtype, nvar, option)</FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>Description</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">This function is used to
+calculate the variograms of a vector sample which is irregularly
+distributed on a plane.  The option 'parallel' or 'perpendi' allows
+you to chose the vector component.  The 'parallel' component is the
+one parallel to the plane whereas the 'perpendi' component is
+perpendicular to the plane.  This function is used to krige vertical
+sections of horizontal currents in physical oceanography.
+</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><U>Input
+variables:</U></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">nd:  number of data (no missing
+values)</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">x(nd):  x coordinates of the
+data set</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">y(nd):  y coordinates of the
+data set</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">u(nd,nvar):  east-west
+current</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">v(nd,nvar):  north-south
+current</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">nlag:  number of lags to
+calculate</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">xlag:  length of the unit
+lag</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">xltol:  distance tolerance (if
+&lt;0 then set to xlag/2)</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">ndir:  number of directions to
+consider</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">azm(ndir):  azimuth angle of
+direction (measured positive degrees clockwise from NS).</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">atol(ndir):  azimuth (half
+window) tolerances</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">bandw(ndir):  maximum
+bandwidth</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">nvarg:  number of variograms to
+compute</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">ivtail(nvarg):  variable for the
+tail of each variogram</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">ivhead(nvarg):  variable for the
+head of each variogram</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">ivtype(nvarg):  type of
+variogram to compute:</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">nvar:  number of
+variables</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">option:  'parallel' or
+'perpendi'</FONT></P>
+
+
+<P><FONT FACE="Helvetica" SIZE="-1"><U></U></FONT><FONT
+FACE="Helvetica" SIZE="-1"><U>Output variables:</U></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">np:  number of pairs</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">gam:  semivariogram, covariance,
+correlogram,...  values</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">hm:  mean of the tail
+data</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">tm:  mean of the head
+data</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">hv:  variance of the tail
+data</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">tv:  variance of the head
+data</FONT></P>
+
+
+<P><FONT FACE="Helvetica"
+SIZE="-1"><STRONG>References</STRONG></FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Denman, K.L.  and H.J.
+Freeland, 1985.  Correlation Scales, Objective Mapping and a
+Statistical Test of Geostrophy over the Continental Shelf.  J.  Mar.
+Res., 43:  517-539.</FONT></P>
+
+<P><FONT FACE="Helvetica" SIZE="-1">Deutsch, C.  V and A.  G.
+Journel (1992<EM>) GSLIB:  Geostatistical Software Library and
+User's Guide.</EM> Oxford University Press, Oxford, 340
+p.</FONT></P>
+
+
+</BODY>
+
+</HTML>
