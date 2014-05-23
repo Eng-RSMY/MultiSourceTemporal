@@ -4,12 +4,10 @@ function [ W ,fs] = cov_kriging( cov_emp, beta, lambda, Dims )
 % a implementation of tensor complemention with low-n-rank contrain in
 % Gandy et al 2011. Here X is covariance tensor
 
-maxIter = 200;
-eta = 1e-6;
-
+maxIter = 100;
 
 nModes = length(Dims);
-nTasks = Dims(3);
+
 thres = 1e-3;
 
 
@@ -25,7 +23,7 @@ for n = 1: nModes
 end
 
 fs =[];
-
+fval_old = obj_cov_kriging(cov_emp, W, Z, C, beta, lambda);
 for iter = 1:maxIter
     CnSum = zeros(Dims);
     ZnSum = zeros(Dims);
@@ -34,7 +32,7 @@ for iter = 1:maxIter
         ZnSum = ZnSum + Z{n};
     end
     % Solve W 
-    W = 1/(1+nModes*beta)* cov_emp+ CnSum+ beta* ZnSum;
+    W = 1/(1+nModes*beta) * ( cov_emp+ CnSum+ beta* ZnSum );
 
     % Optimizing over B    
     for n=1:nModes    
@@ -50,6 +48,10 @@ for iter = 1:maxIter
     end
     
     fval = obj_cov_kriging(cov_emp, W, Z, C, beta, lambda);
+    if(abs(fval-fval_old)/fval < thres)
+        break;
+    end
+    fval_old = fval;
     fs = [fs,fval];
     disp(iter);
 end
@@ -61,18 +63,22 @@ val = 0;
 nTasks = size(W,3);
 nModes = ndims (W);
 for t = 1:nTasks
-    val = val + norm(W(:,:,t)-cov_emp(:,:,t),'fro');
+    val = val + 0.5*norm(W(:,:,t)-cov_emp(:,:,t),'fro')^2;
 end
 for n = 1:nModes
-    Zn_n = unfld(Z{n},n);
-   
-    val = val+ lambda * trace(sqrt(Zn_n'*Zn_n));
     tmp = (W-Z{n});
-    val = val + C{n}(:)'* tmp(:);
+    val = val -  C{n}(:)'* tmp(:);
     
     for t = 1:nTasks
-        val = val + beta/2 * norm(W(:,:,t)-Z{n}(:,:,t),'fro');
+        val = val + beta/2 * norm(W(:,:,t)-Z{n}(:,:,t),'fro')^2;
     end
+    
+    
+     Zn_n = unfld(Z{n},n);
+     S = svd(Zn_n);
+     val = val + lambda * sum(S);
 end
+
+
 end
 

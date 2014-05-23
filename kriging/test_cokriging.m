@@ -1,5 +1,5 @@
 
-clear; clc; genData_ClimateP3;
+% clear; clc; genData_ClimateP3;
 
 x = [];
 time = 1;
@@ -24,10 +24,10 @@ b = rand(3, nTasks); %never used?
 [x0s,s,sv,idout,l,k,k0]=cokri(x,x0,model,c,itype,avg,block,nd,ival,nk,rad,ntok,b);
 
 %% evaluate
-err_RMSE = zeros(nTasks,1);
+err_RMSE_cokriging = zeros(nTasks,1);
 
 for t = 1:nTasks
-    err_RMSE(t) = sqrt(norm(x0s(:,2+t) - series{t}(missing_idx,time),'fro')^2/(nMissing));
+    err_RMSE_cokriging(t) = sqrt(norm(x0s(:,2+t) - series{t}(missing_idx,time),'fro')^2/(nMissing));
 end
 
-disp(err_RMSE);
+disp(err_RMSE_cokriging);
