@@ -1,9 +1,9 @@
 clear; clc;
 genData_ClimateP3;
 
-lambda = 1e-5;
-beta = 2;
-sigma = 1e-1;
+lambda = 2;
+beta = 1;
+sigma = 1e-3;
 Dims = [nObserve, nObserve, nTasks];
 cov_emp = zeros(Dims);
 time = 1;
@@ -18,8 +18,8 @@ end
 %%
 sigma = 1e-1;
 for t = 1: nTasks   
-    for  time = 1:nTime
     kout = nwreg(W(:,:,t), names(observe_idx,2:3), names(missing_idx,2:3), sigma);
+    for  time = 1:nTime
     kriging_est{t}(:,time) = kout'/(W(:,:,t)) * series_partial{t}(:,time);
     end
 end
@@ -29,15 +29,29 @@ for t = 1:nTasks
     err_RMSE(t) = sqrt(norm(kriging_est{t} - series{t}(missing_idx,:),'fro')^2/(nTime*nMissing));
 end
 %%
-sigma = 1e-1;
-for t = 1: nTasks   
-    for  time = 1:nTime
+sigma = 1;
+for t = 1: nTasks       
     kout = nwreg(cov_emp(:,:,t), names(observe_idx,2:3), names(missing_idx,2:3), sigma);
-    kriging_est{t}(:,time) = kout'/W(:,:,t) * series_partial{t}(:,time);
+    for  time = 1:nTime
+    kriging_est_emp{t}(:,time) = kout'/cov_emp(:,:,t) * series_partial{t}(:,time);
     end
 end
 
 err_RMSE_emp = zeros(nTasks,1);
 for t = 1:nTasks
-    err_RMSE_emp(t) = sqrt(norm(kriging_est{t} - series{t}(missing_idx,:),'fro')^2/(nTime*nMissing));
+    err_RMSE_emp(t) = sqrt(norm(kriging_est_emp{t} - series{t}(missing_idx,:),'fro')^2/(nTime*nMissing));
+end
+
+%% metric learning
+sigma = 1;
+for t = 1: nTasks      
+    kout = mlkernel(W(:,:,t), names(observe_idx,2:3), names(missing_idx,2:3));
+    for  time = 1:nTime
+    kriging_est_emp{t}(:,time) = kout'/W(:,:,t) * series_partial{t}(:,time);
+    end
+end
+
+err_RMSE_emp = zeros(nTasks,1);
+for t = 1:nTasks
+    err_RMSE_emp(t) = sqrt(norm(kriging_est_emp{t} - series{t}(missing_idx,:),'fro')^2/(nTime*nMissing));
 end

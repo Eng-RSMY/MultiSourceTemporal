@@ -1,5 +1,6 @@
-addpath(genpath('../'));
-clear; clc; genData_ClimateP3;
+% addpath(genpath('../'));
+% clear; clc; genData_ClimateP3;
+nTime = 1;
 kriging_est = zeros(nMissing,nTasks,nTime);
 % construct xtrain and ytrain
 covfunc_x = 'covSEard';
@@ -16,12 +17,12 @@ for time = 1:nTime
 end
 
 kriging_est = permute(kriging_est,[1,3,2]); 
-save('../result/climate/multiTask_GP_climateP3.mat','kriging_est');
+% save('../result/climate/multiTask_GP_climateP3.mat','kriging_est');
 %% evaluate performance
-err_RMSE = zeros(nTasks,1);
+err_RMSE_GP = zeros(nTasks,1);
 
 for t = 1:nTasks
-    err_RMSE(t) = sqrt(norm(kriging_est(:,:,t) - series{t}(missing_idx,:),'fro')^2/(nTime*nMissing));
+    err_RMSE_GP(t) = sqrt(norm(kriging_est(:,:,t) - series{t}(missing_idx,time),'fro')^2/(nTime*nMissing));
 end
 
-disp(err_RMSE);
+disp(err_RMSE_GP);
