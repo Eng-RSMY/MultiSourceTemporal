@@ -17,10 +17,20 @@ end
 
 %%
 sigma = 1e-1;
+Dims = [nObserve, nMissing, nTasks];
+
+cov_est = zeros(Dims);
+
+for t = 1: nTasks
+    cov_est(:,:,t) = nwreg(W(:,:,t), names(observe_idx,2:3), names(missing_idx,2:3), sigma);
+end
+
+[ cov_est_denoise,fs ] = cov_kriging( cov_est, beta, lambda, Dims );
+
+%%
 for t = 1: nTasks   
     for  time = 1:nTime
-    kout = nwreg(W(:,:,t), names(observe_idx,2:3), names(missing_idx,2:3), sigma);
-    kriging_est{t}(:,time) = kout'/(W(:,:,t)) * series_partial{t}(:,time);
+    kriging_est{t}(:,time)  = cov_est_denoise(:,:,t)'/(W(:,:,t)) * series_partial{t}(:,time);
     end
 end
 
