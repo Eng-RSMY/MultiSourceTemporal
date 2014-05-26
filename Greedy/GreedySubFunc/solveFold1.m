@@ -16,12 +16,11 @@ Q = Q*Q';
 P = XX*XX';
 
 % My solution
-% [~, lamU] = approxEV(YY*YY', 1e-4);   % Change this to svds
-% [v, ~] = approxEV(Q-lamU*P, 1e-4);
+[~, lamU] = approxEV(YY*YY', 1e-4);   % Change this to svds
+[v, ~] = approxEV(Q-lamU*P, 1e-4);
 % Matlab's solution
-[~, lamU] = eigs(YY*YY', 1);
-lamU = lamU*(1-lam);
-[v, ~] = eigs(Q-lamU*P, 1);
+% [~, lamU] = eigs(YY*YY', 1);
+% [v, ~] = eigs(Q-lamU*P, 1);
 
 u = (YY*XX'*v)/(v'*P*v);
 SS = u*v';
