@@ -15,6 +15,7 @@ load norm_4sq_small.mat
 
 global verbose;
 verbose = 1;
+alpha = 0.1;
 beta = 1e-2;
 ratio = 0.1;
 outerNiTPre = 100;
@@ -25,7 +26,6 @@ nType = length(series);
 ratio = 0.1;
 % lambdas = logspace(-3,3,10);
 
-beta = 1e-3;
 dimModes = [nLoc, nLoc,nType]; 
 
 [Dat_eval , Dat_test] = MLMTL_Datpre(series,ratio); 
@@ -65,7 +65,7 @@ dimModes = [nLoc, nLoc,nType];
 % 
 % save('MLMTL_Mixture_FSQ.mat','Quality','train_time','W');
 fprintf('Running Tucker \n');
-[W,W_tensor] = MLMTL_Tucker (Dat_eval.X, Dat_eval.Y, dimModes,0.5);
+[W,W_tensor] = MLMTL_Tucker (Dat_eval.X, Dat_eval.Y, dimModes,alpha);
 Quality = MLMTL_Test(Dat_test.X, Dat_test.Y, W);
 disp(Quality.RMSE);
 save('./result/climate/MLMTL_Tucker_FSQ.mat','Quality','W');

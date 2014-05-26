@@ -43,8 +43,15 @@ end
 
 %% evaluate performance
 err_RMSE_GP = 0;
+X_gt = zeros(nMissing, nTasks);
 
-err_RMSE_GP = err_RMSE_GP +  sqrt(norm_fro(x0s(:,2+t:end) -x(missing_idx,2+t:end))^2/numel(x0s(:,2+t:end)));
 
-disp(err_RMSE_cokriging);
+for t = 1: nTasks
+    X_gt (:,t) = series{t}(missing_idx,time);
+end
+
+    err_RMSE_GP = err_RMSE_GP +  sqrt(norm_fro(kriging_est-X_gt)^2/numel(X_gt));
+
+
+disp(err_RMSE_GP);
 
