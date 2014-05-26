@@ -1,16 +1,18 @@
-function [ W ] = tcLaplacian_kriging( X, idx_Missing, Sim, lambda, beta, mu, Dims )
+function [ W ] = tcLaplacian_kriging( X, idx_Missing, Sim, lambda, beta, mu )
 %TCLAPLACIAN_KRIGING Summary of this function goes here
 %   Detailed explanation goes here
 % tensor completion with the laplacian similarity matrix Sim
 
-
+global verbose;
+verbose = 0;
 maxIter = 500;
 
+Dims  = size(X);
 nModes = length(Dims);
-
+nLoc  = Dims(1);
+nTask = Dims(3);
 thres = 1e-3;
 
-[ P, Q, R] = size(X);
 % intialize 
 W = zeros(Dims);
 Z = cell(nModes,1);
@@ -37,9 +39,9 @@ for iter = 1:maxIter
         ZnSum = ZnSum + Z{n};
     end
     % Solve W 
-    for t = 1:R
-        W(:,:,t) = ((1+nModes*beta)* eye(P)+ mu*2*L)\( X(:,:,t)+ CnSum(:,:,t)+ beta* ZnSum(:,:,t) ) ;
-        tmp = ((nModes*beta)* eye(P)+ mu*2*L )\ (CnSum(:,:,t)+ beta* ZnSum(:,:,t) );
+    for t = 1:nTask
+        W(:,:,t) = ((1+nModes*beta)* eye(nLoc)+ mu*2*L)\( X(:,:,t)+ CnSum(:,:,t)+ beta* ZnSum(:,:,t) ) ;
+        tmp = ((nModes*beta)* eye(nLoc)+ mu*2*L )\ (CnSum(:,:,t)+ beta* ZnSum(:,:,t) );
         W(idx_Missing,1,t) = tmp(idx_Missing,1);
     end
     % Optimizing over B    
@@ -61,7 +63,9 @@ for iter = 1:maxIter
     end
     fval_old = fval;
     fs = [fs,fval];
-    disp(iter);
+    if verbose
+        disp(iter);
+    end
 end
 
 end
