@@ -11,9 +11,6 @@ D = randn(10, 20);
 
 X = randn(10, 20);
 
-i = 3;
-j = 2;
-
 obj1 = objective1(L, X, D, Iomega);
 obj2 = objective2(L, X, D, Iomega);
 
