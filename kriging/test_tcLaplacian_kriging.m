@@ -2,10 +2,13 @@ addpath(genpath('../'));
 clear; clc; genData_ClimateP17;
 lambda = 1;
 beta = 2;
+mu = 1e-5;
 Dims = size(X);
-
+sigma = 1e-2;
 %%
-[ W ] = tc_kriging( X_Missing, lambda, beta, Dims, idx_Missing );
+Sim = sim_Gaussian(locations, sigma);
+%%
+[ W ] = tcLaplacian_kriging( X_Missing, Sim, lambda, beta, mu, Dims, idx_Missing);
 
 
 %% evaluate
