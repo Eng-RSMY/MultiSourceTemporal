@@ -1,22 +1,44 @@
 % addpath(genpath('../'));
-% clear; clc; genData_ClimateP3;
-nTime = 1;
-kriging_est = zeros(nMissing,nTasks,nTime);
-% construct xtrain and ytrain
-covfunc_x = 'covSEard';
-xtrain = names(:,2:3);
-xtest =  names(missing_idx, 2:3);
+%  genData_ClimateP3;
+ 
+clear; clc;
+load 'climateP17.mat'
 
-for time = 1:nTime
-    ytrain = [];
-    for t = 1:nTasks   
-        ytrain = [ytrain; series_partial{t}(:,time)];
-    end
-    idx_train = [observe_idx*nTasks, observe_idx*nTasks-1, observe_idx*nTasks-2];% idx_train and ytrain should be same size
-    [ kriging_est(:,:,time) ] = multitask_GP(covfunc_x ,xtrain, ytrain , idx_train , xtest, nLocs,nTasks,2);
+D = 2;
+nTasks = length(series);
+[nLocs , nTime] = size(series{1});
+
+
+missing_idx = [1:10];
+nMissing = length(missing_idx);
+nObserve = nLocs-nMissing;
+observe_idx = setdiff(1:nLocs,missing_idx);
+
+
+series_partial = cell(nTasks,1);
+for t = 1:nTasks
+    series_t = series{t};
+    series_partial{t} = series_t(observe_idx,:);
 end
 
-kriging_est = permute(kriging_est,[1,3,2]); 
+
+time = 1;
+kriging_est = zeros(nMissing,nTasks);
+% construct xtrain and ytrain
+covfunc_x = 'covSEard';
+xtrain = locations;
+xtest =  locations(missing_idx, :);
+
+
+ytrain = [];
+idx_train = [];
+for t = 1:nTasks   
+    ytrain = [ytrain; series_partial{t}(:,time)];
+    idx_train = [idx_train, (observe_idx-1)*nTasks+t];
+end
+% idx_train and ytrain should be same size
+[ kriging_est] = multitask_GP(covfunc_x ,xtrain, ytrain , idx_train , xtest, nLocs,nTasks,D);
+
 
 
 %% evaluate performance

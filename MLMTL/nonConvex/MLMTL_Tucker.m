@@ -4,7 +4,7 @@ function [W , tensorW ] = MLMTL_Tucker( X, Y, Ps, alpha )
 %   algorithm in Multilinear Multitask Learning
 % TBD: solve the inf problem in the output
 global verbose;
-verbose = 0;
+verbose = 1;
 maxIter = 8;
 
 nDims = length(Ps);
@@ -26,26 +26,29 @@ G_1=tenmat(full(G), 1);
 G_1=G_1.data;
 f_A = cell(nDims, 1);
 etaG =  1e-6;
-etaA1 = 1e-3;
-etaA2 = 1e-4;
-etaA3 = 1e-4;
+etaA1 = 1e-6;
+etaA2 = 1e-6;
+etaA3 = 1e-6;
 
 for iter = 1:maxIter
 
     % minimize over G
-
+    fprintf('minimize over G \n');
     [G_1 f_G_1 etaG] = grad_descent_G(G_1, A, X, Y,etaG, alpha);
     etaG = etaG /10;
 
     % minimize over A1
+    fprintf('minimize over A1 \n');
     [A{1} f_A{1} etaA1] = grad_descent_A1(G_1, A, X, Y,etaA1, alpha);
     etaA1 = etaA1 /10;
+    
     % minimize over An
-
+    fprintf('minimize over A2 \n');
     [A{2},f_An, etaA2] = grad_descent_An(G_1,A,X,Y,2 , etaA2,alpha);
     f_A{2} = f_An;
     etaA2 = etaA2/10;
     
+    fprintf('minimize over A3 \n');
     [A{3},f_An ,etaA3] = grad_descent_An(G_1,A,X,Y,3 , etaA3, alpha);
     f_A{3} = f_An;
     etaA3 = etaA3/10;

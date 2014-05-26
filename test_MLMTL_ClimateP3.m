@@ -7,6 +7,7 @@ nType = length(series);
 ratio = 0.1;
 % lambdas = logspace(-3,3,10);
 lambdas = logspace(2,3,4);
+alpha = 0.1;
 beta = 1e-3;
 dimModes = [nLoc, nLoc,nType];  
 paras.beta = beta;
@@ -31,7 +32,7 @@ paras.dimModes = dimModes;
 
 %%
 fprintf('Running Tucker \n');
-[W,W_tensor] = MLMTL_Tucker (Dat_eval.X, Dat_eval.Y, dimModes,0.5);
+[W,W_tensor] = MLMTL_Tucker (Dat_eval.X, Dat_eval.Y, dimModes,alpha);
 Quality = MLMTL_Test(Dat_test.X, Dat_test.Y, W);
 disp(Quality.RMSE);
 save('./result/climate/MLMTL_Tucker_climateP3.mat','Quality','W');
