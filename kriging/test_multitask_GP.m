@@ -17,12 +17,12 @@ for time = 1:nTime
 end
 
 kriging_est = permute(kriging_est,[1,3,2]); 
-% save('../result/climate/multiTask_GP_climateP3.mat','kriging_est');
+
+
 %% evaluate performance
-err_RMSE_GP = zeros(nTasks,1);
+err_RMSE_GP = 0;
 
-for t = 1:nTasks
-    err_RMSE_GP(t) = sqrt(norm(kriging_est(:,:,t) - series{t}(missing_idx,time),'fro')^2/(nTime*nMissing));
-end
+err_RMSE_GP = err_RMSE_GP +  sqrt(norm_fro(x0s(:,2+t:end) -x(missing_idx,2+t:end))^2/numel(x0s(:,2+t:end)));
 
-disp(err_RMSE_GP);
+disp(err_RMSE_cokriging);
+

@@ -105,7 +105,7 @@ ng=prod(nd);
 % compute point (ng=1) or block (ng>1) variance
 
 t2=[];
-for i=1:d,
+for i=1:d,% coordinate dimension
    nl=prod(nd(1:i-1));
    nr=prod(nd(i+1:d));
    t=[.5*(1/nd(i)-1):1/nd(i):.5*(1-1/nd(i))]';
