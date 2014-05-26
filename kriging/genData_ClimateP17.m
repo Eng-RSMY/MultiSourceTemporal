@@ -29,7 +29,8 @@ for t = 1:nTasks
     X(:,:,t) = series{t};
 end
 
-idx_Missing = [1:10;ones(1,10)]';
+idx_Missing = [1:10]';
+time = 1;
 
 X_Missing = X;
-X_Missing(idx_Missing(:,1),idx_Missing(:,2),:) =0; 
+X_Missing(idx_Missing(:,1),time,:) =0; 

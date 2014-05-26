@@ -12,6 +12,6 @@ Sim = sim_Gaussian(locations, sigma);
 
 
 %% evaluate
-W_test = W(idx_Missing(:,1),idx_Missing(:,2),:);
-X_test = X( idx_Missing(:,1),idx_Missing(:,2),:);
+W_test = W(idx_Missing,1,:);
+X_test = X( idx_Missing,1,:);
 RMSE  = sqrt(norm_fro(W_test-X_test)^2/ numel(W_test));

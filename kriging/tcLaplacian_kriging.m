@@ -38,9 +38,9 @@ for iter = 1:maxIter
     end
     % Solve W 
     for t = 1:R
-        W(:,:,t) = inv(mu*(1+nModes*beta)* eye(P)*(L+L'))*( X(:,:,t)+ CnSum(:,:,t)+ beta* ZnSum(:,:,t) ) ;
-        tmp = inv(mu*(nModes*beta)* eye(P)*(L+L')) * (CnSum(:,:,t)+ beta* ZnSum(:,:,t) );
-        W(idx_Missing(:,1),idx_Missing(:,2),t) = tmp(idx_Missing(:,1),idx_Missing(:,2));
+        W(:,:,t) = ((1+nModes*beta)* eye(P)+ mu*2*L)\( X(:,:,t)+ CnSum(:,:,t)+ beta* ZnSum(:,:,t) ) ;
+        tmp = ((nModes*beta)* eye(P)+ mu*2*L )\ (CnSum(:,:,t)+ beta* ZnSum(:,:,t) );
+        W(idx_Missing,1,t) = tmp(idx_Missing,1);
     end
     % Optimizing over B    
     for n=1:nModes    
