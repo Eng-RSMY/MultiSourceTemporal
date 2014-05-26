@@ -4,6 +4,7 @@ function [Sol, quality] = solveGreedyOrth(Y, X, mu, Max_Iter, A, test)
 % X{i} is a matrix of size (nFeature) x (nData)
 
 global evaluate
+global verbose
 r = length(X);
 [p, n] = size(X{1});
 q = size(Y{1}, 1);
@@ -16,6 +17,7 @@ obj = zeros(Max_Iter, 1);
 Yp = Y;
 quality = zeros(Max_Iter, 5);
 err = zeros(Max_Iter, 2);
+if verbose; fprintf('Iter #: %5d', 0); end
 for ll = 1:r; obj(1) = obj(1) + norm(Y{ll}, 'fro')^2; end
 for i = 1:Max_Iter-1
     [delta(1), tempSol{1}] = solveFold1(Yp, X, Sol);
@@ -30,7 +32,13 @@ for i = 1:Max_Iter-1
             quality(i+1, :) = testQuality(Sol, A, test.X, test.Y)';
         end
 %    end
+    if verbose
+        fprintf('%c%c%c%c%c%c', 8,8,8,8,8,8);
+        fprintf('%5d ', i);
+    end
 end
+
+if verbose; fprintf('\n'); end
 quality = [obj, quality];
 quality(i+1:end, :) = [];
 % [obj, ERMSE, LRCp, TKCp, PRMSE, NPRMSE]
