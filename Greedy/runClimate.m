@@ -40,7 +40,7 @@ end
 
 mu = 1e-10;
 max_iter = 200;
-[~, qualityGreedy] = solveGreedy(Y, X, mu, max_iter, A, test);
+[~, qualityGreedy] = solveGreedyOrth(Y, X, mu, max_iter, A, test);
 save('qualityFor4Sq.mat', 'qualityGreedy')
 %% The Nuclear norm Solution
 % X = cell(nTask*nLoc, 1);
