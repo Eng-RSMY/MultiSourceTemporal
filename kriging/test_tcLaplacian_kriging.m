@@ -7,8 +7,9 @@ Dims = size(X);
 sigma = 1e-2;
 %%
 Sim = sim_Gaussian(locations, sigma);
+%Sim = sim_Haversine(locations, sigma);
 %%
-[ W ] = tcLaplacian_kriging( X_Missing, Sim, lambda, beta, mu, Dims, idx_Missing);
+[ W ] = tcLaplacian_kriging( X_Missing,idx_Missing, Sim, lambda, beta, mu, Dims);
 
 
 %% evaluate

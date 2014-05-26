@@ -1,10 +1,10 @@
-function [ W ] = tcLaplacian_kriging( X, Sim, lambda, beta, mu, Dims, idx_Missing )
+function [ W ] = tcLaplacian_kriging( X, idx_Missing, Sim, lambda, beta, mu, Dims )
 %TCLAPLACIAN_KRIGING Summary of this function goes here
 %   Detailed explanation goes here
 % tensor completion with the laplacian similarity matrix Sim
 
 
-maxIter = 100;
+maxIter = 500;
 
 nModes = length(Dims);
 
