@@ -34,5 +34,5 @@ idx_Missing = randi(nLocs, [nMissing, 1]);
 
 
 X_Missing = X;
-X_Missing(idx_Missing,time,:) =0; 
+X_Missing(idx_Missing,:,:) =0; 
 end
