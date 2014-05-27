@@ -24,9 +24,11 @@ for i = 1:Max_Iter-1
     else 
         break
     end
-    if evaluate
-        quality(i+1, :) = testQuality(Sol, A, test.X, test.Y)';
-    end
+        if evaluate == 1
+            quality(i+1, :) = testQuality(Sol, A, test.X, test.Y)';
+        elseif evaluate == 2  % The kriging case
+            quality(i+1, 1) = testQualityK(Sol, A, test);
+        end
     
     if verbose
         fprintf('%c%c%c%c%c%c', 8,8,8,8,8,8);
