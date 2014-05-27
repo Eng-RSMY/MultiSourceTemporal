@@ -1,51 +1,45 @@
-
 clc
 clear
 
-addpath('./GreedySubFunc/')
-addpath('../TTI/nway331/')
-addpath(genpath('../MLMTL/'))
+addpath(genpath('../'))
 load('../data/climateP17.mat')
 % load('../data/climateP4.mat')
 % load('../data/synth/datasets/synth200_9.mat')
 % load('../data/Foursquare/norm_4sq.mat')
-sigma = 2;
-mu = 0.1;
-nTask = length(series);
+
+% For Euclidian
+% sigma = 2;
+% mu = 18.3486;
+% For Harversine
+sigma = 0.1;  % Should be selected in a way that effectively few neighbors get weights
+mu = 5;
+% nTask = length(series);
 [nLoc, tLen] = size(series{1});
 
 global verbose
 verbose = 1;
 global evaluate
-evaluate = 0;
+evaluate = 2;
 
-%% Create the matrices
+% Create the matrices
 testIndex = 1:10;
 
 A = 0;
-X = cell(nTask, 1);
-Y = cell(nTask, 1);
-test.X = cell(nTask, 1);
-test.Y = cell(nTask, 1);
+
 index = ones(nLoc, 1);
 index(testIndex) = 0;
 Iomega = diag( index);
-sim = mu * euclidSim(locations, sigma);
-for i = 1:nTask
-    Q = chol(Iomega + sim);
-    M = (Q')\(Iomega*series{i});
-    Y{i} = M';
-    X{i} = Q';
+% sim =  euclidSim(locations, sigma);
+sim = haverSimple(locations, sigma);
+sim = sim/(max(sim(:)));       % The goal is to balance between two measures
+
+max_iter = 3;
+ep = 1e-10;
+mu = logspace(0, 2, 10);
+quality = zeros(max_iter-1, length(mu));
+parfor m = 1:length(mu)
+    quality(:, m) = prepareData(series, Iomega, mu(m), sim, max_iter, ep, testIndex);
 end
 
-mu = 1e-10;
-max_iter = 200;
-[Sol, qualityGreedy] = solveGreedyOrth(Y, X, mu, max_iter, A, test);
+save('krigingOrtho.mat', 'quality')
 
-rmse = 0;
-for i = 1:nTask
-    rmse = rmse + norm(squeeze(Sol(:, testIndex, i))' - series{i}(testIndex, :), 'fro')^2;
-end
-rmse = sqrt(rmse/tLen/nTask/length(testIndex));
-disp(rmse)
-% save('qualityFor4Sq.mat', 'qualityGreedy')
