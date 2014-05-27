@@ -33,13 +33,12 @@ Iomega = diag( index);
 sim = haverSimple(locations, sigma);
 sim = sim/(max(sim(:)));       % The goal is to balance between two measures
 
-max_iter = 3;
+max_iter = 102;
 ep = 1e-10;
 mu = logspace(0, 2, 10);
 quality = zeros(max_iter-1, length(mu));
-parfor m = 1:length(mu)
-    quality(:, m) = prepareData(series, Iomega, mu(m), sim, max_iter, ep, testIndex);
-end
+out =  prepareData(series, Iomega, 5, sim, max_iter, ep, testIndex);
 
-save('krigingOrtho.mat', 'quality')
+
+% save('krigingOrtho.mat', 'quality')
 
