@@ -5,7 +5,6 @@ function [delta, Sol] = solveFold2(Y, X, Sol)
 [q, p, r] = size(Sol);
 P = cell(r, 1);
 Q = P;
-lam = 1e-4;
 
 % Create the Q, P matrices
 for ll = 1:r
@@ -21,7 +20,7 @@ u = ones(p, 1);
 step = 1e-4;
 for i = 1:Max_Iter
     [obj(i), G] = findGrad2(Q, P, u);
-    u = u + step * (G-2*u*lam);    % Added for regularization
+    u = u + step * (G);    % Added for regularization
 end
 
 v = zeros(q*r, 1);

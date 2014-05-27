@@ -4,6 +4,7 @@ function [Sol, quality] = solveGreedyOrth(Y, X, mu, Max_Iter, A, test)
 % X{i} is a matrix of size (nFeature) x (nData)
 
 global evaluate
+global verbose
 r = length(X);
 [p, n] = size(X{1});
 q = size(Y{1}, 1);
@@ -16,6 +17,7 @@ obj = zeros(Max_Iter, 1);
 Yp = Y;
 quality = zeros(Max_Iter, 5);
 err = zeros(Max_Iter, 2);
+if verbose; fprintf('Iter #: %5d', 0); end
 for ll = 1:r; obj(1) = obj(1) + norm(Y{ll}, 'fro')^2; end
 for i = 1:Max_Iter-1
     [delta(1), tempSol{1}] = solveFold1(Yp, X, Sol);
@@ -30,7 +32,13 @@ for i = 1:Max_Iter-1
             quality(i+1, :) = testQuality(Sol, A, test.X, test.Y)';
         end
 %    end
+    if verbose
+        fprintf('%c%c%c%c%c%c', 8,8,8,8,8,8);
+        fprintf('%5d ', i);
+    end
 end
+
+if verbose; fprintf('\n'); end
 quality = [obj, quality];
 quality(i+1:end, :) = [];
 % [obj, ERMSE, LRCp, TKCp, PRMSE, NPRMSE]
@@ -39,7 +47,6 @@ quality(i+1:end, :) = [];
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function [Y, Sol, obj] = project(Y, X, Sol, order)
-global verbose
 % I choose to always make the projection in the first mode
 [q, p, r] = size(Sol);
 n = size(X{1}, 2);
@@ -56,42 +63,18 @@ end
 % Finding the bases
 if order > min(size(matrix))
     order = min(size(matrix));
-    [U, B, V] = svds(matrix, order);
+    [U, ~, V] = svds(matrix, order);
 else
-    [U, B, V] = svds(matrix, order);
+    [U, ~, V] = svds(matrix, order);
 end
 
-Max_iter = 100;
-objs = zeros(1, Max_iter);
-delta = 1e-5;       %% Changed here
-t = 1;
-YB = B;
-
-if verbose; fprintf('Iter #: %5d', 0); end
-for i = 1:Max_iter
-    objs(i) = norm(YY - (U*YB*V')*XX, 'fro')^2;
-    G = - U'*((YY - (U*YB*V')*XX)*XX')*V;
-    
-    B_new = YB - delta*G;
-    
-    t_new = (1+sqrt(1+4*t^2))/2;
-     YB = B_new + ((t-1)/t_new)*(B_new - B); 
-    
-    % Variable updates
-    B = B_new;
-    t = t_new;
-    if verbose
-        fprintf('%c%c%c%c%c%c', 8,8,8,8,8,8);
-        fprintf('%5d ', i);
-    end
-end
-if verbose
-    fprintf('\n')
-end
-
+XXX = V'*XX;
+YYY = U'*YY;
+B = (YYY*XXX')/(XXX*XXX');
 Sol = fld(U*B*V', 1, r);
+obj = 0;
 for ll = 1:r; 
     Y{ll} = Y{ll} - squeeze(Sol(:, :, ll))*X{ll}; 
+    obj = obj + norm(Y{ll}, 'fro')^2;
 end
-obj = objs(Max_iter);
 end

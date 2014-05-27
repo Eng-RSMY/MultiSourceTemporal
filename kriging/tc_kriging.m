@@ -37,7 +37,7 @@ for iter = 1:maxIter
     % Solve W 
     W = 1/(1+nModes*beta) * ( X+ CnSum+ beta* ZnSum ) ;
     tmp = 1/ (nModes*beta) * (CnSum+ beta* ZnSum );
-    W(idx_Missing(:,1),idx_Missing(:,2),:) = tmp(idx_Missing(:,1),idx_Missing(:,2),:);
+    W(idx_Missing(:,1),1,:) = tmp(idx_Missing(:,1),1,:);
 
     % Optimizing over B    
     for n=1:nModes    

@@ -13,11 +13,11 @@ for t = 1: nTasks
 end
 
 
-missing_idx =[1:10];
+missing_idx =[1:10]';
 observe_idx = setdiff(1:nLocs, missing_idx);
 
-x_missing = x;
-x_missing(missing_idx,:) = NaN;
+x_observe = x;
+x_observe(missing_idx,:) = NaN;
 x0 = locations(missing_idx,:);
 mod = 3; % quadratic
 a = 1;
@@ -34,7 +34,7 @@ rad  = 80;
 ntok = 1;% missing point group size
 b   = 0.086*a;%never used?
 
-[x0s,s,sv,idout,l,k,k0]=cokri(x_missing,x0,model,c,itype,avg,block,nd,ival,nk,rad,ntok,b);
+[x0s,s,sv,idout,l,k,k0]=cokri(x_observe,x0,model,c,itype,avg,block,nd,ival,nk,rad,ntok,b);
 
 %% evaluate
 
