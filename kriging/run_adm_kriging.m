@@ -21,16 +21,15 @@ end
 Sim = sim_Haversine(locations, sigma);
 Sim = Sim/max(Sim(:));
 
-M = 10;
+M = 2;
+
+tcLap_est = cell(M,1);
+
 for i = 1:M
     idx = idx_Missing(:,i);
 
     X_Missing = X;
     X_Missing(idx,:,:) = 0;
-
-
-    tcLap_est = cell(M,1);
-
 
     tcLap_est{i}= tcLaplacian_kriging( X_Missing,idx,Sim, lambda, beta, mu );
 
@@ -38,6 +37,7 @@ for i = 1:M
 %     cokrig_est{i} = cokrig_est{i}(:,3:end);
     disp(i);
 end
+save('tcLap_ClimateP17.mat','tcLap_est');
 
 
 
