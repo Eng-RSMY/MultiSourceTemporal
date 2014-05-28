@@ -3,6 +3,7 @@ clear
 
 addpath(genpath('../'))
 load('../data/climateP17.mat')
+load('../data/climateP17_missIdx.mat')
 % load('../data/climateP4.mat')
 % load('../data/synth/datasets/synth200_9.mat')
 % load('../data/Foursquare/norm_4sq.mat')
@@ -21,23 +22,25 @@ verbose = 1;
 global evaluate
 evaluate = 2;
 
-% Create the matrices
-testIndex = 1:10;
 
-A = 0;
-
-index = ones(nLoc, 1);
-index(testIndex) = 0;
-Iomega = diag( index);
 % sim =  euclidSim(locations, sigma);
 sim = haverSimple(locations, sigma);
 sim = sim/(max(sim(:)));       % The goal is to balance between two measures
 
-max_iter = 102;
-ep = 1e-10;
-mu = logspace(0, 2, 10);
-quality = zeros(max_iter-1, length(mu));
-out =  prepareData(series, Iomega, 5, sim, max_iter, ep, testIndex);
+max_iter = 151;
+quality = zeros(max_iter-1, size(idx_Missing, 2));
+% Create the matrices
+for i = 1:size(idx_Missing, 2)
+    testIndex = idx_Missing(:, 1);
+    
+    index = ones(nLoc, 1);
+    index(testIndex) = 0;
+    Iomega = diag( index);
+    
+    ep = 1e-10;
+    mu = logspace(0, 2, 10);
+    quality(:, i) =  prepareData(series, Iomega, 5, sim, max_iter, ep, testIndex);
+end
 
 
 % save('krigingOrtho.mat', 'quality')
