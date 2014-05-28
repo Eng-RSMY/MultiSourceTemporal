@@ -50,5 +50,8 @@ for i = 1:M
     idx = idx_Missing(:,i);
     X_test = X( idx,:,:);
     RMSE_tcLap(i)  = sqrt(norm_fro(tcLap_est{i}-X_test)^2/ numel(X_test));
+    
 %     RMSE_cokrig(i)  = sqrt(norm_fro(cokrig_est{i}-X_test)^2/ numel(X_test));
 end
+
+save('tcLap_ClimateP17.mat','tcLap_est','RMSE_tcLap');
