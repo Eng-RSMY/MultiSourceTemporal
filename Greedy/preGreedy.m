@@ -40,8 +40,9 @@ for i = 1:size(idx_Missing, 2)
     ep = 1e-10;
     mu = logspace(0, 2, 10);
     quality(:, i) =  prepareData(series, Iomega, 5, sim, max_iter, ep, testIndex);
+    disp(i)
 end
 
-
+save('KrigingOrthoMultiIndex.mat', 'quality')
 % save('krigingOrtho.mat', 'quality')
 
