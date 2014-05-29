@@ -2,29 +2,39 @@ function test2
 clc
 % The test works for a single vector
 
-L = randn(10, 10);
+p = 100;
+q = 200;
+T = 1000;
+
+L = randn(p, p);
 L = L*L';
 
-Iomega = [zeros(2), zeros(2, 8); zeros(8, 2), eye(8)];
+X = randn(p, T);
+W = randn(p, q);
+Y = randn(q, T);
 
-D = randn(10, 20);
+obj1 = objective1(L, X, Y, W);
+obj2 = objective2(L, X, Y, W);
 
-X = randn(10, 20);
+delta = 1e-6;
+i = 2; j = 3;
+W(i, j) = W(i, j) + delta;
+obj1p = objective1(L, X, Y, W);
+obj2p = objective2(L, X, Y, W);
 
-obj1 = objective1(L, X, D, Iomega);
-obj2 = objective2(L, X, D, Iomega);
-
-disp(obj1)
-disp(obj2)
+disp((obj1p - obj1)/delta)
+disp((obj2p - obj2)/delta)
 
 end
 
-function obj = objective1(L, X, D, Iomega)
-obj = norm( Iomega*(X-D), 'fro' )^2 + trace(X'*L*X);
+function obj = objective1(L, X, Y, W)
+obj = norm( W*Y-X, 'fro' )^2 + trace(Y'*W'*L*W*Y);
+obj = obj/numel(X);
 end
 
-function obj = objective2(L, X, D, Iomega)
-Q = chol(Iomega + L);
-M = (Q')\(Iomega*D);
-obj = norm(Q*X - M, 'fro')^2 + trace(D'*Iomega*D) - norm(M, 'fro')^2;
+function obj = objective2(L, X, Y, W)
+U = chol(eye(size(L)) + L);
+B = (U')\X;
+obj = norm(U*W*Y - B, 'fro')^2;
+obj = obj/numel(X);
 end
