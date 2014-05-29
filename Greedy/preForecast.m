@@ -27,34 +27,22 @@ evaluate = 2;
 sim = haverSimple(locations, sigma);
 sim = sim/(max(sim(:)));       % The goal is to balance between two measures
 
-nLag = 3;
-nTask = length(series);
-tTrain = floor(0.9*tLen);
-tTest = tLen - tTrain;
-
-
-%% Create the matrices
-A = zeros(nLoc, nLoc*nLag, nTask);
-X = cell(nTask, 1);
-Y = cell(nTask, 1);
-test.X = cell(nTask, 1);
-test.Y = cell(nTask, 1);
-for i = 1:nTask
-    Y{i} = series{i}(:, nLag+1:tTrain);
-    X{i} = zeros(nLag*nLoc, (tTrain - nLag));
-    for ll = 1:nLag
-        X{i}(nLoc*(ll-1)+1:nLoc*ll, :) = series{i}(:, nLag+1-ll:tTrain-ll);
-    end
-    test.Y{i} = series{i}(:, tTrain-nLag+1:tLen);
-    for ll = 1:nLag
-        test.X{i}(nLoc*(ll-1)+1:nLoc*ll, :) = series{i}(:, tTrain-nLag+1-ll:tLen-ll);
-    end
+max_iter = 151;
+quality = zeros(max_iter-1, size(idx_Missing, 2));
+% Create the matrices
+for i = 1:size(idx_Missing, 2)
+    testIndex = idx_Missing(:, 1);
+    
+    index = ones(nLoc, 1);
+    index(testIndex) = 0;
+    Iomega = diag( index);
+    
+    ep = 1e-10;
+    mu = logspace(0, 2, 10);
+    quality(:, i) =  prepareData(series, Iomega, 5, sim, max_iter, ep, testIndex);
+    disp(i)
 end
 
-mu = 1e-10;
-max_iter = 200;
-[~, qualityGreedy] = solveGreedyOrth(Y, X, mu, max_iter, A, test);
-save('qualityFor4Sq.mat', 'qualityGreedy')
 save('KrigingOrthoMultiIndex.mat', 'quality')
 % save('krigingOrtho.mat', 'quality')
 
