@@ -9,7 +9,7 @@ maxIter = 100;
 [nLoc, nTime , nTask]  = size(X);
 Dims =  [nLoc, nLoc*nLag, nTask];
 nModes = length(Dims);
-thres = 1e-3;
+thres = 1e-5;
 
 % intialize 
 
@@ -38,14 +38,17 @@ end
 
 L = diag(sum(Sim, 2)) - Sim;
 
-A = ( mu*L + eye(nLoc)) \( nModes*beta *eye(nLoc))  ;
-B = zeros(nLoc*nLag,nLoc*nLag,nTask);
-for t = 1:nTask
-    B(:,:,t) = Xbar(:,:,t)*Xbar(:,:,t)';
-end
+% A = ( mu*L + eye(nLoc)) \( nModes*beta *eye(nLoc))  ;
+% B = zeros(nLoc*nLag,nLoc*nLag,nTask);
+% for t = 1:nTask
+%     B(:,:,t) = Xbar(:,:,t)*Xbar(:,:,t)';
+% end
 
 fs =[];
-fval_old = obj_forecasting( Xbar , Y, W, L, Z, C, beta, lambda);
+CnSum = zeros(Dims);
+ZnSum = zeros(Dims);
+
+fval_old = obj_forecasting( Xbar , Y, W, L, Z, ZnSum, CnSum, beta, mu, lambda );
 for iter = 1:maxIter
     CnSum = zeros(Dims);
     ZnSum = zeros(Dims);
@@ -54,60 +57,89 @@ for iter = 1:maxIter
         ZnSum = ZnSum + Z{n};
     end
     % Solve W : nLoc X  nLoc*nLag X nTask
+    if verbose
+        fprintf('Solve W ');
+    end
     for t = 1:nTask
-            K  = ( mu*L + eye(nLoc)) \(Y(:,:,t)*Xbar(:,:,t)'+ CnSum(:,:,t)+ beta* ZnSum(:,:,t));
-            W(:,:,t) = sylvester(A ,B(:,:,t), K);
-%             W(:,:,t) = (Xbar*Xbar'+ nModes*beta* eye(nLoc*)+ mu*2*L*(Xbar*Xbar'))\(Y(:,:,t)*Xbar(:,:,t)'+ CnSum(:,:,t)+ beta* ZnSum(:,:,t) ) ;
+%             K  = ( mu*L + eye(nLoc)) \(Y(:,:,t)*Xbar(:,:,t)'+ CnSum(:,:,t)+ beta* ZnSum(:,:,t));
+%             W(:,:,t) = sylvester(A ,B(:,:,t), K);
+         W(:,:,t) = solveW_GD(Xbar(:,:,t), Y(:,:,t), W(:,:,t),  L, ZnSum(:,:,t), CnSum(:,:,t), beta ,mu ,nModes);
 
     end
-    % Optimizing over B    
+    % Optimizing over B 
+    if verbose
+        fprintf('Solve Z\n');
+    end
     for n=1:nModes    
         W_n= unfld(W, n);
         Cn_n = unfld(C{n},n);
         Zn_n=shrink(W_n-1/beta*Cn_n, lambda/beta);
         Z{n} = fld2(Zn_n,n, Dims);
     end
-
+    if verbose
+        fprintf('Solve C\n');
+    end
      % Optimizing over C  
     for n=1:nModes     
         C{n}=C{n} -  beta*(W-Z{n});
     end
     
-    fval = obj_forecasting( Xbar, Y, W, L, Z, C, beta, lambda);
-    if(abs(fval-fval_old)/fval < thres)
+    fval = obj_forecasting( Xbar, Y, W, L, Z, ZnSum,  CnSum, beta, mu, lambda);
+    if(abs(fval-fval_old) < thres)
         break;
     end
     fval_old = fval;
     fs = [fs,fval];
     if verbose
-        disp(iter);
+        fprintf ('ADMM iter %d\n',iter);   
     end
 end
 
 end
 
-function val =  obj_forecasting(X, Y, W, L,Z, C, beta, lambda)
+function val =  obj_forecasting(X, Y, W, L, Z,ZnSum, CnSum, beta, mu, lambda )
 val = 0;
 nTasks = size(W,3);
 nModes = ndims (W);
 for t = 1:nTasks
     X_est = W(:,:,t)*X(:,:,t);
     val = val + 0.5*norm(X_est-Y(:,:,t),'fro')^2;    
-    val = val  + 0.5* trace(X_est'*L*X_est);
+    val = val  + 0.5* mu* trace(X_est'*L*X_est);
 end
+tmp = CnSum + beta * ZnSum;
+
+val = val - tmp(:)'*W(:);
+
+val = val + nModes * beta/ 2* norm_fro(W)^2;
 for n = 1:nModes
-    tmp = (W-Z{n});
-    val = val -  C{n}(:)'* tmp(:);
-    
-    for t = 1:nTasks
-        val = val + beta/2 * norm(W(:,:,t)-Z{n}(:,:,t),'fro')^2;
-    end
-    
-    
      Zn_n = unfld(Z{n},n);
      S = svd(Zn_n);
      val = val + lambda * sum(S);
 end
 
+end
+
+
+function [W_r  fs]= solveW_GD(X, Y, W, L,ZnSum, CnSum, beta , mu ,nModes)
+
+ maxIter = 5000;
+ thres = 1e-2;
+
+ eta = 5*1e-5;
+ fs = zeros(maxIter, 1);
+ for iter  = 2: maxIter
+      grad = ( W*X - Y ) * X' + mu * L *W * (X * X')- (CnSum+beta*ZnSum) + nModes * beta *W;
+      W = W - eta * grad;
+      tmp = CnSum + beta*ZnSum;
+      fs(iter) = 0.5* norm(W*X-Y,'fro')^2+ 0.5 *mu* trace ((W*X)'*L*(W*X)) - tmp(:)'*W(:) + nModes*beta * norm(W,'fro')^2;
+      if(abs(fs(iter-1)-fs(iter) )<thres)
+          break
+      end
+      
+%       fprintf ('%d\n',iter);      
+ end
+  fprintf ('Converge after %d iteration\n',iter);
+%  plot(fs(2:end));
+ W_r = W;
 end
 
