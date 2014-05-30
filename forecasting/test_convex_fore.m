@@ -33,6 +33,8 @@ Sim = Sim/max(Sim(:));
 nLag = 3;
 [W fs ] =  convex_forecasting( X(:,1:124,:),  Sim, lambda, beta, mu, nLag );
 
+save('forecast_adm_climateP17.mat','W','fs');
+
 %% 
 nTest = 31;
 Xbar = zeros(nLoc*nLag, nTest, nTask);
@@ -48,3 +50,6 @@ end
 
 
 RMSE  = sqrt ( norm_fro(Y_est- Y )^2 / numel (Y ) );
+
+save('forecast_adm_climateP17.mat','W','fs','RMSE');
+
