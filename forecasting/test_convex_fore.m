@@ -19,7 +19,11 @@
 
 %%
 load 'climateP17.mat'
-
+lambda = 1e-5;
+beta = 1;
+mu = 2;
+sigma = 1;
+nLag = 3;
 nTask = length(series);
 [nLoc nTime] = size(series{1});
 nLag = 3;
@@ -35,9 +39,7 @@ Sim = Sim/max(Sim(:));
 save('forecast_adm_climateP17.mat','W','fs');
 
 %% 
-Dims =  [nLoc, nLoc*nLag, nTask];
 
-W = rand(Dims);
 nTest = 29;
 start = 125;
 Xbar = zeros(nLoc*nLag, nTest, nTask);
