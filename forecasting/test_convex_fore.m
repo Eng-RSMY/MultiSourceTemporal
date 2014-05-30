@@ -19,14 +19,13 @@
 
 %%
 load 'climateP17.mat'
-lambda = 1e-5;
-beta = 1;
+lambda = 1e-3;
+beta = 2;
 mu = 2;
 sigma = 1;
 nLag = 3;
 nTask = length(series);
 [nLoc nTime] = size(series{1});
-nLag = 3;
 X = zeros([nLoc, nTime, nTask]);
 
 for t = 1:nTask

@@ -73,7 +73,7 @@ for iter = 1:maxIter
     for n=1:nModes    
         W_n= unfld(W, n);
         Cn_n = unfld(C{n},n);
-        Zn_n=shrink(W_n-1/beta*Cn_n, lambda/beta);
+        Zn_n=shrink(W_n-1/beta*Cn_n, lambda/beta);% BUGGY
         Z{n} = fld2(Zn_n,n, Dims);
     end
     if verbose
