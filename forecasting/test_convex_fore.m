@@ -18,6 +18,7 @@
 % plot(fs)
 
 %%
+addpath(genpath('.'));
 load 'climateP17.mat'
 lambda = 1e-3;
 beta = 2;
