@@ -27,7 +27,9 @@ AA=A*A';
 AA = (AA+AA')/2;
 
 
-[u l2 v2]=svds(AA);
+[u l2 v2]=svd(AA);
+
+
 
 l=diag(sqrt(diag(l2)));
 invl2=diag(1./sqrt(diag(l2)));
