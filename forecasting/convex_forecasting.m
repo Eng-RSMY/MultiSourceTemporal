@@ -4,7 +4,7 @@ function [ W fs] = convex_forecasting( X,  Sim, lambda, beta, mu, nLag )
 
 global verbose;
 verbose = 1;
-maxIter = 100;
+maxIter = 1000;
 
 [nLoc, nTime , nTask]  = size(X);
 Dims =  [nLoc, nLoc*nLag, nTask];
@@ -66,12 +66,18 @@ for iter = 1:maxIter
          W(:,:,t) = solveW_GD(Xbar(:,:,t), Y(:,:,t), W(:,:,t),  L, ZnSum(:,:,t), CnSum(:,:,t), beta ,mu ,nModes);
 
     end
+
     % Optimizing over B 
     if verbose
         fprintf('Solve Z\n');
     end
-    for n=1:nModes    
+    for n=1:nModes  
+
         W_n= unfld(W, n);
+        if(sum(sum(isnan(W_n)))>0 )
+            fprintf('nan value in W');
+            keyboard
+        end
         Cn_n = unfld(C{n},n);
         Zn_n=shrink(W_n-1/beta*Cn_n, lambda/beta);% BUGGY
         Z{n} = fld2(Zn_n,n, Dims);
@@ -122,24 +128,26 @@ end
 
 function [W_r  fs]= solveW_GD(X, Y, W, L,ZnSum, CnSum, beta , mu ,nModes)
 
- maxIter = 5000;
- thres = 1e-2;
+ maxIter = 1000;
+ thres = 1e-3;
 
- eta = 5*1e-5;
- fs = zeros(maxIter, 1);
+ eta = 1e-6;
+ fs = inf*zeros(maxIter, 1);
  for iter  = 2: maxIter
       grad = ( W*X - Y ) * X' + mu * L *W * (X * X')- (CnSum+beta*ZnSum) + nModes * beta *W;
       W = W - eta * grad;
       tmp = CnSum + beta*ZnSum;
-      fs(iter) = 0.5* norm(W*X-Y,'fro')^2+ 0.5 *mu* trace ((W*X)'*L*(W*X)) - tmp(:)'*W(:) + nModes*beta * norm(W,'fro')^2;
+      fs(iter) = 0.5* norm(W*X-Y,'fro')^2+ 0.5 *mu* trace ((W*X)'*L*(W*X)) - trace(tmp'*W) + nModes*beta/2 * norm(W,'fro')^2;
       if(abs(fs(iter-1)-fs(iter) )<thres)
           break
       end
-      
-%       fprintf ('%d\n',iter);      
+      % BUG!
+      if(fs(iter-1) < fs(iter))
+          break
+      end      
  end
-  fprintf ('Converge after %d iteration\n',iter);
-%  plot(fs(2:end));
- W_r = W;
+fprintf ('Converge after %d iteration\n',iter);
+% plot(fs(2:iter));
+W_r = W;
 end
 

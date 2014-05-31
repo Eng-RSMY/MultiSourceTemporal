@@ -8,20 +8,20 @@
 % 
 % 
 % 
-% lambda = 1e-5;
+% lambda = 1e-3;
 % beta = 1;
-% mu = 2;
+% mu = 0.1;
 % sigma = 1;
 % nLag = 3;
 % [ W fs] = convex_forecasting( X,  Sim, lambda, beta, mu, nLag );
-% 
-% plot(fs)
+
+% % plot(fs)
 
 %%
 addpath(genpath('.'));
 load 'climateP17.mat'
 lambda = 1e-3;
-beta = 2;
+beta = 1;
 mu = 2;
 sigma = 1;
 nLag = 3;

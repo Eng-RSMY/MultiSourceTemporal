@@ -5,17 +5,7 @@ function [ u l v ] = mySVD( A )
 
 [nRows, nCols]=size(A);
 
-% check input inf
-if(sum(isinf(A))) >0
-    warning('mySVD: input matrix has inf element, set to zero\n');
-    A(isinf(A)) =0;
-end
-    
-% check input nan
-if (sum(isnan(A)))>0
-    warning('mySVD: input matrix has nan element, set to zero\n');
-    A(isnan(A)) = 0;
-end
+
 
 if nRows>=nCols
     [u l v]=svd(A);
