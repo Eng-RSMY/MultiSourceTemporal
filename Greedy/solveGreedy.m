@@ -28,6 +28,8 @@ for i = 1:Max_Iter-1
             quality(i+1, :) = testQuality(Sol, A, test.X, test.Y)';
         elseif evaluate == 2  % The kriging case
             quality(i+1, 1) = testQualityK(Sol, A, test);
+        elseif evaluate == 3
+            quality(i+1, 1) = testQualityF(Sol, A, test.X, test.Y);
         end
     
     if verbose

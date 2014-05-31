@@ -51,8 +51,8 @@ for m = 1:length(mu)
         end
     end
     
-    [~, tmp] = solveGreedyOrth(Y, X, ep, max_iter, U, test);
+    [~, tmp] = solveGreedy(Y, X, ep, max_iter, U, test);
     quality(:, m) = tmp(:, 2);
 end
-save('ForecastingOrtho.mat', 'quality')
+save('ForecastingFor.mat', 'quality')
 % save('krigingOrtho.mat', 'quality')
