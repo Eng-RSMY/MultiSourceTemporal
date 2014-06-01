@@ -1,7 +1,7 @@
 function [ qTucker ] = runSynthTucker( name )
 %RUNSYNTHTUCKER Summary of this function goes here
 %   Detailed explanation goes here
-load(['./data/synth/datasets3/' name])
+load(['./data/synth/datasets/' name])
 global verbose
 verbose = 0;
 [~, nLoc, nTask] = size(A);
