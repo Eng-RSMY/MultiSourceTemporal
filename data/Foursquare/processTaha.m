@@ -3,15 +3,16 @@ clear
 clc
 
 load tensor_checkin_counts.mat
-[nLoc, tLen] = size(series{1}); 
+load '121_adjmax.mat'
 tLen = 3600;  % To make thing rounded
-nLoc = 50;
+idx = find(sum(F, 1) > 2);
+nLoc = length(idx);
 Factor  = 3;
 % Every 9 hours
 for i = 1:length(series)
     data = zeros(nLoc, tLen/Factor);
     for j = 1:Factor
-        data = data + series{i}(1:nLoc, j:Factor:tLen);
+        data = data + series{i}(idx, j:Factor:tLen);
     end
     
 %     %% Remove the daily pattern
@@ -36,4 +37,6 @@ for i = 1:length(series)
     close all
 end
 
-save('norm_4sq_small.mat', 'series')
+sim = F(idx, idx);
+
+save('norm_4sq_small.mat', 'series', 'sim')
