@@ -3,6 +3,7 @@ clc;
 addpath(genpath('.'));
 load 'climateP17.mat';
 load 'climateP17_missIdx.mat';
+% locations = names(:,2:3);
 
 lambda = 1e-5;
 beta = 2;
@@ -11,6 +12,7 @@ sigma = 3;
 
 
 nTask = length(series);
+
 [nLoc nTime] = size(series{1});
 
 X = zeros([nLoc, nTime, nTask]);
@@ -35,12 +37,13 @@ for i = 1:M
 
     for time  = 1:nTime
          X_Missing_t =squeeze(X_Missing(:,time,:));
-         est_val = co_kriging (X_Missing_t, idx, locations);
+         est_val = universal_kriging (X_Missing_t, idx, locations);
         cokrig_est{i}(:,time,:) = est_val(:,3:end);
     end
     disp(i);
 end
-save('cokrig_ClimateP17.mat','cokrig_est');
+% save('ordinary_ClimateP3.mat','cokrig_est');
+save('universal_ClimateP17.mat','cokrig_est');
 
 
 
@@ -54,5 +57,5 @@ for i = 1:M
     RMSE_cokrig(i)  = sqrt(norm_fro(cokrig_est{i}-X_test)^2/ numel(X_test));
  end
 
-save('cokrig_ClimateP17.mat','cokrig_est','RMSE_cokrig');
+save('universal_ClimateP17.mat','cokrig_est','RMSE_cokrig');
 
