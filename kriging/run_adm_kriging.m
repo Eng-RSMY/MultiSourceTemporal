@@ -10,7 +10,7 @@ locations = names(:,2:3);
 
 lambda = 1e-5;
 beta = 2;
-mu = 1e-3;
+mu = 0.1;
 sigma = 3;
 
 
@@ -25,7 +25,7 @@ end
 Sim = sim_Haversine(locations, sigma);
 Sim = Sim/max(Sim(:));
 
-M = 2;
+M = 10;
 
 tcLap_est = cell(M,1);
 
