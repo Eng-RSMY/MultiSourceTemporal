@@ -1,8 +1,12 @@
 clear;
 clc;
-addpath(genpath('../'));
-load 'climateP17.mat';
-load 'climateP17_missIdx.mat';
+addpath(genpath('.'));
+% load 'climateP17.mat';
+% load 'climateP17_missIdx.mat';
+
+load 'climateP3.mat';
+load 'climateP3_missIdx.mat';
+locations = names(:,2:3);
 
 lambda = 1e-5;
 beta = 2;
@@ -37,7 +41,7 @@ for i = 1:M
 %     cokrig_est{i} = cokrig_est{i}(:,3:end);
     disp(i);
 end
-save('tcLap_ClimateP17.mat','tcLap_est');
+save('tcLap_ClimateP3.mat','tcLap_est');
 
 
 
@@ -54,4 +58,4 @@ for i = 1:M
 %     RMSE_cokrig(i)  = sqrt(norm_fro(cokrig_est{i}-X_test)^2/ numel(X_test));
 end
 
-save('tcLap_ClimateP17.mat','tcLap_est','RMSE_tcLap');
+save('tcLap_ClimateP3.mat','tcLap_est','RMSE_tcLap');
