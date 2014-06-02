@@ -15,5 +15,5 @@ for t = 1:length(tLen)
     end
     fprintf('t = %d\n',t);
     qTucker{t}= qTuckerTemp;
-    save('result/synth/TuckerResultsSynth.mat', 'qTucker')
+    save('result/synth/TuckerResultsSynth_ds1.mat', 'qTucker')
 end

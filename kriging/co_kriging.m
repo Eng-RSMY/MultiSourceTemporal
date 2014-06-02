@@ -1,7 +1,7 @@
-function [ X_est ] = co_kriging( X, idx_Missing, locations,time )
+function [ X_est ] = co_kriging( X, idx_Missing, locations)
 %CO_KRIGING Summary of this function goes here
 %   Detailed explanation goes here
-X = squeeze(X(:,time,:));
+
 [nLoc, nTasks ]  = size(X);
 idx_Observe = setdiff(1:nLoc, idx_Missing);
 

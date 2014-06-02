@@ -17,20 +17,20 @@ for i = 1:Max_Iter-1
     [delta(2), tempSol{2}] = solveFold2(Y, X, Sol);
     [delta(3), tempSol{3}] = solveFold3(Y, X, Sol);
     [~, ix] = max(delta);
-    if delta(ix)/obj(1) > mu
+%     if delta(ix)/obj(1) > mu
         Sol = Sol + tempSol{ix};
         for ll = 1:r; Y{ll} = Y{ll} - squeeze(tempSol{ix}(:, :, ll))*X{ll}; end
         obj(i+1) = obj(i) - delta(ix);
-    else 
-        break
+%     else 
+%         break
+%     end
+    if evaluate == 1
+        quality(i+1, :) = testQuality(Sol, A, test.X, test.Y)';
+    elseif evaluate == 2  % The kriging case
+        quality(i+1, 1) = testQualityK(Sol, A, test);
+    elseif evaluate == 3
+        quality(i+1, 1) = testQualityF(Sol, A, test.X, test.Y);
     end
-        if evaluate == 1
-            quality(i+1, :) = testQuality(Sol, A, test.X, test.Y)';
-        elseif evaluate == 2  % The kriging case
-            quality(i+1, 1) = testQualityK(Sol, A, test);
-        elseif evaluate == 3
-            quality(i+1, 1) = testQualityF(Sol, A, test.X, test.Y);
-        end
     
     if verbose
         fprintf('%c%c%c%c%c%c', 8,8,8,8,8,8);

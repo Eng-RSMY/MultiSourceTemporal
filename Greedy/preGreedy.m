@@ -43,5 +43,5 @@ for i = 1:size(idx_Missing, 2)
     disp(i)
 end
 
-save('KrigingOrthoMultiIndex.mat', 'quality')
+save('KrigingForMultiIndex.mat', 'quality')
 % save('krigingOrtho.mat', 'quality')
