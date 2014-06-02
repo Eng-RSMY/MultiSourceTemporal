@@ -18,15 +18,15 @@
 % % plot(fs)
 
 %%
-addpath(genpath('.'));
+addpath(genpath('../'));
 load 'climateP17.mat'
-lambda = 1e-3;
+lambda = 5e-2;
 beta = 1;
-mu = 2;
+mu = 50;
 sigma = 1;
 nLag = 3;
 nTask = length(series);
-[nLoc nTime] = size(series{1});
+[nLoc, nTime] = size(series{1});
 X = zeros([nLoc, nTime, nTask]);
 
 for t = 1:nTask
@@ -34,7 +34,7 @@ for t = 1:nTask
 end
 Sim = sim_Gaussian(locations, sigma);
 Sim = Sim/max(Sim(:));
-[W fs ] =  convex_forecasting( X(:,1:124,:),  Sim, lambda, beta, mu, nLag );
+[W, fs ] =  convex_forecasting( X(:,1:124,:),  Sim, lambda, beta, mu, nLag );
 
 save('forecast_adm_climateP17.mat','W','fs');
 
