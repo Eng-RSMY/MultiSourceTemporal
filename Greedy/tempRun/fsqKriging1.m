@@ -26,6 +26,8 @@ evaluate = 2;
 % sim =  euclidSim(locations, sigma);
 % sim = haverSimple(locations, sigma);
 sim = sim/(max(sim(:)));       % The goal is to balance between two measures
+sim(logical(eye(size(sim)))) = max(sim(:));
+sim = diag(sum(sim)) - sim + (1e-5)*eye(nLoc);
 
 max_iter = 151;
 quality = zeros(max_iter-1, size(idx_Missing, 2));
