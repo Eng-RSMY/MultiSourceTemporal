@@ -55,3 +55,4 @@ for i = 1:M
  end
 
 save('cokrig_ClimateP17.mat','cokrig_est','RMSE_cokrig');
+
