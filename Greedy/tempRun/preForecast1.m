@@ -1,8 +1,8 @@
 clc
 clear
 
-addpath(genpath('../'))
-load('../data/climateP17.mat')
+addpath(genpath('../../'))
+load('../../data/climateP3.mat')
 
 % For Euclidian
 % sigma = 2;
@@ -24,7 +24,7 @@ sim = sim/(max(sim(:)));       % The goal is to balance between two measures
 
 nLag = 3;
 nTask = length(series);
-tTrain = 137+nLag;
+tTrain = 926+nLag;
 tTest = tLen - tTrain;
 % Create the matrices
 A = zeros(nLoc, nLoc*nLag, nTask);
@@ -54,5 +54,5 @@ for m = 1:length(mu)
     [~, tmp] = solveGreedy(Y, X, ep, max_iter, U, test);
     quality(:, m) = tmp(:, 2);
 end
-save('ForecastingFor.mat', 'quality')
+save('ForecastingForP3.mat', 'quality')
 % save('krigingOrtho.mat', 'quality')
