@@ -1,6 +1,7 @@
 function M = shrink(A, s)
-[U L V]=mySVD(A);
-% [U L V] = svd(A);
+% [U L V]=mySVD(A);
+options.tol = 1e-5;  % REducing the accuracy for faster convergence
+[U, L, V] = svds(A, min(size(A)), 'L', options);
 eig=diag(L)-s;
 eig(eig<0)=0;
 eigM=diag(eig);
