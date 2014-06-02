@@ -27,7 +27,7 @@ evaluate = 2;
 sim = haverSimple(locations, sigma);
 sim = sim/(max(sim(:)));       % The goal is to balance between two measures
 
-max_iter = 151;
+max_iter = 251;
 quality = zeros(max_iter-1, size(idx_Missing, 2));
 % Create the matrices
 for i = 1:size(idx_Missing, 2)

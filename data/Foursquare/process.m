@@ -85,5 +85,20 @@ for t = 1:nType
     tmp = series{t};
     series_s{t} = tmp(1:60,1:300);
 end
-    
+%% create adjacent matrix with the top friendship
+pair = Top_Friendship;
+users = Top_Common_User;
+nPair = length(pair);
+F = zeros(121, 121);
+for i = 1:nPair
+    U1 = pair(i,1);
+    U2 = pair(i,2);
+    U1_idx = find(users==U1);
+    disp(U1_idx)
+    U2_idx = find(users==U2);
+    disp(U2_idx)
+    F(U1_idx,U2_idx) = F(U1_idx,U2_idx) +1;
+    F(U2_idx,U1_idx) = F(U2_idx,U1_idx) +1;
+end
+
 
