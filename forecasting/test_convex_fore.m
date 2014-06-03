@@ -34,9 +34,14 @@ for t = 1:nTask
 end
 Sim = sim_Gaussian(locations, sigma);
 Sim = Sim/max(Sim(:));
+
+mus = logspace(-3,3,10);
+RMSE_best = inf;
+for mu = mus
+fprintf('mu %d\n',mu);
 [W, fs ] =  convex_forecasting( X(:,1:124,:),  Sim, lambda, beta, mu, nLag );
 
-save('forecast_adm_climateP17.mat','W','fs');
+save('forecast_adm_climateP17.mat','W');
 
 %% 
 
@@ -60,6 +65,11 @@ end
 
 RMSE  = sqrt ( norm_fro(Y_est- Y )^2 / numel (Y ) );
 disp(RMSE);
-
-save('forecast_adm_climateP17.mat','W','fs','RMSE');
+if (RMSE<RMSE_best)
+	RMSE_best = RMSE;
+	mu_best = mu;
+	Y_est_best = Y;
+end
+end
+save('forecast_adm_climateP17.mat','Y_est_best','RMSE_best');
 
