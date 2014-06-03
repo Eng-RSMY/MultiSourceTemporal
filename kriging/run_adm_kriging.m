@@ -26,7 +26,9 @@ Sim = sim_Haversine(locations, sigma);
 Sim = Sim/max(Sim(:));
 
 M = 10;
-
+RMSE_tcLap_best = inf;
+mus = logspace(-3,3,10);
+for mu = mus
 tcLap_est = cell(M,1);
 
 for i = 1:M
@@ -58,4 +60,12 @@ for i = 1:M
 %     RMSE_cokrig(i)  = sqrt(norm_fro(cokrig_est{i}-X_test)^2/ numel(X_test));
 end
 
-save('tcLap_ClimateP3.mat','tcLap_est','RMSE_tcLap');
+disp(mean(RMSE_tcLap));
+if (mean(RMSE_tcLap) < RMSE_tcLap_best)
+    RMSE_tcLap_best = mean(RMSE_tcLap);
+    tcLap_est_best = tcLap_est; 
+    mu_best = mu;
+end
+
+save('tcLap_ClimateP3.mat','tcLap_est_best','RMSE_tcLap_best');
+end
