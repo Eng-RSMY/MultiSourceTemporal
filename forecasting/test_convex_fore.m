@@ -22,7 +22,7 @@ addpath(genpath('../'));
 load 'climateP17.mat'
 lambda = 5e-2;
 beta = 1;
-mu = 50;
+mu = 0.1;
 sigma = 1;
 nLag = 3;
 nTask = length(series);
