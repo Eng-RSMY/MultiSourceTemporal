@@ -9,7 +9,7 @@ maxIter = 1000;
 [nLoc, nTime , nTask]  = size(X);
 Dims =  [nLoc, nLoc*nLag, nTask];
 nModes = length(Dims);
-thres = 1e-5;
+thres = 1e-3;
 
 % intialize 
 
@@ -66,7 +66,7 @@ for iter = 1:maxIter
          W(:,:,t) = solveW_GD(Xbar(:,:,t), Y(:,:,t), W(:,:,t),  L, ZnSum(:,:,t), CnSum(:,:,t), beta ,mu ,nModes);
 
     end
-
+    fval1 = obj_forecasting( Xbar, Y, W, L, Z, ZnSum,  CnSum, beta, mu, lambda);
     % Optimizing over B 
     if verbose
         fprintf('Solve Z\n');
@@ -82,6 +82,7 @@ for iter = 1:maxIter
         Zn_n=shrink(W_n-1/beta*Cn_n, lambda/beta);% BUGGY
         Z{n} = fld2(Zn_n,n, Dims);
     end
+    fval2 = obj_forecasting( Xbar, Y, W, L, Z, ZnSum,  CnSum, beta, mu, lambda);
     if verbose
         fprintf('Solve C\n');
     end
@@ -91,7 +92,7 @@ for iter = 1:maxIter
     end
     
     fval = obj_forecasting( Xbar, Y, W, L, Z, ZnSum,  CnSum, beta, mu, lambda);
-    if(abs(fval-fval_old) < thres)
+    if(abs((fval-fval_old)/fval_old) < thres)
         break;
     end
     fval_old = fval;
@@ -126,19 +127,23 @@ end
 end
 
 
-function [W_r  fs]= solveW_GD(X, Y, W, L,ZnSum, CnSum, beta , mu ,nModes)
-
+function [W,  fs]= solveW_GD(X, Y, W, L,ZnSum, CnSum, beta , mu ,nModes)
+% Uses "Accelerated Gradient Method" to solve the problem.
  maxIter = 1000;
- thres = 1e-3;
+ thres = 7e-5;
 
- eta = 1e-6;
+ eta = 1e-4;
  fs = inf*zeros(maxIter, 1);
+ YW = W;
+ t = 1;
  for iter  = 2: maxIter
-      grad = ( W*X - Y ) * X' + mu * L *W * (X * X')- (CnSum+beta*ZnSum) + nModes * beta *W;
-      W = W - eta * grad;
-      tmp = CnSum + beta*ZnSum;
-      fs(iter) = 0.5* norm(W*X-Y,'fro')^2+ 0.5 *mu* trace ((W*X)'*L*(W*X)) - trace(tmp'*W) + nModes*beta/2 * norm(W,'fro')^2;
-      if(abs(fs(iter-1)-fs(iter) )<thres)
+     [fs(iter), grad] = findGrad(YW, X, Y, mu, L, CnSum, beta, ZnSum, nModes);
+      W_new = YW - eta * grad;
+      t_new = (1+sqrt(1+4*t^2))/2;
+      YW = W_new + ((t-1)/t_new)*(W_new - W);
+      W = W_new;
+      t = t_new;
+      if(abs(fs(iter-1)-fs(iter) )/abs(fs(iter-1))<thres)
           break
       end
       % BUG!
@@ -146,8 +151,16 @@ function [W_r  fs]= solveW_GD(X, Y, W, L,ZnSum, CnSum, beta , mu ,nModes)
           break
       end      
  end
-fprintf ('Converge after %d iteration\n',iter);
+ fs = fs*size(W, 1);
+fprintf ('Converged after %d iteration\n',iter);
 % plot(fs(2:iter));
-W_r = W;
 end
 
+function [obj, grad] = findGrad(W, X, Y, mu, L, CnSum, beta, ZnSum, nModes)
+tmp = CnSum + beta*ZnSum;
+obj = 0.5* norm(W*X-Y,'fro')^2+ 0.5 *mu* trace ((W*X)'*L*(W*X)) - trace(tmp'*W) + nModes*beta/2 * norm(W,'fro')^2;
+grad = ( W*X - Y ) * X' + mu * L *W * (X * X')- (CnSum+beta*ZnSum) + nModes * beta *W;
+% This makes tuning eta more robust
+obj = obj / size(W, 1);
+grad = grad / size(W, 1);
+end
