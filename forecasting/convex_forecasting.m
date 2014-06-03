@@ -3,7 +3,7 @@ function [ W fs] = convex_forecasting( X,  Sim, lambda, beta, mu, nLag )
 %   Detailed explanation goes here?X P x T x M
 
 global verbose;
-verbose = 1;
+verbose = 0;
 maxIter = 1000;
 
 [nLoc, nTime , nTask]  = size(X);
