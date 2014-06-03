@@ -19,6 +19,8 @@ global evaluate
 evaluate = 3;
 
 sim = sim/(max(sim(:)));       % The goal is to balance between two measures
+sim(logical(eye(size(sim)))) = max(sim(:));
+sim = diag(sum(sim)) - sim + (1e-5)*eye(nLoc);
 
 nLag = 5;
 nTask = length(series);
