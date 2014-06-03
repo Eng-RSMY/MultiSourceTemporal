@@ -13,7 +13,7 @@ load 'fsq_missIdx.mat'
 
 lambda = 1e-5;
 beta = 2;
-mu = 50;
+mu = 0.1;
 sigma = 3;
 
 
