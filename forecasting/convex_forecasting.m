@@ -4,7 +4,7 @@ function [ W fs] = convex_forecasting( X,  Sim, lambda, beta, mu, nLag )
 
 global verbose;
 verbose = 0;
-maxIter = 1000;
+maxIter = 250;
 
 [nLoc, nTime , nTask]  = size(X);
 Dims =  [nLoc, nLoc*nLag, nTask];
