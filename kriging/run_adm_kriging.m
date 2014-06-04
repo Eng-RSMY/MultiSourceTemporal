@@ -28,10 +28,9 @@ X = zeros([nLoc, nTime, nTasks]);
 for t = 1:nTasks
     X(:,:,t) = series{t};
 end
-% Sim = sim_Haversine(locations, sigma);
-% Sim = Sim/max(Sim(:));
-Sim = sim;
-
+locations = loc(:,2:3);
+Sim = sim_Haversine(locations, sigma);
+Sim = Sim/max(Sim(:));
 M = 10;
 
 tcLap_est = cell(M,1);
@@ -48,7 +47,7 @@ for i = 1:M
 %     cokrig_est{i} = cokrig_est{i}(:,3:end);
     disp(i);
 end
-save('tcLap_FSQ.mat','tcLap_est');
+save('tcLap_ClimateP4.mat','tcLap_est');
 
 
 
@@ -62,5 +61,6 @@ for i = 1:M
     X_test = X( idx,:,:);
     RMSE_tcLap(i)  = sqrt(norm_fro(tcLap_est{i}-X_test)^2/ numel(X_test));
     end
+disp(mean(RMSE_tcLap(i)));
 
-save('tcLap_FSQ.mat','tcLap_est','RMSE_tcLap');
+save('tcLap_ClimateP4.mat','tcLap_est','RMSE_tcLap');
