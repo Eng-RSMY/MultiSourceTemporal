@@ -5,7 +5,7 @@ path ='./result/final/';
 samples = [10, 50, 100, 200];
 
 % for i = 1:4
-    i =1 ;
+    i = 2;
     load (strcat(path,'greedyResultsSynth.mat'));
     
     forward = [qFor{1}(:, i), qFor{2}(:, i), qFor{3}(:, i), qFor{4}(:, i)];
@@ -59,32 +59,33 @@ samples = [10, 50, 100, 200];
     
     
     %%
+%     load ('Synth_MLMTL_Convex');
+%    
+%     [T,N] = size(Qualities);
+%     RMSE_est = zeros(T,N);
+%     SVs1 = cell(T,N);
+%     for t = 1:T
+%         for i = 1:N
+%             W = Ws{t,i};
+% %             [RMSE_est(t,i),SVs1{t,i}] =  cal_LatentRank(W,1e-2);% Qualities{t,i}.Rank;
+%                RMSE_est(t,i) =  Qualities{t,i}.RMSE_est;
+%         end
+%     end
+%     RMSE_est = RMSE_est';
+%     convexMean = mean(RMSE_est);
+%     convexSD = std(RMSE_est);
+%     tLen = [10, 50, 100, 200];
+
+
     load ('Synth_MLMTL_Convex');
-   
     [T,N] = size(Qualities);
-    RMSE_est = zeros(T,N);
-    SVs1 = cell(T,N);
-    for t = 1:T
-        for i = 1:N
-            W = Ws{t,i};
-%             [RMSE_est(t,i),SVs1{t,i}] =  cal_LatentRank(W,1e-2);% Qualities{t,i}.Rank;
-               RMSE_est(t,i) =  Qualities{t,i}.RMSE_est;
-        end
-    end
-    RMSE_est = RMSE_est';
-    convexMean = mean(RMSE_est);
-    convexSD = std(RMSE_est);
-    tLen = [10, 50, 100, 200];
-
-
-    load ('Synth_MLMTL_Mixture');
     RMSE_est = zeros(T,N);
     SVs2 = cell(T,1);
     for t = 1:T
         for i = 1:N
             W = Ws{t,i};
 %             [RMSE_est(t,i),SVs2{t,i}] =   cal_LatentRank(W,1e-2); % Qualities{t,i}.Rank;
-            RMSE_est(t,i) =  Qualities{t,i}.RMSE_est;
+            RMSE_est(t,i) =  Qualities{t,i}.Rank;
         end
     end
     RMSE_est = RMSE_est';
@@ -110,23 +111,36 @@ samples = [10, 50, 100, 200];
 %     hold off;
     
     %%
-    
+     % parameter estimation error
     
     figure
     hold all
     errorbar(samples, forwardMean, forwardSD)
     errorbar(samples, orthMean, orthSD)
     
-    errorbar(samples, convexMean, convexSD)
     errorbar(samples, mixtureMean, mixtureSD)
 
-%     errorbar(samples, tuckerMean, tuckerSD) 
+    errorbar(samples, tuckerMean, tuckerSD) 
     errorbar(samples, lowrankMean, lowrankSD)
     errorbar(samples, L1Mean, L1SD)
     errorbar(samples, L21Mean, L21SD)
     errorbar(samples, DirtyMean, DirtySD)
     errorbar(samples, CMTLMean,CMTLSD);
-%    legend('forward', 'orthogonal', 'overlapped', 'mixture', 'low-rank')
 
-    legend('Forward', 'Orthogonal', 'Convex', 'Mixture','Tucker', 'Trace',  'MTL-L1', 'MTL-L21', 'MTL-Dirty','CMTL')
+    legend('Forward', 'Orthogonal', 'ADMM', 'Tucker', 'Trace',  'MTL-L1', 'MTL-L21', 'MTL-Dirty','CMTL')
+    xlabel('# of samples')
+    
+    %% rank
+        figure
+    hold all
+    errorbar(samples, forwardMean, forwardSD)
+    errorbar(samples, orthMean, orthSD)
+    
+    errorbar(samples, mixtureMean, mixtureSD)
+
+    errorbar(samples, tuckerMean/3, tuckerSD) 
+    errorbar(samples, lowrankMean, lowrankSD)
+
+
+    legend('Forward', 'Orthogonal', 'ADMM', 'Tucker', 'Trace')
     xlabel('# of samples')
