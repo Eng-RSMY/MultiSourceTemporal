@@ -7,8 +7,11 @@ addpath(genpath('.'));
 % load 'climateP3.mat';
 % load 'climateP3_missIdx.mat';
 
-load 'norm_4sq_small.mat'
-load 'fsq_missIdx.mat'
+%load 'norm_4sq_small.mat'
+%load 'fsq_missIdx.mat'
+
+load 'climateP4.mat'
+load 'climateP4_missIdx.mat'
 
 
 lambda = 1e-5;
@@ -29,7 +32,7 @@ end
 % Sim = Sim/max(Sim(:));
 Sim = sim;
 
-M = 1;
+M = 10;
 
 tcLap_est = cell(M,1);
 
