@@ -1,0 +1,6 @@
+Clim P4:
+Forecast Ortho: 0.8495
+Forecast For: 0.9166
+Kriging Ortho: 0.8112
+Kriging For: 0.9132
+

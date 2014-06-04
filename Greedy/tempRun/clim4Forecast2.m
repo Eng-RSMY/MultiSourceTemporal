@@ -2,7 +2,7 @@ clc
 clear
 
 addpath(genpath('../../'))
-load('../../data/Foursquare/norm_4sq_small.mat')
+load('../../data/climateP4.mat')
 
 % For Euclidian
 % sigma = 2;
@@ -18,13 +18,14 @@ verbose = 1;
 global evaluate
 evaluate = 3;
 
+locations = loc(:, 2:3);
+% sim =  euclidSim(locations, sigma);
+sim = haverSimple(locations, sigma);
 sim = sim/(max(sim(:)));       % The goal is to balance between two measures
-sim(logical(eye(size(sim)))) = max(sim(:));
-sim = diag(sum(sim)) - sim + (1e-5)*eye(nLoc);
 
-nLag = 5;
+nLag = 3;
 nTask = length(series);
-tTrain = 1080+nLag;
+tTrain = 66+nLag;
 tTest = tLen - tTrain;
 % Create the matrices
 A = zeros(nLoc, nLoc*nLag, nTask);
@@ -54,5 +55,5 @@ for m = 1:length(mu)
     [~, tmp] = solveGreedyOrth(Y, X, ep, max_iter, U, test);
     quality(:, m) = tmp(:, 2);
 end
-save('ForecastingOrth4sq.mat', 'quality')
+save('ForecastingOrthP4.mat', 'quality')
 % save('krigingOrtho.mat', 'quality')
