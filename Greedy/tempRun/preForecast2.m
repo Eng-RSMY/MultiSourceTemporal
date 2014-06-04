@@ -18,6 +18,7 @@ verbose = 1;
 global evaluate
 evaluate = 3;
 
+locations = names(:, 2:3);
 % sim =  euclidSim(locations, sigma);
 sim = haverSimple(locations, sigma);
 sim = sim/(max(sim(:)));       % The goal is to balance between two measures
@@ -36,7 +37,7 @@ test.Y = cell(nTask, 1);
 mu = logspace(-1, 1.3, 10);
 
 ep = 1e-10;
-max_iter = 3;
+max_iter = 151;
 quality = zeros(max_iter-1, length(mu));
 for m = 1:length(mu)
     U = chol(eye(nLoc) + mu(m)*sim);

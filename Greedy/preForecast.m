@@ -36,7 +36,7 @@ test.Y = cell(nTask, 1);
 mu = logspace(-1, 1.3, 10);
 
 ep = 1e-10;
-max_iter = 3;
+max_iter = 101;
 quality = zeros(max_iter-1, length(mu));
 for m = 1:length(mu)
     U = chol(eye(nLoc) + mu(m)*sim);

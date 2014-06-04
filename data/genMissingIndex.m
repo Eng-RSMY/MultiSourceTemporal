@@ -2,7 +2,7 @@
 clc
 clear
 
-load climateP3.mat
+load climateP4.mat
 
 nLoc = size(series{1}, 1);
 
@@ -16,4 +16,4 @@ for i = 1:N
     idx_Missing(:, i) = in(1:nMiss)';
 end
 
-save('climateP3_missIdx.mat', 'idx_Missing')
+save('climateP4_missIdx.mat', 'idx_Missing')
