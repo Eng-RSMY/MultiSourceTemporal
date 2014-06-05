@@ -1,25 +1,5 @@
-% 
-% nLoc = 4;
-% nTime = 10;
-% nTask = 5;
-% X = rand(nLoc,nTime, nTask);
-% A = rand(nLoc, nLoc);
-% Sim = A'*A;
-% 
-% 
-% 
-% lambda = 1e-3;
-% beta = 1;
-% mu = 0.1;
-% sigma = 1;
-% nLag = 3;
-% [ W fs] = convex_forecasting( X,  Sim, lambda, beta, mu, nLag );
-
-% % plot(fs)
-
-%%
 addpath(genpath('../'));
-load 'climateP17.mat'
+load 'climateP3.mat'
 lambda = 5e-2;
 beta = 1;
 mu = 0.1;
@@ -32,6 +12,7 @@ X = zeros([nLoc, nTime, nTask]);
 for t = 1:nTask
     X(:,:,t) = series{t};
 end
+locations = names(:,2:3);
 Sim = sim_Gaussian(locations, sigma);
 Sim = Sim/max(Sim(:));
 
@@ -41,7 +22,7 @@ for mu = mus
 fprintf('mu %d\n',mu);
 [W, fs ] =  convex_forecasting( X(:,1:124,:),  Sim, lambda, beta, mu, nLag );
 
-save('forecast_adm_climateP17.mat','W');
+save('forecast_adm_climateP3.mat','W');
 
 %% 
 
@@ -71,5 +52,5 @@ if (RMSE<RMSE_best)
 	Y_est_best = Y;
 end
 end
-save('forecast_adm_climateP17.mat','Y_est_best','RMSE_best');
+save('forecast_adm_climateP3.mat','Y_est_best','RMSE_best');
 

@@ -16,6 +16,9 @@ AA=A*A';
 % force AA symetric
 AA = (AA+AA')/2;
 
+AA(isnan(AA)) = 0;
+AA(isinf(AA)) = 0;
+
 
 [u l2 v2]=svd(AA);
 
