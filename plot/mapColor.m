@@ -29,7 +29,7 @@ indexConus(indexHawaii|indexAlaska) = [];
 stateColor = [1 1 1];
 
 
-load solCli17Orth10L3.mat
+load solutionOrthMap.mat
 
 N = size(series{1}, 1);
 SolAgg = zeros(N);
@@ -52,6 +52,11 @@ results = zeros(length(lats), length(lons));
 for i = 1:length(influence)
     results( lats == locations(i, 1), lons == locations(i, 2) ) = influence(i);
 end
+
+% Just a fix
+results(1, 1) = results(2, 2);
+results(1, 2) = results(2, 2);
+results(2, 1) = results(2, 2);
 
 pcolorm(LAT,LON,results)
 

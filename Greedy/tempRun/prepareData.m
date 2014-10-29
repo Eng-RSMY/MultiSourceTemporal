@@ -8,7 +8,9 @@ for i = 1:nTask
     Y{i} = M';
     X{i} = Q';
 end
+tic
 [~, tmp] = feval(func, Y, X, ep, max_iter, testIndex, series);
+toc
 out = tmp(:, 2);
 end
 

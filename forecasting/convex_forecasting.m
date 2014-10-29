@@ -9,7 +9,7 @@ maxIter = 250;
 [nLoc, nTime , nTask]  = size(X);
 Dims =  [nLoc, nLoc*nLag, nTask];
 nModes = length(Dims);
-thres = 1e-3;
+thres = 1e-4;
 
 % intialize 
 

@@ -11,7 +11,7 @@ Dims  = size(X);
 nModes = length(Dims);
 nLoc  = Dims(1);
 nTask = Dims(3);
-thres = 1e-6;
+thres = 5e-5;
 
 % intialize 
 W = zeros(Dims);
@@ -58,7 +58,7 @@ for iter = 1:maxIter
     end
     
     fval = obj_cov_kriging(X, W, Z, C, beta, lambda);
-    if(abs(fval-fval_old)< thres)
+    if abs((fval-fval_old)/fval_old)< thres
         break;
     end
     fval_old = fval;

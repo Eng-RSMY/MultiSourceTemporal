@@ -36,7 +36,7 @@ test.Y = cell(nTask, 1);
 mu = logspace(-1, 1.3, 10);
 
 ep = 1e-10;
-max_iter = 101;
+max_iter = 6;
 quality = zeros(max_iter-1, length(mu));
 for m = 1:length(mu)
     U = chol(eye(nLoc) + mu(m)*sim);
@@ -50,8 +50,9 @@ for m = 1:length(mu)
             test.X{i}(nLoc*(ll-1)+1:nLoc*ll, :) = series{i}(:, tTrain-nLag+1-ll:tLen-ll);
         end
     end
-    
-    [~, tmp] = solveGreedy(Y, X, ep, max_iter, U, test);
+    tic
+    [~, tmp] = solveGreedyOrth(Y, X, ep, max_iter, U, test);
+    toc
     quality(:, m) = tmp(:, 2);
 end
 save('ForecastingFor.mat', 'quality')

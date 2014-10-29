@@ -8,6 +8,7 @@ for i = 1:nTask
     Y{i} = M';
     X{i} = Q';
 end
+
 [~, tmp] = solveGreedyOrth(Y, X, ep, max_iter, testIndex, series);
 out = tmp(:, 2);
 end
