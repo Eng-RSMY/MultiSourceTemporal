@@ -27,11 +27,11 @@ locations = names(:, 2:3);
 sim = haverSimple(locations, sigma);
 sim = sim/(max(sim(:)));       % The goal is to balance between two measures
 
-max_iter = 251;
+max_iter = 6;
 quality = zeros(max_iter-1, size(idx_Missing, 2));
 % Create the matrices
 for i = 1:size(idx_Missing, 2)
-    testIndex = idx_Missing(:, 1);
+    testIndex = idx_Missing(:, i);
     
     index = ones(nLoc, 1);
     index(testIndex) = 0;

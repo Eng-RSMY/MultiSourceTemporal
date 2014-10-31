@@ -33,11 +33,13 @@ for i = 1:M
     X_Missing = X;
     X_Missing(idx,:,:) = 0;
 
+    tic
     for time  = 1:nTime
          X_Missing_t =squeeze(X_Missing(:,time,:));
          est_val = mtgp_kriging (X_Missing_t, idx, locations);
         mtgp_est{i}(:,time,:) = est_val;
     end
+    toc
     disp(i);
 end
 save('mtgp_ClimateP17.mat','mtgp_est');

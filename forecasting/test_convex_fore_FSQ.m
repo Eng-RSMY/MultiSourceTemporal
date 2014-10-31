@@ -1,11 +1,11 @@
 addpath(genpath('../'));
 load 'norm_4sq_small.mat';
 
-lambda = 5e-2;
-beta = 1;
+lambda = 1e-2;
+beta = 0.1;
 mu = 0.1;
 sigma = 1;
-nLag = 3;
+nLag = 6;
 nTask = length(series);
 [nLoc, nTime] = size(series{1});
 X = zeros([nLoc, nTime, nTask]);
@@ -21,8 +21,9 @@ mus = logspace(-3,3,10);
 RMSE_best = inf;
 for mu = mus
 fprintf('mu %d\n',mu);
+tic
 [W, fs ] =  convex_forecasting( X(:,1:124,:),  Sim, lambda, beta, mu, nLag );
-
+toc
 save('forecast_adm_FSQ.mat','W');
 
 %% 
