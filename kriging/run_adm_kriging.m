@@ -7,12 +7,14 @@ addpath(genpath('../'));
 %load 'climateP3.mat';
 %load 'climateP3_missIdx.mat';
 
-load 'norm_4sq_small.mat'
-load 'fsq_missIdx.mat'
+% load 'norm_4sq_small.mat'
+% load 'fsq_missIdx.mat'
 
 %load 'climateP4.mat'
 %load 'climateP4_missIdx.mat'
 
+load 'yelp.mat'
+load 'yelp_missIdx.mat'
 
 lambda = 1e-5;
 beta = 2;
@@ -30,9 +32,9 @@ for t = 1:nTasks
 end
 % locations = names(:,2:3);
 % Sim = sim_Haversine(locations, sigma);
-Sim = sim;
+Sim = Lap;
 Sim = Sim/max(Sim(:));
-M = 10;
+M = 22;
 
 tcLap_est = cell(M,1);
 
@@ -50,7 +52,7 @@ for i = 1:1
 %     cokrig_est{i} = cokrig_est{i}(:,3:end);
     disp(i);
 end
-save('tcLap_ClimateP4.mat','tcLap_est');
+save('tcLap_yelp.mat','tcLap_est');
 
 
 
@@ -63,7 +65,7 @@ for i = 1:M
     idx = idx_Missing(:,i);
     X_test = X( idx,:,:);
     RMSE_tcLap(i)  = sqrt(norm_fro(tcLap_est{i}-X_test)^2/ numel(X_test));
-    end
+end
 disp(mean(RMSE_tcLap(i)));
 
-save('tcLap_ClimateP4.mat','tcLap_est','RMSE_tcLap');
+save('tcLap_yelp.mat','tcLap_est','RMSE_tcLap');
