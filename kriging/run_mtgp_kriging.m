@@ -19,7 +19,7 @@ for t = 1:nTask
     X(:,:,t) = series{t};
 end
 
-M = 2;
+M = 1;
 nMissing = 13;
 
 mtgp_est = cell(M,1);
@@ -54,6 +54,8 @@ for i = 1:M
     idx = idx_Missing(:,i);
     X_test = X( idx,:,:);
     RMSE_mtgp(i)  = sqrt(norm_fro(mtgp_est{i}-X_test)^2/ numel(X_test));
- end
+end
+
+disp(mean(RMSE_mtgp));
 
 save('mtgp_ClimateP17.mat','mtgp_est','RMSE_mtgp');

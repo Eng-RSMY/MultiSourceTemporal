@@ -25,7 +25,7 @@ logtheta_all0 = [theta_lf0; theta_kx0; theta_sigma0];
 %    is explained by Kf
 deriv_range = ([1:nlf,nlf+2:length(logtheta_all0)])'; 
 logtheta0 = logtheta_all0(deriv_range);
-niter = 1000; % setting for minimize function: number of function evaluations
+niter = 500; % setting for minimize function: number of function evaluations
 [logtheta nl] = minimize(logtheta0,'learn_mtgp',niter, logtheta_all0, ...
 			 covfunc_x, xtrain, ytrain,...
 			 M, irank, nx, ind_kf_train, ind_kx_train, deriv_range);
