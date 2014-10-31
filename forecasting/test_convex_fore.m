@@ -39,8 +39,9 @@ mus = logspace(-3,3,10);
 RMSE_best = inf;
 for mu = mus
 fprintf('mu %d\n',mu);
+tic
 [W, fs ] =  convex_forecasting( X(:,1:124,:),  Sim, lambda, beta, mu, nLag );
-
+toc
 save('forecast_adm_climateP17.mat','W');
 
 %% 
