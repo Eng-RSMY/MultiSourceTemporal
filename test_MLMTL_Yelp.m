@@ -11,7 +11,7 @@ addpath(genpath('.'));
 % data. Task: predict the values for certain location and certain agents
 
 % load 'tensor_checkin_small'
-load norm_4sq_small.mat
+load 'yelp.mat'
 
 global verbose;
 verbose = 1;
@@ -32,43 +32,45 @@ dimModes = [nLoc, nLoc,nType];
 
 %% train-test (with cross validation)
 
-% lambdas = logspace(-3,3,10);
-% lambda = 3.162278e+02;
+lambdas = logspace(-3,3,10);
+lambda = 3.162278e+02;
 
-% paras.beta = beta;
-% paras.dimModes = dimModes;
-% paras.outIter = outerNiTPre;
+paras.beta = beta;
+paras.dimModes = dimModes;
+paras.outIter = outerNiTPre;
 
-% W_Convex = MLMTL_Crosval(X_train,Y_train,@MLMTL_Convex,@MLMTL_Test,lambdas, paras);
-% W_Mixture = MLMTL_Crosval(X_train,Y_train,@MLMTL_Mixture,@MLMTL_Test,lambdas, paras);
+W_Convex = MLMTL_Crosval(X_train,Y_train,@MLMTL_Convex,@MLMTL_Test,lambdas, paras);
+W_Mixture = MLMTL_Crosval(X_train,Y_train,@MLMTL_Mixture,@MLMTL_Test,lambdas, paras);
 
 
-% use  select best parameter
-% fprintf('Running Overlapped \n');
-% [ W,~, ~, train_time ] = MLMTL_Convex( Dat_eval.X, Dat_eval.Y, dimModes, beta, 2.15, outerNiTPre);
-% Quality = MLMTL_Test(Dat_test.X, Dat_test.Y, W);
-% if verbose
-%     fprintf('RMSE %d, NRMSE %d, Rank %d, Time %d\n', Quality.RMSE, Quality.NRMSE,Quality.Rank, train_time);
-% end
-% 
-% save('MLMTL_Convex_FSQ.mat','Quality','train_time','W');
-% 
-% %%
-% 
-% fprintf('Running Mixture \n');
-% [ W ,~ ,~,train_time] = MLMTL_Mixture( Dat_eval.X, Dat_eval.Y, dimModes, beta, 10,outerNiTPre);
-% Quality = MLMTL_Test(Dat_test.X, Dat_test.Y, W);
-% 
-% if verbose
-%     fprintf('RMSE %d, NRMSE %d, Rank %d, Time %d\n', Quality.RMSE, Quality.NRMSE,Quality.Rank, train_time);
-% end
-% 
-% save('MLMTL_Mixture_FSQ.mat','Quality','train_time','W');
+use  select best parameter
+fprintf('Running Overlapped \n');
+[ W,~, ~, train_time ] = MLMTL_Convex( Dat_eval.X, Dat_eval.Y, dimModes, beta, 2.15, outerNiTPre);
+Quality = MLMTL_Test(Dat_test.X, Dat_test.Y, W);
+if verbose
+    fprintf('RMSE %d, NRMSE %d, Rank %d, Time %d\n', Quality.RMSE, Quality.NRMSE,Quality.Rank, train_time);
+end
+
+save('MLMTL_Convex_yelp.mat','Quality','train_time','W');
+
+%%
+
+fprintf('Running Mixture \n');
+[ W ,~ ,~,train_time] = MLMTL_Mixture( Dat_eval.X, Dat_eval.Y, dimModes, beta, 10,outerNiTPre);
+Quality = MLMTL_Test(Dat_test.X, Dat_test.Y, W);
+
+if verbose
+    fprintf('RMSE %d, NRMSE %d, Rank %d, Time %d\n', Quality.RMSE, Quality.NRMSE,Quality.Rank, train_time);
+end
+
+save('MLMTL_Mixture_yep.mat','Quality','train_time','W');
+
+
 fprintf('Running Tucker \n');
 [W,W_tensor] = MLMTL_Tucker (Dat_eval.X, Dat_eval.Y, dimModes,alpha);
 Quality = MLMTL_Test(Dat_test.X, Dat_test.Y, W);
 disp(Quality.RMSE);
-save('./result/climate/MLMTL_Tucker_FSQ.mat','Quality','W');
+save('./result/climate/MLMTL_Tucker_yelp.mat','Quality','W');
 
 
 exit;

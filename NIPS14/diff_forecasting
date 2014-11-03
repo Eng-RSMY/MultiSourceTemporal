@@ -1,0 +1,10 @@
+[1mdiff --git a/NIPS14/forecasting.tex b/NIPS14/forecasting.tex[m
+[1mindex 420ff59..9670cbc 100755[m
+[1m--- a/NIPS14/forecasting.tex[m
+[1m+++ b/NIPS14/forecasting.tex[m
+[36m@@ -1,5 +1,5 @@[m
+% multi-task forecasting[m
+Forecasting estimates the future value of[31m[-the-][m multivariate time series given[31m[-the-][m historical observations. [31m[-Simply,-][m[32m{+For ease of presentation,+}[m we use the classical VAR model with  $K$ lags and coefficient tensor $\W \in \mathbb{R}^{P\times LP\times [31m[-M}$.-][m[32m{+M}$ as an example.+}[m Using the matrix representation, the VAR($K$) process defines the following data generation process:
+\begin{equation}[m
+\X_{:,t,m} = \mathcal{W}_{:,:, m}\mathbf{X}_{t, m} + \mathcal{E}_{:,t,m}, \quad \text{for } m = 1, \ldots, M \text{ and } t = K+1, \ldots, T,[m
+\label{eqn:auto-regressive} [m
