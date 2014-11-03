@@ -1,0 +1,49 @@
+\begin{proof}
+
+The original problem has the following form:
+\begin{equation}
+\widehat{A} = \argmin_{A: \mathrm{rank}(A) = 1} \left\{ \left\| Y - AX\right\|_F^2 \right\}
+\label{eq:original}
+\end{equation}
+
+We can rewrite the optimization problem in Eq. (\ref{eq:original}) as estimation of $\alpha \in \mathbb{R}$, $\mathbf{u} \in \mathbb{R}^{q\times 1}, \|\mathbf{u}\|_2 =1$, and $\mathbf{v} \in \mathbb{R}^{p\times 1}, \|\mathbf{v}\|_2 = 1$ such that:
+\begin{equation}
+\widehat{\alpha}, \widehat{\mathbf{u}}, \widehat{\mathbf{v}} = \argmin_{\alpha, \mathbf{u}, \mathbf{v}: \|\mathbf{u}\|_2 =1, \|\mathbf{v}\|_2 =1} \left\{ \left\| Y - \alpha\mathbf{u}\mathbf{v}^{\top}X\right\|_F^2 \right\}
+\end{equation}
+
+We will minimize the above objective function in three steps: First, minimization in terms of $\alpha$ yields $\widehat{\alpha} = \langle Y, \mathbf{u}\mathbf{v}^{\top}X\rangle/\|\mathbf{u}\mathbf{v}^{\top}X\|_F^2$, where we have assumed that $\mathbf{v}^{\top}X \neq \mathbf{0}$. Hence, we have:
+\begin{equation}
+\widehat{\mathbf{u}}, \widehat{\mathbf{v}} = \argmax_{\mathbf{u}, \mathbf{v}: \|\mathbf{u}\|_2 =1, \|\mathbf{v}\|_2 =1} \frac{\mathrm{tr}((\mathbf{u}\mathbf{v}^{\top}X)^{\top}Y)^2}{\|\mathbf{u}\mathbf{v}^{\top}X\|_F^2 }
+\label{eq:afteralpha}
+\end{equation}
+The objective function can be rewritten  $\mathrm{tr}\left\{(\mathbf{u}\mathbf{v}^{\top}X)^{\top}Y\right\} = \mathrm{tr}\left\{X^{\top}\mathbf{v}\mathbf{u}^{\top}Y\right\} = \mathrm{tr}\left\{YX^{\top}\mathbf{v}\mathbf{u}^{\top}\right\}$.  
+Some algebra work on the denominator yields $\|\mathbf{u}\mathbf{v}^{\top}X\|_F^2 = \mathrm{tr}\left\{(\mathbf{u}\mathbf{v}^{\top}X)^{\top}(\mathbf{u}\mathbf{v}^{\top}X) \right\}  = \mathrm{tr}\left\{ X^{\top}\mathbf{v}\mathbf{u}^{\top}\mathbf{u}\mathbf{v}^{\top}X\right\} = \mathrm{tr}\left\{ X^{\top}\mathbf{v}\mathbf{v}^{\top}X \right\} = \mathbf{v}^{\top}XX^{\top}\mathbf{v}$.  
+This implies that the denominator is independent of $\mathbf{u}$ and the optimal value of $\mathbf{u}$ in Eq. (\ref{eq:afteralpha}) is proportional to $YX^{\top}\mathbf{v}$. Hence, we need to first find the optimal value of $\mathbf{v}$ and then compute $\mathbf{u} = (YX^{\top}\mathbf{v})/\|YX^{\top}\mathbf{v}\|_2$. Substitution of the optimal value of $\mathbf{u}$ yields:
+\begin{equation}
+\widehat{\mathbf{v}} = \argmax_{\mathbf{v}: \|\mathbf{v}\|_2 =1} \frac{\mathbf{v}^{\top}XY^{\top}YX^{\top}\mathbf{v}}{\mathbf{v}^{\top}XX^{\top}\mathbf{v} }
+\label{eq:afterU}
+\end{equation}
+
+Note that the objective function is bounded and invariant of $\|\mathbf{v}\|_2$, hence the $\|\mathbf{v}\|_2 = 1$ constraint can be relaxed. Now, suppose the value of $\mathbf{v}^{\top}XX^{\top}\mathbf{v}$ for optimal choice of vectors $\mathbf{v}$ is $t$.  We can rewrite the optimization in Eq. (\ref{eq:afterU}) as
+\begin{align}
+\widehat{\mathbf{v}} &= \argmax_{\mathbf{v}} ~\mathbf{v}^{\top}XY^{\top}YX^{\top}\mathbf{v} \nonumber\\
+\mathrm{s.t.} &\qquad \mathbf{v}^{\top}XX^{\top}\mathbf{v} = t
+\label{eq:afterRelax}
+\end{align}
+
+Using the Lagrangian multipliers method, we can show that there is a value for $\lambda$ such that the solution $\widehat{\mathbf{v}}$ for the dual problem is the optimal solution for Eq. (\ref{eq:afterRelax}). Hence, we need to solve the following optimization problem for $\mathbf{v}$:
+\begin{align}
+\widehat{\mathbf{v}} & = \argmax_{\mathbf{v}: \|\mathbf{v}\|_2 =1} \left\{\mathbf{v}^{\top}XY^{\top}YX^{\top}\mathbf{v}  - \lambda \mathbf{v}^{\top}XX^{\top}\mathbf{v} \right\}\nonumber\\
+ & = \argmax_{\mathbf{v}: \|\mathbf{v}\|_2 =1} \left\{\mathbf{v}^{\top}X(Y^{\top}Y - \lambda I) X^{\top}\mathbf{v}  \right\} \label{eq:finalopt}
+\end{align}
+
+Eq. (\ref{eq:finalopt}) implies that $\mathbf{v}$ is the dominant eigenvector of $X(Y^{\top}Y - \lambda I) X^{\top}$. Hence, we are able to find the optimal value of both $\mathbf{u}$ and $\mathbf{v}$ for the given value of $\lambda$. For simplicity of notation, let's define $P \triangleq XX^{\top}$ and $Q \triangleq XY^{\top}YX^{\top}$.
+Consider the equations obtained by solving the Lagrangian dual of Eq. (\ref{eq:afterRelax}):
+\begin{align}
+Q\mathbf{v} &= \lambda P\mathbf{v}\label{eq:boundLamU}\\
+\|\mathbf{v}^{\top}X\|_2^2 &= t,\label{eq:boundScaling}\\
+ \lambda &\geq 0\label{eq:boundLamL}.
+\end{align}
+
+Eq. (\ref{eq:boundLamU}) describes a generalized positive definite eigenvalue problem. Hence, we can select $\lambda_{\max} = \lambda_{1}(Q, P)$ which maximizes the objective function in Eq. (\ref{eq:afterU}). The optimal value of $\mathbf{u}$ can be found by substitution of optimal $\mathbf{v}$ in Eq. (\ref{eq:afteralpha}) and simple algebra yields the result in Lemma \ref{lem:rank1opt}.
+\end{proof}

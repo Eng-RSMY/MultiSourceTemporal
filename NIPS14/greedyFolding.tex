@@ -1,0 +1,61 @@
+Let us consider the simpler case of multitask regression in different domains $Y\in \mathbb{R}^{q\times r}$ and $X\in \mathbb{R}^{p\times r}$ represent the response and predictor variables in different tasks. The parameter tensor $\mathcal{A}\in \mathbb{R}^{q\times p\times r}$ models the relationship between the predictors and the response variables, as follows:
+\begin{equation}
+Y(i, j) = \sum_{k=1}^{p}\mathcal{A}(i, k, j)X(k, j) + \varepsilon(i, j)
+\label{eq:var}
+\end{equation}
+\paragraph{Unfolding in Mode 1}
+\begin{align*}
+\mathcal{A}_{(1)}= \left[ \begin{array}{ccccc}
+\mathcal{A}(1, 1, 1) & \cdots & \mathcal{A}(1, p, 1) & \cdots &\mathcal{A}(1, p, r)\\
+\mathcal{A}(2, 1, 1) & \cdots & \mathcal{A}(2, p, 1) & \cdots &\mathcal{A}(2, p, r)\\
+\vdots & \cdots& \vdots&\cdots&\vdots\\
+\mathcal{A}(q, 1, 1) & \cdots & \mathcal{A}(q, p, 1) & \cdots &\mathcal{A}(q, p, r)\\ \end{array} \right]
+\end{align*}
+
+We can rewrite Eq. (\ref{eq:var})
+\begin{equation}
+Y(:, j) = \mathcal{A}_{(1)}(:,(p(j-1)+1):pj )X(:, j) + \varepsilon(:, j)
+\end{equation}
+
+Thus, we can write the loss function in the compact form
+\begin{equation}
+\min\left\{\left\|\bm{Y} - \mathcal{A}_{(1)}\bm{X}\right\|_F^2\right\}
+\label{eq:greedyFold1}
+\end{equation}
+
+\noindent where $\bm{Y} = [Y(:, 1), Y(:, 2), \ldots, Y(:, r)]$ and $\bm{X} = [X(:, 1), X(:, 2), \ldots, X(:, r)]$
+
+
+\paragraph{Unfolding in Mode 2}
+\begin{align*}
+\mathcal{A}_{(2)}= \left[ \begin{array}{ccccc}
+\mathcal{A}(1, 1, 1) & \cdots & \mathcal{A}(q, 1, 1) & \cdots &\mathcal{A}(q, 1, r)\\
+\mathcal{A}(1, 2, 1) & \cdots & \mathcal{A}(q, 2, 1) & \cdots &\mathcal{A}(q, 2, r)\\
+\vdots & \cdots& \vdots&\cdots&\vdots\\
+\mathcal{A}(1, p, 1) & \cdots & \mathcal{A}(q, p, 1) & \cdots &\mathcal{A}(q, p, r)\\ \end{array} \right]
+\end{align*}
+
+\begin{equation}
+Y(:, j) = [\mathcal{A}_{(2)}(:, (q(j-1)+1):qj)]^{\top}X(:, j) + \varepsilon(:, j)
+\end{equation}
+
+\paragraph{Unfolding in Mode 3}
+\begin{align*}
+\mathcal{A}_{(3)}= \left[ \begin{array}{ccccc}
+\mathcal{A}(1, 1, 1) & \cdots & \mathcal{A}(q, 1, 1) & \cdots &\mathcal{A}(q, p, 1)\\
+\mathcal{A}(1, 1, 2) & \cdots & \mathcal{A}(q, 1, 2) & \cdots &\mathcal{A}(q, p, 2)\\
+\vdots & \cdots& \vdots&\cdots&\vdots\\
+\mathcal{A}(1, 1, r) & \cdots & \mathcal{A}(q, 1, r) & \cdots &\mathcal{A}(q, p, r)\\ \end{array} \right]
+\end{align*}
+For simplicity of notation, we can permute the columns of $\mathcal{A}_{(3)}$ to write as: 
+\begin{align*}
+\mathcal{A}'_{(3)}= \left[ \begin{array}{ccccc}
+\mathcal{A}(1, 1, 1) & \cdots & \mathcal{A}(1, p, 1) & \cdots &\mathcal{A}(q, p, 1)\\
+\mathcal{A}(1, 1, 2) & \cdots & \mathcal{A}(1, p, 2) & \cdots &\mathcal{A}(q, p, 2)\\
+\vdots & \cdots& \vdots&\cdots&\vdots\\
+\mathcal{A}(1, 1, r) & \cdots & \mathcal{A}(1, p, r) & \cdots &\mathcal{A}(q, p, r)\\ \end{array} \right]
+\end{align*}
+Now reshape each row of $\mathcal{A}'_{(3)}$ into $q\times p$ matrices: denote the matrix resulting from the $j^{th}$ row as $A'_{(3), j}$. We can rewrite Eq. (\ref{eq:var}) as
+\begin{equation}
+Y(:, j) = A'_{(3), j}X(:, j) + \varepsilon(:, j)
+\end{equation}

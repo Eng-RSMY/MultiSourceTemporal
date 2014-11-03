@@ -1,0 +1,34 @@
+% synthetic
+%As shown in Eq. (\ref{eq:greedyUnified}),
+We formulate the cokriging and the forecasting task as low rank tensor learning problems to capture the shared structure among variables, space and time. 
+%To validate that our algorithms can accurately and efficiently estimate the low rank tensor, we experiment with the multitask regression model.
+For empirical evaluation, we compare with  multitask learning (MTL) algorithms, which also utilize the commonalities of the tasks for better performance. We use the following baselines: Trace norm regularized MTL (\textit{Trace}) seeks for the low rank structure only on the task dimension.  Multilinear MTL \cite{romera2013multilinear} which adapts the convex relaxation of low rank tensor learning solved with Alternating Direction Methods of Multiplier  (\textit{ADMM}) \cite{gabay1976dual} and Tucker decomposition to describe the low rankness in multiple dimensions. Also, \textit{MTL-$L_1$} , \textit{MTL-$L_{21}$} \cite{nie2010efficient}, and\textit{ MTL-$L_{\mathrm{Dirty}}$}  \cite{jalali2010dirty} investigate joint sparsity of the tasks with $L_p$ norm regularization. For MTL-$L_1$ , MTL-$L_{21}$ \cite{nie2010efficient} and MTL-$L_{\mathrm{Dirty}}$, we use MALSAR Version 1.1 \cite{zhou2012mutal}. 
+
+
+We construct a model coefficient tensor $\W$ of size $20 \times 20 \times 10 $ with CP rank equals to $1$.  Then, we generate the observations $\Y$ and $\V$ according to multivariate regression model $\V_{:,:,m} = \W_{:,:,m}\Y_{:, :, m} + \mathcal{E}_{:,:,m}$ for $m = 1, \ldots, M$, where $\mathcal{E}$ is tensor with zero mean Gaussian noise elements. We split the synthesized data into training and testing time series and vary the length of the training time series from $10$ to $200$. For each training length setting, we repeat the experiments for $10$ times and select the model parameters via five fold cross validation. We measure performance of the algorithms  with two criteria: parameter estimation accuracy and the rank complexity. For accuracy, we calculate the RMSE of the estimation versus the true model coefficient tensor. For rank complexity, we calculate the mixture rank complexity \cite{tomioka2010estimation} as $MRC = \frac{1}{n}\sum_{n=1}^{N}\mathrm{rank}(\W_{(n)})$. 
+
+\begin{figure*}[t]
+%\vskip 0.2in
+\centering 
+\subfigure[RMSE]{
+\includegraphics[scale = 0.18]{figures/RMSE_est_Synth.pdf}
+\label{fig:RMSE_est}
+}
+\subfigure[Rank]{
+\includegraphics[scale = 0.18]{figures/LR_complexity.pdf}
+\label{fig:LR_complexity}
+}
+\subfigure[Scalability]{
+\includegraphics[scale = 0.18]{figures/Scalability_Synth.pdf}
+\label{fig:Scalability}
+}
+\label{fig:synthetic}
+\caption{Tensor estimation performance comparison on the synthetic dataset over 10 random runs.  \subref{fig:RMSE_est} parameter Estimation RMSE with training time series length,  \subref{fig:LR_complexity} Mixture Rank Complexity with training  time series length,  \subref{fig:Scalability} running time for one single round with respect to number of variables.}
+\vskip -0.2in
+\end{figure*} 
+
+
+The results are shown in Fig.\ref{fig:RMSE_est} and \ref{fig:LR_complexity}. We omit the Tucker decomposition as the results are not comparable. We can clearly see that the proposed greedy algorithm with orthogonal projections achieves the most accurate tensor estimation. In terms of rank complexity, we make two observations: (i) Given that the tensor CP rank is 1, greedy algorithm with orthogonal projections produces the estimate with the lowest rank complexity. This can be attributed to the fact that the orthogonal projections eliminate the redundant rank-1 components that fall in the same spanned space. (ii) The rank complexity of the forward greedy algorithm increases as we enlarge the sample size. We believe that  when there are limited number of observations, most of the new rank-1 elements added to the estimate are not accurate and the cross-validation steps prevent them from being added to the model. However, as the sample size grows, the rank-1 estimates become more accurate and they are preserved during the cross-validation.
+
+To showcase the scalability of our algorithm, we vary the number of variables and generate a series of tensor $\W \in \mathbb{R}^{20\times 20 \times M}$ for M from 10 to 100 and record the running time (in seconds) for three tensor learning algorithms, i.e, forward greedy, greedy with orthogonal projections and ADMM. We measure the run time on a machine with a 6-core 12-thread Intel Xenon 2.67GHz processor and  12GB memory. The results are shown in 
+Fig.\ref{fig:Scalability}. The running time of ADMM increase rapidly with the data size while the greedy algorithm stays steady,  which confirms the speedup advantage of the greedy algorithm. 

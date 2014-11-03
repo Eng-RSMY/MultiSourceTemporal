@@ -1,0 +1,19 @@
+% multi-task forecasting
+Forecasting estimates the future value of the multivariate time series given the historical observations. Simply, we use the classical VAR model with  $K$ lags and coefficient tensor $\W \in \mathbb{R}^{P\times LP\times M}$. Using the matrix representation, the VAR($K$) process defines the following data generation process:
+\begin{equation}
+\X_{:,t,m} = \mathcal{W}_{:,:, m}\mathbf{X}_{t, m} + \mathcal{E}_{:,t,m}, \quad \text{for } m = 1, \ldots, M \text{ and } t = K+1, \ldots, T,
+\label{eqn:auto-regressive} 
+\end{equation}
+\noindent where $\mathbf{X}_{t, m} = [\X_{:, t-1, m}^{\top}, \ldots, \X_{:, t-K, m}^{\top}]^{\top}$ denotes the concatenation of $K$-lag historical data before time $t$. The noise tensor $\mathcal{E}$ is a multivariate Gaussian with zero mean and unit variance .
+
+Existing multivariate regression methods designed to capture the complex correlations, such as Tucker decomposition \cite{romera2013multilinear}, are computationally expensive. 
+A scalable solution requires a simpler model that also efficiently accounts for the shared structures in variables, space, and time. Similar global and local consistency principles still hold in forecasting. For global consistency, we can use low rank constraint to capture the commonalities of the variables as well as the spatial correlations on the model parameter tensor, as in \cite{cressie2010fixed}. For local consistency, we enforce the predicted value for close locations to be similar via spatial Laplacian regularization. Thus, we can formulate the forecasting task as the following optimization problem over the model coefficient tensor $\W$:
+\begin{equation}
+\widehat{\W} = \argmin_{\W} \left\{ \| \widehat{\X}- \X \|^2_F +  \mu \sum\limits_{m=1}^M \text{tr} (\widehat{\X}_{:,:,m}^\top L \widehat{\X}_{:,:,m}) \right\} 
+\;\;\text{s.t.} \;\; \text{rank}(\W) \leq \rho, \; \widehat{\X}_{:,t,m} = \mathcal{W}_{:,:, m}\mathbf{X}_{t, m}
+\label{eqn:forecasting}
+\end{equation}
+
+Though cokriging and forecasting are two different tasks, we can easily see that both formulations follow the global and local consistency principles and can capture the inter-correlations from spatial-temporal data.
+
+ 
