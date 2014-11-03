@@ -1,0 +1,97 @@
+% greedy
+To solve the non-convex problem in Eq. (\ref{eq:greedyUnified}) and find its optimal solution, we propose a greedy learning algorithm by successively adding rank-1 estimation of the mode-n unfolding. The main idea of the algorithm is to unfold the tensor into a matrix,  seek for its rank-1 approximation and then fold back into a tensor with same dimensionality. We describe this algorithm in three steps: (i) First, we show that we can learn rank-1 matrix estimations efficiently by solving a generalized eigenvalue problem, (ii) We use the rank-1 matrix estimation to greedily solve the original tensor rank constrained problem, and (iii) We propose an enhancement via orthogonal projections after each greedy step.
+
+\paragraph{Optimal rank-1 Matrix Learning} %After we have a unified formulation of our learning tasks in Eq. (\ref{eq:greedyUnified}), we specify the greedy updates for solving it. 
+The following lemma enables us to find such optimal rank-1 estimation of the matrices.
+
+\begin{lemma}
+\label{lem:rank1opt}
+%Suppose $n$ pairs of observations $(\mathbf{x}_i, \mathbf{y}_i)\in {\R}^{p\times 1}\times {\R}^{q\times 1}$ are given. Consider the following rank-1 estimation problem:
+%\begin{align}
+%\widehat{A}_1 &= \argmin_{A, \mathrm{rank}(A) = 1}\left\{\frac{1}{n}\sum_{i=1}^{n}\|\mathbf{y}_i - A\mathbf{x}_i\|_2^2 \right\}\label{eq:rank1estimate}
+%\end{align}
+Consider the following rank constrained problem:
+\begin{equation}
+\widehat{A}_1 = \argmin_{A: \mathrm{rank}(A) = 1} \left\{ \left\| Y - AX\right\|_F^2 \right\},
+\label{eq:rank1estimate}
+\end{equation}
+\noindent where $Y \in {\R}^{q\times n}$, $X \in {\R}^{p\times n}$, and $A\in \mathbb{R}^{q\times p}$. The optimal solution of $\widehat{A}_1$ can be written as $\widehat{A}_1 = \widehat{\mathbf{u}}\widehat{\mathbf{v}}^{\top}$, $\|\widehat{\mathbf{v}}\|_2 = 1$ where $\widehat{\mathbf{v}}$ is the dominant eigenvector of the following generalized eigenvalue problem:
+\begin{equation}
+(XY^{\top}YX^{\top})\mathbf{v} = \lambda (XX^{\top})\mathbf{v}\label{eq:solv}\\
+\end{equation}
+and $\widehat{\mathbf{u}}$ can be computed as
+\begin{align}
+&\widehat{\mathbf{u}} = \frac{1}{\widehat{\mathbf{v}}^{\top}XX^{\top}\widehat{\mathbf{v}}}YX^{\top}\widehat{\mathbf{v}}. \label{eq:solu}
+\end{align}
+\end{lemma}
+
+Proof is deferred to Appendix \ref{sec:optRank1}. Eq. (\ref{eq:solv}) is a generalized eigenvalue problem whose dominant eigenvector can be found efficiently \cite{jpen2000}. If $XX^{\top}$ is full rank, as assumed in Theorem \ref{thm:greedy}, the problem is simplified to a  regular eigenvalue problem whose dominant eigenvector can be efficiently computed.
+%which can be solved in $\mathcal{O}(n_z\log(p))$ iterations if the matrix has $n_z$ non-zero elements \cite{Kuczynski1992}.  
+
+\paragraph{Greedy Low n-rank Tensor Learning} The optimal rank-1 matrix learning serves as a basic element in our greedy algorithm. 
+Using Lemma \ref{lem:rank1opt}, we can solve the problem in Eq. (\ref{eq:greedyUnified}) in the \textit{Forward Greedy Selection} framework as follows:  at each iteration of the greedy algorithm, it searches for the mode that gives the largest decrease in the objective function. It does so by unfolding the tensor in that mode and finding the best rank-1 estimation of the unfolded tensor. After finding the optimal mode, it adds the rank-1 estimate in that mode to the current estimation of the tensor. Algorithm \ref{alg:greedy} shows the details of this approach, where $\loss(\W;\Y, \V ) = \sum_{m=1}^{M} \|\W_{:, :, m}\Y_{:, :, m} - \V_{:, :, m} \|^2_F$.  Note that we can find the optimal rank-1 solution in only one of the modes, but it is enough to guarantee the convergence of our greedy algorithm. %rate in Theorem \ref{thm:greedy}.
+% Due to the page limit, a detailed example of sub-problem in each fold is described in Appendix \ref{sec:gfolding}.
+
+\begin{algorithm}[t]
+ \caption{Greedy Low-rank Tensor Learning }
+ \label{alg:greedy}
+\begin{algorithmic}[1]
+   \STATE {\bfseries Input:}
+   transformed data $\Y, \V$ of $M$ variables, stopping criteria $\eta$
+   \STATE {\bfseries Output:} $N$ mode tensor $\W$ 
+  \STATE  Initialize $\W \gets 0$
+  \REPEAT 
+    \FOR{$n=1$ {\bfseries to} $N$}
+    \STATE $B_n \leftarrow  \argmin\limits_{B:~\mathrm{rank}(B) = 1}\loss(\mathrm{refold}(\W_{(n)}+B); \Y, \V)$
+ 	\STATE  
+$\Delta_n\gets \loss(\W;\Y, \V ) -  \loss(\mathrm{refold}(\W_{(n)}+B_n);\Y, \V )$
+	\ENDFOR
+	\STATE $ n^{*}\leftarrow \argmax\limits_{n} \{\Delta_n\}$
+
+ \IF{$ \Delta_{n^{*}}> \eta$}
+% \STATE 
+% $B_{n^{*}} \leftarrow  \argmin\limits_{B:\mathrm{rank}(B) = 1}\loss(\mathcal{\W}_{(n^{*})}; \X,\Y) + B)$
+ \STATE
+ $\W \gets \W + \mathrm{refold}(B_{n^{*}},n^{*} )$
+ \ENDIF
+ \STATE $\W \gets \argmin_{\begin{subarray}{c}\mathrm{row}(\A_{(1)}) \subseteq \mathrm{row}(\W_{(1)})\\ \mathrm{col}(\A_{(1)}) \subseteq \mathrm{col}(\W_{(1)})\end{subarray} } \loss(\A;\Y, \V ) $ \COMMENT{\textit{Optional Orthogonal Projection Step.}}
+ \UNTIL{$\Delta_{n^{*}} < \eta$}
+\end{algorithmic}
+\end{algorithm}
+
+\eat{
+\begin{algorithm}[htbp]
+ \caption{The Orthogonal Projection Steps at $k^{th}$ Iteration of Algorithm \ref{alg:greedy} after line 11.}
+ \label{alg:orthogonal}
+\begin{algorithmic}
+\STATE $[U, S, V] \gets \mathrm{svd}(\mathcal{W}_{(1)}, k)$.
+\STATE $\widehat{S} \gets \min_{S}\loss(USV^{\top}, \mathcal{X}, \mathcal{Y})$.
+\STATE $\W \gets \mathrm{fold}(U\widehat{S}V^{\top}, 1)$s
+\end{algorithmic}
+\end{algorithm}}
+
+Theorem \ref{thm:greedy} bounds the difference between the loss function evaluated at each iteration of the greedy algorithm and the one at the globally optimal solution.
+
+\begin{theorem}\label{thm:greedy}
+Suppose in Eq. (\ref{eq:greedyUnified}) the matrices $\Y_{:, :, m}^{\top}\Y_{:, :, m}$ for $m = 1, \ldots, M$ are positive definite.  The solution of Algo. \ref{alg:greedy} at its $k$th iteration step satisfies the following inequality:
+\begin{equation}
+\mathcal{L}(\W_{k};\Y,\V) - \mathcal{L}(\W^{*};\Y,\V) \leq \frac{ (\| \Y \|_{2}\|\W_{(1)}^*\|_{*})^2 }{(k+1)},
+\end{equation}
+\noindent where $\W^*$ is the global minimizer of the problem in Eq. (\ref{eq:greedyUnified}) and $\| \Y\|_{2}$ is the largest singular value of a block diagonal matrix created by placing the matrices $\Y(:, :, m)$ on its diagonal blocks.
+\end{theorem}
+
+The detailed proof is given in Appendix \ref{sec:gProof}. The key idea of the proof is that the amount of decrease in the loss function by each step in the selected mode is not smaller than the amount of decrease if we had selected the first mode. The theorem shows that we can obtain the same rate of convergence for learning low rank tensors as achieved in \cite{ShalevShwartz2010} for learning low rank matrices. The greedy algorithm in Algorithm \ref{alg:greedy} is also connected to mixture regularization in \cite{tomioka2010estimation}: the mixture approach decomposes the solution into a set of low rank structures while the greedy algorithm successively learns a set of rank one components. 
+
+\paragraph{Greedy Algorithm with Orthogonal Projections} It is well-known that the forward greedy algorithm may make steps in sub-optimal directions because of noise.  A common solution to alleviate the effect of noise is to make orthogonal projections after each greedy step \cite{Barron2008,Shwartz11}. Thus, we enhance the forward greedy algorithm by projecting the solution into the space spanned by the singular vectors of its mode-1 unfolding. The  greedy algorithm with \textit{orthogonal} projections performs an extra step in line 13 of Algorithm \ref{alg:greedy}:  It finds the top $k$ singular vectors of the solution: $[U, S, V] \gets \mathrm{svd}(\mathcal{W}_{(1)}, k)$ where $k$ is the iteration number. Then it finds the best solution in the space spanned by $U$ and $V$ by solving $\widehat{S} \gets \min_{S}\loss(USV^{\top}, \Y, \V)$ which has a closed form solution. Finally, it reconstructs the solution: $\W \gets \mathrm{refold}(U\widehat{S}V^{\top}, 1)$. Note that the projection only needs to find top $k$ singular vectors which can be computed efficiently for small values of $k$.
+
+
+
+
+%In order to describe our greedy algorithm for mixture low-rank tensor learning, we first describe it in a simpler multi-task linear regression setting; then we show how we can solve the target problems. Consider the problem of finding a tensor $\mathcal{A}\in \mathbb{R}^{q\times p\times r}$  in a multisource regression problem of predicting $\mathbf{y}^{(j)}\in \mathbb{R}^{q\times 1}$ using $\mathbf{x}^{(j)}\in \mathbb{R}^{p\times 1}$ for tasks $j = 1, \ldots, r$ based on the following model:
+%\begin{equation}
+%\mathbf{y}^{(j)} = \mathcal{A}(:, :, j)\mathbf{x}^{(j)} + \bm{\varepsilon}^{(j)}
+%\end{equation}
+%\noindent for $j = 1, \ldots, r$.  Suppose we are given $n$ pairs of $(\mathbf{x}^{(j)}, \mathbf{y}^{(j)})$ for each task.  If we stack the observations as $Y^{(j)} \in \mathbb{R}^{q\times n}$ and $X^{(j)} \in \mathbb{R}^{p\times n}$ we can write:
+%\begin{equation}
+%\widehat{\mathcal{A}} = \argmin_{\mathcal{A}}\left\{\frac{1}{n}\sum_{j=1}^{r}\left\|Y^{(j)} - \mathcal{A}(:, :, j)X^{(j)} \right\|_F^2 \right\}
+%\end{equation}

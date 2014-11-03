@@ -1,0 +1,59 @@
+A common convex surrogate for the matrix rank constraint is through nuclear norm regularization, see for e.g \cite{Negahban2011}. It is known as the best convex approximation of the rank function over the unit ball of matrices with norm less than one \cite{Recht2010}. Thus, we relax the constraint $\text{rank}(\W_{(n)})$ with its convex hull $\|\W_{(n)}\|_*$. To obtain low rankness in all modes, two forms of the trace norm regularizers have been studied: The \textit{overlapped} approach which regularizes the summation of nuclear norm of tensor mode-n unfolding $\sum_{n=1}^N \|\W_{(n)}\|_*$; The \textit{mixture} approach which assumes that the $N$-mode tensor $\W$ is a mixture of $N$ auxiliary tensors $\{\Z^{n}\}$ with $\W = \sum_{n=1}^{N}\Z^n$. It regularizes the nuclear norm of only the mode-$n$ unfolding for the $n$ th tensor $\Z^{n}$, i.e, $\sum_{n=1}^N \|\Z^n_{(n)}\|_*$. The mixture approach shows improved estimation performance in \cite{tomioka2010estimation} especially when the tensor is low rank only in certain mode. We adapt the mixture approach for our problem setting. The resulting convex relaxed optimization problem is as follows:
+
+\vspace{-0.2in}
+\begin{align}\label{eqn:mixture}
+\min_{\W}\mathcal{L} ( \W; \mathcal{X}, \mu, L)  + \lambda \sum_n^N \|\Z^n_{(n)}\|_*  \quad
+\mathrm{s.t.} \quad  \frac{1}{N}\sum\limits_n^N \Z^n = \W
+\end{align} 
+\vspace{-0.1in}
+
+We derive an algorithm based on Alternating Direction Methods of Multipliers (ADMM) and prove that it is guaranteed to converge to the globally optimal solution. See details of the algorithm and the proof in Appendix \ref{sec:admm_algo}.
+
+However, solving the problem in Eq. (\ref{eqn:mixture}) requires iterative full singular value decomposition of the tensor mode-n unfolding $\Z^n_{(n)}$ which is cost prohibitive. In the next section, we propose a greedy algorithm that is significantly faster than the ADMM-based solver, which makes it a better fit for the large scale spatio-temporal data set. 
+
+% that directly solves problem  (\ref{eq:rankConst}) without approximation, providing that the model tensor $\W$ have separatable singular values
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\eat{
+In what follows, the relaxed problem can be written as
+\vspace{-0.1in}
+\begin{align}\label{eqn:nuclear}
+&\min_{\W}\mathcal{L} ( \W; \mathcal{X}, \mathcal{Y})   + \lambda  
+\end{align} 
+\vspace{-0.1in}
+
+
+The state-of-art method for solving problem Equation \ref{eqn:nuclear} introduces a set of auxiliary tensors $\{ \Z^{n}\}$ and constrains the each auxiliary tensor $\Z^n$  to be low rank on its mode $n$ unfolding .  
+Since the condition  $\frac{1}{N}\sum\limits_n^N \Z^n = \W$ describes the target tensor $\W$ as a mixture of $\Z^n$, we refer this approach as \textit{Mixture approach} and specify the formulation in Equation \ref{eqn:mixture}. 
+We are able to upper bound the estimation error of the Mixture approach by generalizing the theoretical results from \cite{tomioka2010estimation} to our formulation. We defer the details of the analysis to Appendix \ref{sec:admm_proof}. 
+
+To show the deterministic bound of the Mixture approach, we make the assumption that the loss function in problem \ref{eqn:mixture} can be represented as a linear operator $\X$ applied to the target tensor $\W$. $\X$ needs to satisfy the following restricted strong convexity (RSC):
+\begin{definition}(RSC) \cite{agarwal2012noisy}
+The quadratic loss with linear operator $\X: R^{d_1 \times d_2} \rightarrow R^{n_1\times n_2} $ satisfies restricted strong convexity with respect to the norm $\Phi$ and with parameters $(\gamma,\tau_n)$ if
+\begin{equation*}
+\frac{1}{2}\|\X(\Delta)\|^2_F \geq \frac{\gamma}{2} \|\Delta\|^2_F -\tau_n\Phi^2(\Delta) \quad \forall \Delta \in R^{d_1 \times d_2}.
+\end{equation*}
+\end{definition}\label{dfn:RSC}
+
+Denote the optimal estimator as $\W^*$ and the error bound  as $\Delta = \W^{*}-\W $. With RSC condition, Theorem \ref{thm:MixtureBound} describes the estimation error for the Mixture approach. Proof is deferred to Appendix \ref{sec:admm_proof}.
+
+\begin{theorem}
+For an RSC operator $\X$, let $\{\hat{\W}\}$ be the model tensors estimated by constraining on all modes. Assume  $\|\Wstar^l_{(n)}\|_{\text{op}} \leq \alpha \quad \forall l\neq n $, the estimation error for mixture approach is upper bounded by $\|\Delta\|^2_F \leq c \lambda^2 \min\limits_n{r_n}(Z^n_{n})$. With $\lambda \geq \frac{2}{N}\|\Phi(\mathcal{E})\|_{op}+ \frac{2}{N^2}\alpha(N-1)$, and $\mathcal{E}$ as additional model noise.
+\label{thm:MixtureBound}
+\end{theorem}
+
+Theorem \ref{thm:MixtureBound} generalizes the conclusions from  \cite{tomioka2010estimation} and upper bounds the estimation error of the Mixture approach by a factor relating to the minimum value of the mode-n rank of $\W$. }
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,41 @@
+Note that intuitively, since our greedy steps are optimal in the first mode, we can see that our bound should be at least as tight as the bound of \cite{Shwartz11}.  Here is the formal proof of Theorem \ref{thm:greedy}.
+\begin{proof} Let's denote the loss function at $k^{th}$ step by 
+\begin{equation}
+\mathcal{L}(\Y, \V, \mathcal{W}_{k}) = \sum_{j=1}^{r}\|\V_{(:, :, j)} - \mathcal{W}(:, :, j)\Y_{(:, :, j)}\|_F^2
+\end{equation}
+Lines 5--8 of Algorithm \ref{alg:greedy} imply:
+\begin{align}
+\mathcal{L}(\Y, \V, \mathcal{W}_{k}) - \mathcal{L}(\Y, \V, \W_{k+1})&= \mathcal{L}(\Y, \V, \mathcal{W}_{k}) - \min_{m}\inf_{\mathrm{rank}(B) = 1}\mathcal{L}(\Y, \V,  \W_{(m), k}+B)\nonumber\\
+&\geq \mathcal{L}(\Y, \V, \mathcal{W}_{k}) - \inf_{\mathrm{rank}(B) = 1}\mathcal{L}(\Y, \V,  \W_{(1), k}+B)\label{eq:gstep1} 
+\end{align}
+
+Let's define $B = \alpha C$ where $\alpha \in \mathbb{R},\mathrm{rank}(C) = 1,$ and $\|C\|_2 = 1$.  We expand the right hand side of Eq. (\ref{eq:gstep1}) and write: 
+\begin{align*}
+&\mathcal{L}(\Y, \V, \W_{k}) - \mathcal{L}(\Y, \V, \W_{k+1})\geq \sup_{\alpha, C: \mathrm{rank}(C) = 1, \|C\|_2 = 1} 2\alpha\langle C\bm{Y}, \bm{V} - \W_{(1), k}\bm{Y}\rangle - \alpha^2\|C\bm{Y}\|_F^2  ,
+\end{align*}
+
+\noindent where $\bm{Y}$ and $\bm{V}$ are used for denoting the matrix created by repeating $\Y_{(:, :, j)}$ and $\V_{(:, :, j)}$ on the diagonal blocks of a block diagonal matrix, respectively. Since the algorithm finds the optimal $B$, we can maximize it with respect to $\alpha$ which yields:
+\begin{align*}
+\mathcal{L}(\Y, \V, \W_{k}) - \mathcal{L}(\Y, \V, \W_{k+1}) &\geq \sup_{C: \mathrm{rank}(C) = 1, \|C\|_2 = 1} \frac{\langle C\bm{Y}, \bm{V} - \W_{(1), k}\bm{Y}\rangle^2}{\|C\bm{Y}\|_F^2}\\
+&\geq\sup_{C: \mathrm{rank}(C) = 1, \|C\|_2 = 1} \frac{1}{\sigma_{\max}(\bm{Y})^2}\langle C\bm{Y}, \bm{V} - \W_{(1), k}\bm{Y}\rangle^2  \\
+&=\sup_{C: \mathrm{rank}(C) = 1, \|C\|_2 = 1} \frac{1}{\sigma_{\max}(\bm{Y})^2}\langle C, (\bm{V} - \W_{(1), k}\bm{Y})\bm{Y}^{\top}\rangle^2\\
+&  =\frac{\sigma_{\max}\left((\bm{V} - \W_{(1), k}\bm{Y})\bm{Y}^{\top} \right)^2}{\sigma_{\max}(\bm{V})}\\
+\end{align*}
+Define the residual $R_k = \mathcal{L}(\Y, \V, \W_{k}) - \mathcal{L}(\Y, \V, \W^{*})$. Note that $-(\bm{V} - \W_{(1), k}\bm{Y})\bm{Y}^{\top}$ is the gradient of the residual function with respect to $\W_{(1), k}$. Since the operator norm and the nuclear norms are dual of each other, using the properties of dual norms we can write for any two matrices $A$ and $B$
+\begin{equation}
+\langle A, B \rangle \leq \|A\|_2\|B\|_{*}
+\end{equation}
+Thus, using the convexity of the residual function, we can show that
+\begin{align}
+R_k - R_{k+1} &\geq \frac{\left(\left\| \nabla_{\W_{(1), k}}R_k\right\|_2 \|\W_{(1), k} - \W_{(1)}^{*}\|_*\right)^2}{\sigma_{\max}(\bm{Y})^2\|\W_{(1), k} - \W_{(1)}^{*}\|_*^2}\\
+& \geq\frac{R_k^2}{\sigma_{\max}(\bm{Y})^2\|\W_{(1), k} - \W_{(1)}^{*}\|_*^2}\label{eq:greedyDecreasing}\\
+& \geq \frac{R_k^2}{\sigma_{\max}(\bm{Y})^2\|\W_{(1)}^{*2}\|_*^2}\label{eq:seq}
+\end{align}
+
+The sequence in Eq. (\ref{eq:seq}) converges to zero according to the following rate \cite[Lemma B.2]{ShalevShwartz2010}%\citep[Lemma B.2]{ShalevShwartz2010}:
+\begin{equation*}
+R_k \leq \frac{(\sigma_{\max}(\bm{Y})\|\W_{(1)}^*\|_{*})^2}{(k+1)}
+\end{equation*}
+
+The step in Eq. (\ref{eq:greedyDecreasing}) is due to the fact that the parameter estimation error decreases as the algorithm progresses. This can be seen by noting that the minimum eigenvalue assumption ensures strong convexity of the loss function. 
+\end{proof}

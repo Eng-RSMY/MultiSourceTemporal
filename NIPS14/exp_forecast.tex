@@ -1,0 +1,91 @@
+% forecast
+
+\subsubsection{Forecasting}
+We present the empirical evaluation on the forecasting task by comparing with multitask regression algorithms.  We split the data along the temporal dimension into 90\% training set and 10\% testing set. We choose VAR(3) model and during the training phase, we use 5-fold cross-validation.% for model selection.
+
+\begin{table*}[t]
+\caption{ Forecasting NRMSE for VAR process with 3 lags, trained with 90\%  of the time series.} %title of the table
+\small
+\label{tab:real_RMSE}
+%\vskip 0.15in
+\begin{center}
+\begin{tiny}
+\begin{sc}
+\centering  \footnotesize% centering table
+\begin{tabular}{@{}c@{\;\;} c @{\;\;} c @{\;\;}c @{\;\;}c@{\;\;} c @{\;\;}c@{\;\;} c @{\;\;}c @{\;\;}c @{\;\;}c@{}} % creating eight columns
+\hline
+%\abovespace\belowspace
+Dataset  & Tucker  & ADMM & Forward & Ortho & OrthoNL& Trace  & MTL$_{l1}$ & MTL$_{l21}$ & MTL$_{dirty}$  \\
+\hline
+USHCN  & \textbf{0.8975} & 0.9227& 0.9171& 0.9069 & 0.9175 & 0.9273& 0.9528   & 0.9543 &  0.9735  \\
+CCDS & 0.9438 & 0.8448 & 0.8810& \textbf{0.8325} &0.8555 &0.8632 & 0.9105& 0.9171& 1.0950 \\
+FSQ  & 0.1492 & 0.1407& 0.1241& \textbf{0.1223} & 0.1234 &0.1245 &  0.1495 &  0.1495   & 0.1504  \\
+%Climate 4  & & & 0.9511 & 1.1374 & 1.1374 & 0.9449  & 0.9342 & 1.1255\\
+%EEG(S) &  & 0.6531  & 0.6519 &  &    &0.6132 & 0.6547& NA\\
+\hline
+\end{tabular}
+\end{sc}
+\end{tiny}
+\end{center}
+\vspace{-0.25in}
+\end{table*}
+
+
+As shown in Table \ref{tab:real_RMSE}, the greedy algorithm with orthogonal projections again achieves the best prediction accuracy. Different from the cokriging task, forecasting does not necessarily need the correlations of locations for prediction. One might raise the question as to whether the Laplacian regularizer helps. Therefore, we report the results for our formulation without Laplacian (ORTHONL) for comparison.  For efficiency, we report the running time (in seconds) in Table \ref{tab:real_runtime} for both tasks of cokriging and forecasting.  Compared with ADMM, which is a competitive baseline also capturing the commonalities among variables, space, and time, our greedy algorithm is much faster for most datasets.
+
+\begin{table*}[t]
+\caption{ Running time (in seconds)  for cokriging and forecasting.} %title of the table
+\label{tab:real_runtime}
+\vspace{-0.05in}
+\begin{center}
+\begin{tiny}
+\begin{sc}
+\centering  \footnotesize% centering table
+\begin{tabular}{c| c c c| c c c c} % creating eight columns
+%\abovespace\belowspace
+\hline
+&\multicolumn{3}{c}{Cokriging}& \multicolumn{3}{c}{Forecasting}\\
+\hline
+\hline
+Dataset & USHCN  & CCDS & FSQ &  USHCN  & CCDS & FSQ \\
+\hline
+ORTHO  & 93.03 & 16.98& 91.51  & 75.47 & 21.38& 37.70\\
+ADMM &791.25 & 320.77 & 720.40 & 235.73 &45.62 & 33.83\\
+\hline
+\end{tabular}
+\end{sc}
+\end{tiny}
+\end{center}
+\vspace{-0.25in}
+\end{table*}
+
+\begin{wrapfigure}{r}{0.45\textwidth}
+\vspace{-0.2in}
+\begin{center}
+    \includegraphics[scale = 0.34]{figures/map_climate17_new.pdf}
+  \end{center}
+\vspace{-0.2in}
+  \caption{ Map of most predictive regions analyzed by the greedy algorithm using 17 variables of  the CCDS dataset. Red color means high predictiveness whereas blue denotes low predictiveness.}
+\end{wrapfigure}
+
+
+
+
+%\begin{figure}[h]
+%\centering
+%    \includegraphics[scale = 0.35]{figures/map_climate17_new.pdf}
+%  \caption{ Map of most predictive regions analyzed by the greedy algorithm using 17 variables of  the CCDS dataset. Red color means highly predictive while blue denotes low predictive.}
+%  \label{fig:paramTensor}
+%\end{figure}
+As a qualitative study, we plot the map of most predictive regions analyzed by the greedy algorithm using CCDS dataset in Fig. 2. Based on the concept of how informative the past values of the climate measurements in a specific location are in predicting future values of other time series, we define the aggregate strength of predictiveness of each region as $w(t) = \sum_{p=1}^{P}\sum_{m=1}^{M}|\W_{p, t, m}|$. We can see that two regions are identified as the most predictive regions: (1) The southwest region, which reflects the impact of the Pacific ocean and (2) The southeast region, which frequently experiences relative sea level rise, hurricanes, and storm surge in Gulf of Mexico.  Another interesting region lies in the center of Colorado, where the Rocky mountain valleys act as a funnel for the winds from the west, providing locally divergent wind patterns.
+
+
+
+%\begin{figure}[htbp]
+%%\vskip 0.2in
+%\centering 
+%\includegraphics[scale = 0.3]{figures/map_climate17Color.pdf}
+%\caption{ Map of most predictive regions analyzed by the orthogonal greedy algorithm using 17 agents of CCDS dataset. Red color means highly predictive while blue denotes low predictive.}
+%\label{fig:paramTensor}
+%\vskip -0.2in
+%\end{figure} 

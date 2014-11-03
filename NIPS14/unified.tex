@@ -1,0 +1,23 @@
+% unified formulation
+We now show that both cokriging and forecasting can be formulated into the same tensor learning framework. Let us rewrite the loss function in Eq. (\ref{eqn:cokriging}) and Eq. (\ref{eqn:forecasting}) in the form of multitask regression and complete the quadratic form for the loss function. The cokriging task can be reformulated as follows:
+\begin{align}
+\widehat{\W} = \argmin_{\W}& \left\{\sum_{m=1}^{M} \|\W_{:, :, m}H - (H^{\top})^{-1}\X_{\Omega, m} \|^2_F\right\} \quad
+\mathrm{s.t.} \quad \text{rank}(\W) \leq \rho  \label{eqn:cokriging_reformulate}
+\end{align}
+\noindent where we define $HH^{\top} = I_{\Omega}+\mu L$.\footnote{We can use Cholesky decomposition to obtain $H$. In the rare cases that $I_{\Omega}+\mu L$ is not full rank, $\epsilon I_{P}$ is added where $\epsilon$ is a very small positive value.} For the forecasting problem, $HH^{\top} = I_{P}+\mu L$ and we have:
+\begin{align}
+\widehat{\W} = \argmin_{\W} \left\{\sum_{m=1}^{M}\sum_{t=K+1}^{T} \|H\W_{:, :, m}\mathbf{X}_{t, m} - (H^{-1})\X_{:, t, m} \|^2_F\right\}
+\quad \mathrm{s.t.}  \quad\text{rank}(\W) \leq \rho,  \label{eqn:forecasting_reformulate}
+\end{align}
+By slight change of notation (cf. Appendix \ref{sec:derive}), we can easily see that the optimal solution of both problems can be obtained by the following optimization problem with appropriate choice of tensors $\Y$ and $\V$:
+\begin{equation}
+\widehat{\W} = \argmin_{\W} \left\{\sum_{m=1}^{M} \|\W_{:, :, m}\Y_{:, :, m} - \V_{:, :, m} \|^2_F\right\} \quad
+\mathrm{s.t.} \quad\text{rank}(\W) \leq \rho.
+\label{eq:greedyUnified}
+\end{equation}
+
+After unifying the objective function, we note that tensor rank has different notions such as CP rank, Tucker rank and mode n-rank \cite{kolda2009tensor,gandy2011tensor}. In this paper,  we choose the mode-n rank, which is computationally more tractable \cite{gandy2011tensor,tomioka2010estimation}. The mode-n rank of a tensor $\W$ is the rank of its mode-n unfolding $\W_{(n)}$.\footnote{The mode-$n$ unfolding of a tensor is the matrix resulting from treating $n$ as the first mode of the matrix, and cyclically concatenating other modes. Tensor refolding is the reverse direction operation \cite{kolda2009tensor}.} In particular, for a tensor $\W$ with $N$ mode, we have the following definition:
+\begin{equation}
+\text{mode-n rank}(\W) = \sum\limits_{n=1}^N \text{rank}(\W_{(n)}).
+\end{equation}
+ A common practice to solve this formulation with mode $n$-rank constraint  is to relax the rank constraint to a convex nuclear norm constraint \cite{gandy2011tensor,tomioka2010estimation}. However, those methods are  computationally expensive since they need full singular value decomposition of large matrices. In the next section, we present a fast greedy algorithm to tackle the problem.

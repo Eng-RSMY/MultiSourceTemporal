@@ -1,0 +1,20 @@
+2. Include the big O complexity of ADMM, Multitasks Gaussian Process, Tucker decomposition and provide reference for Tucker decomposition
+3. Explain the parameter tuning ( how did we choose the stopping criteria for the greedy algorithm ) (Kernel parameter tuning)
+4. further emphasis on the experiment results, should we add the run time for MTGP?
+
+-- New notes
+5- Dimensionlessness of delta in algorithm (see rebuttal)
+7- Runtime one more point
+1- Add derivation of Eq (4-6) from supplementary to the main content
+
+
+DONE.
+0. Clarify the motivation for global and local consistency, refer to the response for the rebuttal- response 1  (+++++)
+4- Definition of the Loss function
+1- Clarify the fact that "simple kriging" is just univariate GP on separate variables.
+
+NOT DONE:
+3- What happens when rho and mu go to extremes
+
+
+We compare the cokriging performances of the proposed method with the classical cokriging approaches. Simple and ordinary kriging, which are univariate Gaussian process models,  are applied independently on each variable. Multitask Gaussian process (MTGP), which is a multivariate generalization, considers the interdependencies among variables. 

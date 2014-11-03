@@ -1,0 +1,92 @@
+% Proof of theorems 
+\subsection*{Proof of Theorem \ref{thm:OverlappedBound}  }
+In order to be consist with existing work, we define the linear operator $\Phi(\W)= [X_1\w_1, \cdots, X_t\w_t, X_T\w_t]$, where $\w_t$ is the $t$ th column of $\W_{(1)}$ and $X_t$ is the $t$ th slice of tensor $\X$.
+\setcounter{equation}{0}
+Assume $\hat{\W}$, $\Wstar $ can be decomposed into $\hat{\W}= \frac{1}{N} \sum_{n=1}^N\hat{\W}^n $ and $\Wstar =  \frac{1}{N} \sum_{n=1}^N\Wstar^n$. Let $\Delta = \hat{\W}-\Wstar $, $\Delta^n  = \hat{\W}^n - \Wstar^n$, and $r_n$ be the mode-n  rank of the $\hat{\W}^n$.  Denote
+ $L(\W) = \| Y- \Phi(\W)\|_F^2$
+ 
+\begin{lemma} (Adapted from  \cite{tomioka2010estimation} )
+\label{lma:lowerbound}
+Let $\Delta$ and $\Delta^n$ be the estimation error accordingly. Assume the incoherence assumption holds, which is $\|\Wstar^l_{(n)}\|_{\text{op}} \leq \alpha \quad \forall l\neq n $. We have
+\begin{equation*}
+\frac{1}{2N^2}\sum_n \|\Delta^n\|_F^2 \leq \frac{1}{2}\|\Delta\|^2_F +\frac{1}{N^2} \alpha (N-1)\sum_n \|\Delta_{(n)}^n\|_*
+\end{equation*}
+\end{lemma}
+
+\begin{lemma} \cite{agarwal2012noisy}
+\label{lma:decomposition}
+For model  $\Y = \X(\W )$, if operator $\X$ satisfies restricted strong convexity (RSC) defined in \ref{dfn:RSC}, there is a decomposition of $\Delta_{(n)}$ into two matrices $\Delta_{(n)}= \Delta^A_{(n)} + \Delta^B_{(n)}$, such that $(\Delta^{A}_{(n)})^T \Delta^B_{(n)} =0$, $\mathrm{rank}(\Delta^A_{(n)}) < 2r$ , and $\sum\limits_n \|\Delta^A_{(n)}\|_* \leq 3 \sum\limits_n \|\Delta^B_{(n)}\|_*$, where $A,B$ denote two orthogonal spaces.
+\end{lemma}
+
+
+
+
+
+According to optimality
+\begin{equation}
+\label{eqn:optimality}
+L(\hat{\W}) +\lambda\sum\limits_n \|\hat{\W}^n_{(n)}\|_* \leq L(\Wstar) +\lambda\sum\limits_n \|\Wstar^{n}_{(n)}\|_*
+\end{equation}
+
+Use the fact that $Y = \Phi(\Wstar)+\mathcal{E}$, (\ref{eqn:optimality}) can be written as
+\begin{equation}
+\|\mathcal{E} - \Phi(\Delta) \|_F^2  + \lambda \sum_n \|\hat{\W}^n_{(n)} \|_* \leq  \|\mathcal{E}\|_F^2\\
++ \lambda \sum_n \left( \| \Wstar^{n}_{(n)}\|_{*} \right)\nonumber \\
+\end{equation}
+Rearrange the inequality, we get 
+\begin{eqnarray*}
+\|\Phi(\Delta)\|_F^2 &\leq & \lambda \sum_n \left( \|  \Wstar^n_{(n)}\|_{*}- \|\hat{\W}^n_{(n)} \|_* \right)\nonumber \\
+& +& 2\langle\mathcal{E}, \Phi(\Delta) \rangle
+\end{eqnarray*}
+where $\langle\mathcal{E}, \Phi(\Delta)\rangle$ denotes the summation of vector inner product $\sum_{t} (X_t\Delta_t)'*\mathcal{E}_t $.
+
+With triangle inequality,
+\begin{equation}
+\|  \Wstar^n_{(n)} \|_*- \|\hat{\W}^n_{(n)} \|_* \leq \| \Wstar^n_{(n)}  - \hat{\W}^n_{(n)} \|_*=\|\Delta^n_{(n)}\|_{*}
+\end{equation}
+
+With tensor vectorization and H{\"o}lder's inequality 
+\begin{eqnarray}
+\langle \mathcal{E}, \Phi(\Delta) \rangle \leq \frac{1}{N}\|\Phi(\mathcal{E})\|_{op} \sum_n  \|\Delta^n_{(n)}\|_*
+\end{eqnarray}
+
+
+Put together, we get
+\begin{eqnarray}\label{eqn:phi_upper}
+\|\Phi(\Delta)\|_F^2  \leq (\lambda +\frac{2}{N}\|\Phi(\mathcal{E})\|_{op}) \sum_n  \|\Delta^n_{(n)}\|_*
+\end{eqnarray}
+Here we slightly abuse the symbols by using the same $\mathcal{E}$ for the mode 1 folding of noise matrix.
+
+According to the definition of RSC, we know there exists a $\gamma >0$ such that
+\begin{equation}\label{eqn:RSC_condition}
+\gamma\|\Delta\|_F^2  \leq \|\Phi(\Delta)\|_F^2
+\end{equation}
+
+Combining (\ref{eqn:phi_upper} ) and (\ref{eqn:RSC_condition}) with Lemma \ref{lma:lowerbound}, we have
+\begin{eqnarray*}
+\frac{\gamma}{N^2}\sum_n \|\Delta^{n}_{(n)} \|_F^2  & \leq  &(\lambda +\frac{2}{N}\|\Phi(\mathcal{E})\|_{op}) \sum_n  \|\Delta^n_{(n)}\|_*\\ &+&\frac{2}{N^2} \alpha (N-1)\sum_n \|\Delta_{(n)}^n\|_*
+\end{eqnarray*}
+
+
+Choose $\lambda \geq \frac{2}{N}\|\Phi(\mathcal{E})\|_{op}+ \frac{2}{N^2}\alpha(N-1)$, we have
+\begin{eqnarray}
+\label{eqn:upperbound}
+\frac{\gamma}{N^2}\sum_n \|\Delta^{n}_{(n)} \|_F^2 \leq 2\lambda  \sum_n\|  \Delta^n_{(n)}\|_* 
+\end{eqnarray}
+
+Use the property of RSC in Lemma \ref{lma:decomposition}
+\begin{eqnarray}
+\| \Delta^n_{(n)}\|_*  & = &\|\Delta^{n,A}_{(n)} + \Delta^{n,B}_{(n)}\|_* \nonumber \\
+& = &\|\Delta^{n,A}_{(n)} + 3\Delta^{n,A}_{(n)}\|_* \nonumber\\
+ &\leq & 4 \|\Delta^{n,A}_{(n)}\|_*   \leq  4\sqrt{2r_n}\|\Delta^{n}_{(n)} \|_F  
+\end{eqnarray}
+
+Put  together, we have 
+\begin{eqnarray}
+\frac{\gamma}{N^2}\sum_n \|\Delta^{n}_{(n)} \|_F^2 &  \leq &  2\lambda  \sum_n\|  \Delta^n_{(n)}\|_*  \nonumber \\
+& \leq &  8\lambda\sum_n\sqrt{2r_n}\|\Delta^{n}_{(n)} \|_F \nonumber\\
+& \leq & 8\sqrt{2}\lambda\sqrt{\sum_n r_n} \sqrt{\sum_n \|\Delta^n_{(n)}\|_F^2} \nonumber
+\end{eqnarray}
+Divide both sides  by  $\sqrt{\sum_n \|\Delta^n_{(n)}\|_F^2} $. We have the error bound.
+
+For the mixture approach, since we are flexible in terms of choosing $\{\hat{\W}^n\}$, we can choose one of the $\hat{\W}^{\accentset{\ast} n} = \W$ and all the others to be zero, with $\accentset{\ast} n$ as the mode index for the minimum mode-n rank of $\W$. Thus the latent approach has an improved error of $O(\min r_n)$ while the overlapped approach is $O( \sum\limits_n r_n)$
