@@ -32,18 +32,18 @@ dimModes = [nLoc, nLoc,nType];
 
 %% train-test (with cross validation)
 
-lambdas = logspace(-3,3,10);
-lambda = 3.162278e+02;
+% lambdas = logspace(-3,3,10);
+% lambda = 3.162278e+02;
+% 
+% paras.beta = beta;
+% paras.dimModes = dimModes;
+% paras.outIter = outerNiTPre;
+% 
+% W_Convex = MLMTL_Crosval(X_train,Y_train,@MLMTL_Convex,@MLMTL_Test,lambdas, paras);
+% W_Mixture = MLMTL_Crosval(X_train,Y_train,@MLMTL_Mixture,@MLMTL_Test,lambdas, paras);
+% 
 
-paras.beta = beta;
-paras.dimModes = dimModes;
-paras.outIter = outerNiTPre;
-
-W_Convex = MLMTL_Crosval(X_train,Y_train,@MLMTL_Convex,@MLMTL_Test,lambdas, paras);
-W_Mixture = MLMTL_Crosval(X_train,Y_train,@MLMTL_Mixture,@MLMTL_Test,lambdas, paras);
-
-
-use  select best parameter
+% use  select best parameter
 fprintf('Running Overlapped \n');
 [ W,~, ~, train_time ] = MLMTL_Convex( Dat_eval.X, Dat_eval.Y, dimModes, beta, 2.15, outerNiTPre);
 Quality = MLMTL_Test(Dat_test.X, Dat_test.Y, W);
