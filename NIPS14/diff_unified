@@ -1,0 +1,10 @@
+[1mdiff --git a/NIPS14/unified.tex b/NIPS14/unified.tex[m
+[1mindex 7a6e30b..2746b69 100755[m
+[1m--- a/NIPS14/unified.tex[m
+[1m+++ b/NIPS14/unified.tex[m
+[36m@@ -1,5 +1,5 @@[m
+% unified formulation[m
+We now show that both [32m{+the+}[m cokriging and [32m{+the+}[m forecasting [31m[-can be formulated-][m[32m{+formulation fall+}[m into the same tensor learning framework. Let us rewrite the loss function in Eq. (\ref{eqn:cokriging}) and Eq. (\ref{eqn:forecasting}) in the form of multitask regression and complete the quadratic form for the loss function. The cokriging task can be reformulated as follows:
+\begin{align}[m
+\widehat{\W} = \argmin_{\W}& \left\{\sum_{m=1}^{M} \|\W_{:, :, m}H - (H^{\top})^{-1}\X_{\Omega, m} \|^2_F\right\} \quad[m
+\mathrm{s.t.} \quad \text{rank}(\W) \leq \rho  \label{eqn:cokriging_reformulate}[m

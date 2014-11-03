@@ -1,0 +1,6 @@
+[1mdiff --git a/NIPS14/method.tex b/NIPS14/method.tex[m
+[1mindex 91bac35..69b5437 100755[m
+[1m--- a/NIPS14/method.tex[m
+[1m+++ b/NIPS14/method.tex[m
+[36m@@ -1 +1 @@[m
+The critical element in multivariate spatio-temporal analysis is an efficient way to incorporate the spatial temporal correlations  into [31m[-modeling-][m[32m{+the model+}[m and automatically capture the shared structures [31m[-across-][m[32m{+among+}[m variables, locations, and time. In this section, we present a unified low rank tensor learning framework that can perform various types of spatio-temporal analysis. We will use two important applications, i.e., cokriging and forecasting,  to motivate and describe the framework. %,  which not only captures the complex correlations in the data, but also is scalable. 
