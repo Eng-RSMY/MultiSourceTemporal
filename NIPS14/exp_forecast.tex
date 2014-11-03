@@ -1,7 +1,7 @@
 % forecast
 
 \subsubsection{Forecasting}
-We present the empirical evaluation on the forecasting task by comparing with multitask regression algorithms.  We split the data along the temporal dimension into 90\% training set and 10\% testing set. We choose VAR(3) model and during the training phase, we use five fold cross validation.% for model selection.
+We present the empirical evaluation on the forecasting task by comparing with multitask regression algorithms.  We split the data along the temporal dimension into 90\% training set and 10\% testing set. We choose VAR(3) model and during the training phase, we use 5-fold cross-validation.% for model selection.
 
 \begin{table*}[t]
 \caption{ Forecasting NRMSE for VAR process with 3 lags, trained with 90\%  of the time series.} %title of the table
@@ -31,7 +31,7 @@ FSQ  & 0.1492 & 0.1407& 0.1241& \textbf{0.1223} & 0.1234 &0.1245 &  0.1495 &  0.
 \end{table*}
 
 
-As shown in Tab. \ref{tab:real_RMSE}, the greedy algorithm with orthogonal projections again achieves the best prediction accuracy. Different from cokriging task, forecasting does not necessarily need the correlations of locations for prediction. One might raise the question that whether the Laplacian regularizer helps. Therefore, we report the results for our formulation without Laplacian (ORTHONL) for comparison.  For the speed up, we report the running time (in seconds) in Tab. \ref{tab:real_runtime} for both tasks of cokriging and forecasting.  Compared with ADMM, which is a competitive baseline also capturing the commonalities among variables, space, and time, the proposed greedy algorithm is much faster for most datasets.
+As shown in Table \ref{tab:real_RMSE}, the greedy algorithm with orthogonal projections again achieves the best prediction accuracy. Different from the cokriging task, forecasting does not necessarily need the correlations of locations for prediction. One might raise the question as to whether the Laplacian regularizer helps. Therefore, we report the results for our formulation without Laplacian (ORTHONL) for comparison.  For efficiency, we report the running time (in seconds) in Table \ref{tab:real_runtime} for both tasks of cokriging and forecasting.  Compared with ADMM, which is a competitive baseline also capturing the commonalities among variables, space, and time, our greedy algorithm is much faster for most datasets.
 
 \begin{table*}[t]
 \caption{ Running time (in seconds)  for cokriging and forecasting.} %title of the table

@@ -1,5 +1,5 @@
 % unified formulation
-We now show that both the cokriging and the forecasting formulation fall into the same tensor learning framework. Let us rewrite the loss function in Eq. (\ref{eqn:cokriging}) and Eq. (\ref{eqn:forecasting}) in the form of multitask regression and complete the quadratic form for the loss function. The cokriging task can be reformulated as follows:
+We now show that both cokriging and forecasting can be formulated into the same tensor learning framework. Let us rewrite the loss function in Eq. (\ref{eqn:cokriging}) and Eq. (\ref{eqn:forecasting}) in the form of multitask regression and complete the quadratic form for the loss function. The cokriging task can be reformulated as follows:
 \begin{align}
 \widehat{\W} = \argmin_{\W}& \left\{\sum_{m=1}^{M} \|\W_{:, :, m}H - (H^{\top})^{-1}\X_{\Omega, m} \|^2_F\right\} \quad
 \mathrm{s.t.} \quad \text{rank}(\W) \leq \rho  \label{eqn:cokriging_reformulate}

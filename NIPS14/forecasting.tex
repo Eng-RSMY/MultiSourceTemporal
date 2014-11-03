@@ -1,5 +1,5 @@
 % multi-task forecasting
-Forecasting estimates the future value of the multivariate time series given the historical observations. Simply, we use the classical VAR model with  $K$ lags and coefficient tensor $\W \in \mathbb{R}^{P\times LP\times M}$. Using the matrix representation, the VAR($K$) process defines the following data generation process:
+Forecasting estimates the future value of multivariate time series given historical observations. For ease of presentation, we use the classical VAR model with  $K$ lags and coefficient tensor $\W \in \mathbb{R}^{P\times LP\times M}$ as an example. Using the matrix representation, the VAR($K$) process defines the following data generation process:
 \begin{equation}
 \X_{:,t,m} = \mathcal{W}_{:,:, m}\mathbf{X}_{t, m} + \mathcal{E}_{:,t,m}, \quad \text{for } m = 1, \ldots, M \text{ and } t = K+1, \ldots, T,
 \label{eqn:auto-regressive} 
