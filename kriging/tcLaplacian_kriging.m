@@ -1,17 +1,21 @@
-function [ W fs] = tcLaplacian_kriging( X, idx_Missing, Sim, lambda, beta, mu )
+function [ W fs] = tcLaplacian_kriging( X, idx_Missing, Sim, lambda, beta, mu, maxIter, thres )
 %TCLAPLACIAN_KRIGING Summary of this function goes here
 %   Detailed explanation goes here
 % tensor completion with the laplacian similarity matrix Sim
 
 global verbose;
 verbose = 1;
-maxIter = 10;
+
+if ( nargin == 6 )
+    maxIter = 50;
+    thres = 1e-3;
+end
 
 Dims  = size(X);
 nModes = length(Dims);
 nLoc  = Dims(1);
 nTask = Dims(3);
-thres = 5e-5;
+
 
 % intialize 
 W = zeros(Dims);
