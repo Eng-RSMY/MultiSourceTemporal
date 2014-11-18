@@ -20,5 +20,10 @@ series = permute(series, [2,1,3]);
 latlng = SparseSensors(:,3:4);
 
 %% missing index
-idx_missing = rand(100,1);
-idx_missing = (idx_missing > 0.05);
+num_fold = 10;
+num_loc = 115;
+idx_missing = zeros(num_loc, num_fold);
+for i = 1: num_fold
+    idx = rand(num_loc,1);
+    idx_missing(:,i)= (idx < 0.05);
+end

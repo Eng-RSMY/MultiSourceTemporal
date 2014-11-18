@@ -16,6 +16,10 @@ addpath(genpath('../'));
 % load 'yelp.mat'
 % load 'yelp_missIdx.mat'
 
+load 'dense_high_way_april.mat'
+load 'idx_missing_dense.mat'
+
+
 lambda = 1e-3;
 beta = 2;
 mu = 0.1;
@@ -39,7 +43,6 @@ M = 22;
 nMissing = 1;
 %%
 tcLap_est = cell(nMissing,1);
-
 for i = 1:nMissing
     idx = idx_Missing(:,i);
 
