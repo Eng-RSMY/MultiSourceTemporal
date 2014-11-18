@@ -2,9 +2,11 @@ clear;
 clc;
 addpath(genpath('./'));
 
-load 'dense_highway_april.mat'
-load 'idx_missing_dense.mat'
+% load 'dense_highway_april.mat'
+% load 'idx_missing_dense.mat'
 
+load 'sparse_highway_april.mat'
+load 'idx_missing_sparse.mat'
 
 lambda = 1e-3;
 beta = 2;
@@ -39,7 +41,7 @@ parfor fold_idx = 1:num_fold
     disp(fold_idx);
 end
 
-save('tcLap_dense_highway.mat','tcLap_est');
+save('tcLap_sparse_highway.mat','tcLap_est');
 fprintf('finish estimation\n');
 
 %%
@@ -55,7 +57,7 @@ for i = 1:num_fold
 end
 disp(mean(RMSE_tcLap(i)));
 
-save('tcLap_dense_highway.mat','tcLap_est','RMSE_tcLap');
+save('tcLap_sparse_highway.mat','tcLap_est','RMSE_tcLap');
 fprintf('finish evaluation\n');
 
 
