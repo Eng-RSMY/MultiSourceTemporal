@@ -5,7 +5,7 @@ function [ W fs] = tcLaplacian_kriging( X, idx_Missing, Sim, lambda, beta, mu )
 
 global verbose;
 verbose = 1;
-maxIter = 500;
+maxIter = 10;
 
 Dims  = size(X);
 nModes = length(Dims);
@@ -69,6 +69,7 @@ for iter = 1:maxIter
 end
 
 W = W(idx_Missing,:,:);
+plot(fs);
 
 end
 
