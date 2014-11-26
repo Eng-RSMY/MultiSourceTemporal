@@ -20,7 +20,7 @@ mu = 5;
 global verbose
 verbose = 1;
 global evaluate
-evaluate = 2;
+evaluate = 4;
 
 % locations = names(:, 2:3);
 % sim =  euclidSim(locations, sigma);
@@ -30,11 +30,11 @@ sim = sim/(max(sim(:)));       % The goal is to balance between two measures
 % sim(logical(eye(size(sim)))) = max(sim(:));
 % sim = diag(sum(sim)) - sim + (1e-5)*eye(nLoc);
 
-max_iter = 100;
+max_iter = 30;
 quality = zeros(max_iter-1, size(idx_Missing, 2));
 % Create the matrices
 for i = 1:size(idx_Missing, 2)
-    testIndex = idx_Missing(:, 1);
+    testIndex = idx_Missing(:, i);
     
     index = ones(nLoc, 1);
     index(testIndex) = 0;
@@ -42,7 +42,8 @@ for i = 1:size(idx_Missing, 2)
     
     ep = 1e-10;
     mu = logspace(0, 2, 10);
-    quality(:, i) =  prepareData(series, Iomega, 5, sim, max_iter, ep, testIndex, 'solveGreedy');
+    [quality(:, i), Sol] =  prepareData(series, Iomega, 5, sim, max_iter, ep, testIndex, 'solveGreedy');
+    save(sprintf('./yelpFiles/resultFor%d.mat', i), 'Sol')
     disp(i)
 end
 
