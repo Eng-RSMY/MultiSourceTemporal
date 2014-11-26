@@ -8,10 +8,10 @@ addpath(genpath('./'));
 load 'sparse_highway_april.mat'
 load 'idx_missing_sparse.mat'
 
-lambda = 1e-3;
-beta = 2;
-mu = 0.1;
-sigma = 3;
+lambda = 1e2;
+beta = 1;
+mu = 20;
+sigma = 0.01;
 
 [nLoc, nTime, nTask] = size(series);
 X = series;
@@ -23,7 +23,7 @@ Sim = Sim/max(Sim(:));
 num_fold = 10;
 %%
 maxIter = 50;
-thres = 1e-3;
+thres = 1e-6;
 tcLap_est = cell(num_fold,1);
 X_missing_list = cell(num_fold,1);
 for i = 1:num_fold
@@ -41,11 +41,10 @@ parfor fold_idx = 1:num_fold
     disp(fold_idx);
 end
 
-save('tcLap_sparse_highway.mat','tcLap_est');
+save('result/traffic/adm_sparse_highway.mat','tcLap_est');
 fprintf('finish estimation\n');
 
 %%
-num_fold = 10;
 
 RMSE_tcLap = zeros(1,num_fold);
 
@@ -57,7 +56,7 @@ for i = 1:num_fold
 end
 disp(mean(RMSE_tcLap(i)));
 
-save('tcLap_sparse_highway.mat','tcLap_est','RMSE_tcLap');
+save('result/traffic/adm_sparse_highway.mat','tcLap_est','RMSE_tcLap');
 fprintf('finish evaluation\n');
 
 
