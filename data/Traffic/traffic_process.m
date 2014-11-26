@@ -27,3 +27,25 @@ for i = 1: num_fold
     idx = rand(num_loc,1);
     idx_missing(:,i)= (idx < 0.05);
 end
+%% calculate non-zero RMSD
+load 'dense_highway_april.mat'
+load 'idx_missing_dense.mat'
+load 'tcLap_dense_highway.mat'
+
+num_fold = 10;
+
+RMSE_tcLap = zeros(1,num_fold);
+
+for i = 1:num_fold
+    idx = logical(idx_missing(:,i));  
+    X_test = X( idx,:,:);
+    non_zero_idx = (X_test ~=0);
+    X_test_nonzero = X_test(non_zero_idx);
+    X_est = tcLap_est{i};
+    X_est_nonzero = X_est(non_zero_idx);
+    RMSE_tcLap(i)  = sqrt(norm_fro(X_est_nonzero-X_test_nonzero)^2/ numel(X_test_nonzero));
+end
+disp(mean(RMSE_tcLap(i)));
+
+fprintf('finish evaluation\n');
+
